@@ -40,11 +40,11 @@ class MacLayer(YowInterfaceLayer):
 
     def onGetSyncResult(self, resultSyncIqProtocolEntity, originalIqProtocolEntity):
         print(resultSyncIqProtocolEntity)
-        raise KeyboardInterrupt()
+        #raise KeyboardInterrupt()
 
     def onGetSyncError(self, errorSyncIqProtocolEntity, originalIqProtocolEntity):
         print(errorSyncIqProtocolEntity)
-        raise KeyboardInterrupt()
+        #raise KeyboardInterrupt()
 
 
     @ProtocolEntityCallback("message")
