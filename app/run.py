@@ -12,18 +12,15 @@ from layer import MacLayer
 # logging.basicConfig(level=logging.DEBUG)
 
 # Config
-#################################################################
-
-# Phone, password (Replace with your own, there ones are fake as fck)
-credentials = ("5218111287273", "5Fq+tw5f4y782DCAUdA3X//TJKx=")
+credentials = ("5218111287273", "8SZ+l7XErk2N4QRlTsZ8L//TJKo=")
 encryptionEnabled = True
 
-# Add contacts here
 contacts = {
     "5218114140740": "Daniel Cardenas",
     "5218115112713": "Otniel"
 }
 
+contactsNumbers = ["5218114140740", "5218115112713"]
 
 class MacStack(object):
     def __init__(self):
@@ -35,7 +32,7 @@ class MacStack(object):
             .build()
 
         self.stack.setCredentials(credentials)
-        self.stack.setProp(MacLayer.PROP_CONTACTS, contacts.keys())
+        self.stack.setProp(MacLayer.PROP_CONTACTS, contactsNumbers)
         self.stack.setProp(PROP_IDENTITY_AUTOTRUST, True)
 
     def start(self):

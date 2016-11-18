@@ -35,16 +35,16 @@ class MacLayer(YowInterfaceLayer):
     def onSuccess(self, successProtocolEntity):
         contacts = self.getProp(self.__class__.PROP_CONTACTS, [])
         print("Sync contacts sucess: " + getNiceList(contacts))
-        #contactEntity = GetSyncIqProtocolEntity(contacts)
-        #self._sendIq(contactEntity, self.onGetSyncResult, self.onGetSyncError)
+        contactEntity = GetSyncIqProtocolEntity(contacts)
+        self._sendIq(contactEntity, self.onGetSyncResult, self.onGetSyncError)
 
-    #def onGetSyncResult(self, resultSyncIqProtocolEntity, originalIqProtocolEntity):
-    #    print(resultSyncIqProtocolEntity)
-    #    raise KeyboardInterrupt()
+    def onGetSyncResult(self, resultSyncIqProtocolEntity, originalIqProtocolEntity):
+        print(resultSyncIqProtocolEntity)
+        raise KeyboardInterrupt()
 
-    #def onGetSyncError(self, errorSyncIqProtocolEntity, originalIqProtocolEntity):
-    #    print(errorSyncIqProtocolEntity)
-    #    raise KeyboardInterrupt()
+    def onGetSyncError(self, errorSyncIqProtocolEntity, originalIqProtocolEntity):
+        print(errorSyncIqProtocolEntity)
+        raise KeyboardInterrupt()
 
 
     @ProtocolEntityCallback("message")
