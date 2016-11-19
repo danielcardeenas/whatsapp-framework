@@ -4,6 +4,7 @@ import time, random, threading, datetime, os
 from app.utils import helper
 from app.poll import poll
 from app.mac import mac
+from app.yesno import yesno
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_contacts.protocolentities import *
@@ -132,7 +133,8 @@ def handle_message(self, predicate, command, who, conversation):
         print(answer)
 
     elif command == "siono":
-        print("Sending")
+        _yesno = yesno.YesNo(self, conversation)
+        _yesno.send_yesno()
 
     elif command == "poll":
         args = [x.strip() for x in predicate.split(',')]
