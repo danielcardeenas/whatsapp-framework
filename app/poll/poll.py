@@ -1,13 +1,17 @@
-from ..utils import helper
+from app.utils import helper
+from app.receiver.receiver import Receiver
 
 
-class WAPoll(object):
-    def __init__(self, instance, args, creator):
+class WAPoll(Receiver):
+    def __init__(self, instance, args, creator, identifier):
+        Receiver.__init__(self, identifier, creator, self.handle_answer())
         self.instance = instance
         self.args = args
         self.args_len = len(args)
         self.creator = creator
 
+    def handle_answer(self, message_entity):
+        print("Got answer")
 
     def send_poll(self):
         answer = "Encuesta: *" + self.title + "*" + "\n" + self.identifier + " para votar"

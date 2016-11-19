@@ -1,28 +1,24 @@
 # -*- coding: utf-8 -*-
-import time, random, threading, datetime, os
+import time
+import random
 
 from app.utils import helper
 from app.poll import poll
 from app.mac import mac
-from app.yesno import yesno
+from app.yesno.yesno import YesNo
+from app.receiver import receiver
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_contacts.protocolentities import *
 
-from yowsup.layers.protocol_privacy.protocolentities import *
-from yowsup.layers.protocol_media.protocolentities import *
-from yowsup.layers.protocol_media.mediauploader import MediaUploader
-from yowsup.layers.protocol_profiles.protocolentities import *
-from yowsup.common.optionalmodules import PILOptionalModule, AxolotlOptionalModule
-from yowsup.layers.protocol_ib.protocolentities import *
-from yowsup.layers.protocol_iq.protocolentities import *
-from yowsup.layers.auth import YowAuthenticationProtocolLayer
-from yowsup.layers import YowLayerEvent, EventCallback
-from yowsup.layers.network import YowNetworkLayer
-from yowsup.common import YowConstants
 from yowsup.layers.protocol_groups.protocolentities import *
 
-
+'''
+Basic flow. DO NOT TOUCH
+Modifying this block automatically makes you a piece of shit
+####################################################################################################################
+####################################################################################################################
+'''
 class MacLayer(YowInterfaceLayer):
     PROP_CONTACTS = "org.openwhatsapp.yowsup.prop.syncdemo.contacts"
 
@@ -30,83 +26,55 @@ class MacLayer(YowInterfaceLayer):
         super(MacLayer, self).__init__()
 
     # Callback function when there is a successful connection to Whatsapp server
-    # Basic flow. DO NOT TOUCH
-    #####################################################################
     @ProtocolEntityCallback("success")
-    def onSuccess(self, successProtocolEntity):
+    def onSuccess(self, success_entity):
         contacts = self.getProp(self.__class__.PROP_CONTACTS, [])
         print("Sync contacts sucess: " + helper.nice_list(contacts))
-        contactEntity = GetSyncIqProtocolEntity(contacts)
-        self._sendIq(contactEntity, self.on_sync_result, self.on_sync_error)
+        contact_entity = GetSyncIqProtocolEntity(contacts)
+        self._sendIq(contact_entity, self.on_sync_result, self.on_sync_error)
 
     def on_sync_result(self,
-                        resultSyncIqProtocolEntity,
-                        originalIqProtocolEntity):
+                       result_sync_iq_entity,
+                       original_iq_entity):
         print("Sync result:")
-        print(resultSyncIqProtocolEntity)
+        print(result_sync_iq_entity)
 
     def on_sync_error(self,
-                       errorSyncIqProtocolEntity,
-                       originalIqProtocolEntity):
+                      error_sync_iq_entity,
+                      original_iq_entity):
         print("Sync error:")
-        print(errorSyncIqProtocolEntity)
+        print(error_sync_iq_entity)
 
-    # Just ignore everything above (this block)
-    #####################################################################
-
-    @ProtocolEntityCallback("message")
-    def onMessage(self, message_entity):
-        print("Type: " + message_entity.getType())
-        print("Msg: " + helper.clean_message(message_entity))
-        if helper.is_text_message(message_entity):
-            # Basic flow. DO NOT TOUCH
-            #####################################################################
-
-            # Set received (double v)
-            mac.receive_message(self, message_entity)
-
-            # Add message to queue to ACK later
-            mac.ack_queue.append(message_entity)
-
-            if mac.should_write(message_entity):
-                # Set name Presence
-                mac.make_presence(self)
-
-                # Set online
-                mac.online(self)
-                time.sleep(random.uniform(0.5, 1.5))
-
-                # Set read (double v blue)
-                mac.ack_messages(self, message_entity.getFrom())
-
-                # Set is writing
-                mac.start_typing(self, message_entity)
-                time.sleep(random.uniform(0.5, 2))
-
-                # Set it not writing
-                mac.stop_typing(self, message_entity)
-                time.sleep(random.uniform(0.3, 0.7))
-
-                # Send the answer, here magic happens
-                self.on_text_message(message_entity)
-                time.sleep(1)
-
-            # Finally Set offline
-            mac.disconnect(self)
-            #####################################################################
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
-        print(entity.ack())
         self.toLower(entity.ack())
+        #print(entity.ack())
+
+
+    @ProtocolEntityCallback("message")
+    def onMessage(self, message_entity):
+        if helper.is_text_message(message_entity):
+
+            # Set received (double v) and add to ack queue
+            mac.receive_message(self, message_entity)
+
+            # Handle intercepts if needed
+            receiver.handle_intercepts(self, message_entity)
+
+            # If is a mac order. (Message starts with '!')
+            if mac.should_write(message_entity):
+                # Prepare mac to answer (Human behavior)
+                mac.prepate_answer(self, message_entity)
+
+                # Send the answer, here magic happens
+                self.on_text_message(message_entity)
+                time.sleep(random.uniform(0.5, 1.5))
+
+            # Finally Set offline
+            mac.disconnect(self)
 
     def on_text_message(self, message_entity):
-        # Log
-        helper.log_mac(message_entity)
-
-        # Nigga who send the message (first name only)
-        who = message_entity.getNotify().split(" ")[0]
-
         # Detect command and the predicate of the message
         command = ""
         predicate = ""
@@ -115,26 +83,53 @@ class MacLayer(YowInterfaceLayer):
             command = helper.predicate(message_entity).split(' ', 1)[0]
             predicate = helper.predicate(message_entity).split(' ', 1)[1]
         except IndexError:
-            print("Could not find predicate")
+            print("No predicate")
+
+        # Log
+        # helper.log_mac(message_entity)
 
         if helper.is_command(message_entity):
-            handle_message(self, predicate, command, who, message_entity.getFrom())
+            handle_message(self, predicate, command, message_entity, message_entity.getFrom())
+
+'''
+Just ignore everything above (this block)
+Modifying this block automatically makes you a piece of shit
+####################################################################################################################
+####################################################################################################################
+'''
 
 
-def handle_message(self, predicate, command, who, conversation):
+# You can touch code below here this line (:
+####################################################################################################################
+
+'''
+This method gets all you need in a command message.
+For ex.
+    In group "ITS", daniel sent "!hola a todos"
+    @self = the MacLayer (You need this to send reply with mac -> mac.send_message())
+    @command = What comes after '!'. In this case "hola"
+    @predicate = What comes after command. In this case "a todos"
+    @who = Who sent this. In this case daniel (check below for retrieving the name)
+    @conversation = The jId of the conversation. In this case the group "ITS".
+                    NOTE: You can only send messages to conversations
+'''
+def handle_message(self, command, predicate, message_entity, conversation):
+    # Nigga who send the message (first name)
+    who = message_entity.getNotify().split(" ")[0]
+
     if command == "hi" or command == "hola":
-        answer = "Hi *" + who + "*"
+        answer = "Hola *" + who + "*"
         mac.send_message(self, answer, conversation)
         print(answer)
 
     elif command == "help":
-        answer = "Hi " + who + "\nNo puedo ayudarte aun"
+        answer = "Hola *" + who + "*\nNo puedo ayudarte por ahora"
         mac.send_message(self, answer, conversation)
         print(answer)
 
     elif command == "siono":
-        _yesno = yesno.YesNo(self, conversation)
-        _yesno.send_yesno()
+        yesno = YesNo(self, conversation)
+        yesno.send_yesno()
 
     elif command == "poll":
         args = [x.strip() for x in predicate.split(',')]

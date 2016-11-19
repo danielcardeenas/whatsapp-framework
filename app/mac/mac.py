@@ -1,6 +1,8 @@
 import os.path
 import logging
 import sys
+import time
+import random
 from yowsup.layers.protocol_presence.protocolentities import *
 from yowsup.layers.protocol_chatstate.protocolentities import *
 from yowsup.layers.protocol_media.protocolentities import *
@@ -13,8 +15,31 @@ name = "MacPresence"
 ack_queue = []
 logger = logging.getLogger(__name__)
 
+
 def receive_message(self, message_entity):
     self.toLower(message_entity.ack())
+    # Add message to queue to ACK later
+    ack_queue.append(message_entity)
+
+
+def prepate_answer(self, message_entity):
+    # Set name Presence
+    make_presence(self)
+
+    # Set online
+    online(self)
+    time.sleep(random.uniform(0.5, 1.5))
+
+    # Set read (double v blue)
+    ack_messages(self, message_entity.getFrom())
+
+    # Set is writing
+    start_typing(self, message_entity)
+    time.sleep(random.uniform(0.5, 2))
+
+    # Set it not writing
+    stop_typing(self, message_entity)
+    time.sleep(random.uniform(0.3, 0.7))
 
 
 def make_presence(self):
