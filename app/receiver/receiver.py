@@ -23,7 +23,7 @@ def should_intercept(message_entity):
     receiver = message_has_identifier(message_entity)
     if receiver:
         print("Found receiver with id: " + receiver.identifier)
-        receiver.fn()
+        receiver.fn(message_entity)
     else:
         return False
 

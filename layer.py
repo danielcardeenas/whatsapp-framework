@@ -3,7 +3,7 @@ import time
 import random
 
 from app.utils import helper
-from app.poll.poll import WAPoll
+from app.poll import poll
 from app.mac import mac
 from app.yesno.yesno import YesNo
 from app.receiver import receiver
@@ -61,7 +61,7 @@ class MacLayer(YowInterfaceLayer):
             mac.receive_message(self, message_entity)
 
             # Handle intercepts if needed
-            receiver.handle_intercepts(self, message_entity)
+            receiver.intercept(self, message_entity)
 
             # If is a mac order. (Message starts with '!')
             if mac.should_write(message_entity):
@@ -140,14 +140,18 @@ def handle_message(self, command, predicate, message_entity, who, conversation):
         if len(args) <= 0:
             mac.send_message(self, "_Argumentos invalidos_", conversation)
             return
-        elif len(args) == 1:
-            title = args[0]
-            poll = WAPoll(self, who, title)
-            poll.send_poll()
-        elif len(args) >= 2:
-            title = args[0]
-            identifier = args[1]
-            poll = WAPoll(self, who, title, identifier)
-            poll.send_poll()
+        if len(args) >= 1:
+            if args[0] == "finish":
+                poll.finish_my_poll(self, who)
+                return
+            if len(args) == 1:
+                title = args[0]
+                basic_boll = poll.WAPoll(self, conversation, who, title)
+                basic_boll.send_poll()
+            elif len(args) >= 2:
+                title = args[0]
+                identifier = args[1]
+                basic_boll = poll.WAPoll(self, conversation, who, title, identifier)
+                basic_boll.send_poll()
     else:
         return
