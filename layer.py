@@ -6,11 +6,7 @@ from app.poll import poll
 from app.mac import mac
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
-from yowsup.layers.protocol_presence.protocolentities import *
 from yowsup.layers.protocol_contacts.protocolentities import *
-from yowsup.layers.protocol_chatstate.protocolentities import *
-from yowsup.layers.protocol_messages.protocolentities import *
-from yowsup.common.tools import Jid
 
 from yowsup.layers.protocol_privacy.protocolentities import *
 from yowsup.layers.protocol_media.protocolentities import *
@@ -45,33 +41,33 @@ class MacLayer(YowInterfaceLayer):
     def on_sync_result(self,
                         resultSyncIqProtocolEntity,
                         originalIqProtocolEntity):
-        print(resultSyncIqProtocolEntity)
+        print("Sync result:\n" + resultSyncIqProtocolEntity)
 
     def on_sync_error(self,
                        errorSyncIqProtocolEntity,
                        originalIqProtocolEntity):
-        print(errorSyncIqProtocolEntity)
+        print("Sync error:\n" + errorSyncIqProtocolEntity)
 
-    # Just ignore
+    # Just ignore everything above (this block)
     #####################################################################
-
 
     @ProtocolEntityCallback("message")
     def onMessage(self, message_entity):
-        print ("Type: " + message_entity.getType())
+        print("Type: " + message_entity.getType())
         print("Msg: " + helper.clean_message(message_entity))
-        if message_entity.getType() == 'text':
+        if helper.is_text_message(message_entity):
             # Basic flow. DO NOT TOUCH
             #####################################################################
+
             # Set received (double v)
-            self.toLower(message_entity.ack())
+            mac.receive_message(self, message_entity)
 
             # Add message to queue to ACK later
             mac.ack_queue.append(message_entity)
 
             if mac.should_write(message_entity):
                 # Set name Presence
-                mac.presence(self)
+                mac.make_presence(self)
 
                 # Set online
                 mac.online(self)
@@ -93,7 +89,7 @@ class MacLayer(YowInterfaceLayer):
                 time.sleep(1)
 
             # Finally Set offline
-            self.toLower(UnavailablePresenceProtocolEntity())
+            mac.disconnect(self)
             #####################################################################
 
     @ProtocolEntityCallback("receipt")
@@ -108,34 +104,28 @@ class MacLayer(YowInterfaceLayer):
         # Nigga who send the message (first name only)
         who = message_entity.getNotify().split(" ")[0]
 
-        # Predicate of the command (message)
-        predicate = helper.predicate(message_entity)
+        # Detect command and the predicate of the message
+        command = helper.predicate(message_entity).split(' ', 1)[0]
+        predicate = helper.predicate(message_entity).split(' ', 1)[1]
 
         if helper.is_command(message_entity):
-            handle_message(self, predicate, who, message_entity.getFrom())
+            handle_message(self, predicate, command, who, message_entity.getFrom())
 
 
-def handle_message(self, predicate, who, conversation):
-    if predicate == "hi" or predicate == "hola":
+def handle_message(self, predicate, command, who, conversation):
+    if command == "hi" or command == "hola":
         answer = "Hi *" + who + "*"
-        self.toLower(helper.make_message(answer, conversation))
+        mac.send_message(self, answer, conversation)
         print(answer)
 
-    elif predicate == "help":
-        answer = "Hi " + who + "\nNo puedo ayudarte negro"
-        self.toLower(helper.make_message(answer, conversation))
+    elif command == "help":
+        answer = "Hi " + who + "\nNo puedo ayudarte aun"
+        mac.send_message(self, answer, conversation)
         print(answer)
 
-    elif predicate == "poll":
-        # Remove command from predicate
-        predicate = predicate.replace("poll ", "")
-
-        attributes = [x.strip() for x in predicate.split(',')]
-        poll_title = attributes[0]
-        poll_type = ""
-
-        _poll = poll.WAPoll(self, poll_title, conversation, poll_type)
-        _poll.send_poll()
+    elif command == "poll":
+        args = [x.strip() for x in predicate.split(',')]
+        _poll = poll.WAPoll(self, args, who)
 
     else:
         return

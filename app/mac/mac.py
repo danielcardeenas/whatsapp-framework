@@ -8,7 +8,11 @@ name = "MacPresence"
 ack_queue = []
 
 
-def presence(self):
+def receive_message(self, message_entity):
+    self.toLower(message_entity.ack())
+
+
+def make_presence(self):
     self.toLower(PresenceProtocolEntity(name=name))
 
 
@@ -63,3 +67,7 @@ def same_conversation(message_entity, conversation):
 
 def remove_conversation_from_queue(conversation):
     ack_queue[:] = [entity for entity in ack_queue if not same_conversation(entity, conversation)]
+
+
+def send_message(self, message, conversation):
+    self.toLower(helper.make_message(message, conversation))
