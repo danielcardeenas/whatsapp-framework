@@ -87,7 +87,7 @@ class MacLayer(YowInterfaceLayer):
                 time.sleep(random.uniform(0.3, 0.7))
 
                 # Send the answer, here magic happens
-                self.onTextMessage(message_entity)
+                self.on_text_message(message_entity)
                 time.sleep(1)
 
             # Finally Set offline
@@ -99,33 +99,33 @@ class MacLayer(YowInterfaceLayer):
         print(entity.ack())
         self.toLower(entity.ack())
 
-    def onTextMessage(self, message_entity):
-        # Nigga who send the message (first name)
+    def on_text_message(self, message_entity):
+        # Log
+        # helper.log_mac(message_entity)
+
+        # Nigga who send the message (first name only)
         who = message_entity.getNotify().split(" ")[0]
 
         # Predicate of the command (message)
         predicate = helper.predicate(message_entity)
 
-        # Log
-        # helper.log_mac(message_entity)
-
-        if (helper.is_command(message)):
-            handle_message(self, message_entity, predicate, who, message_entity.getFrom())
+        if helper.is_command(message_entity):
+            handle_message(self, predicate, who, message_entity.getFrom())
 
 
-def handle_message(self, message_entity, message, who, conversation):
-    if message == "hi" or message == "hola":
+def handle_message(self, predicate, who, conversation):
+    if predicate == "hi" or predicate == "hola":
         answer = "Hi *" + who + "*"
         self.toLower(helper.make_message(answer, conversation))
         print(answer)
 
-    elif message == "help":
+    elif predicate == "help":
         answer = "Hi " + who + "\nNo puedo ayudarte negro"
         self.toLower(helper.make_message(answer, conversation))
         print(answer)
 
-    elif message == "poll" or "encuesta":
-        attributes = [x.strip() for x in message.split(',')]
+    elif predicate == "poll" or "encuesta":
+        attributes = [x.strip() for x in predicate.split(',')]
         poll_title = attributes[0]
         poll_type = attributes[1]
 

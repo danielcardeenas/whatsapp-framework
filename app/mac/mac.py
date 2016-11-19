@@ -40,7 +40,7 @@ def should_write(message_entity):
 
 def ack_messages(self, conversation):
     # Filter messages from this conversation
-    queue = [message_entity for message_entity in conversation if same_conversation(message_entity, conversation)]
+    queue = [message_entity for message_entity in ack_queue if same_conversation(message_entity, conversation)]
 
     # Get only last 10 messages (Will discard reading the others)
     queue = queue[-10:]

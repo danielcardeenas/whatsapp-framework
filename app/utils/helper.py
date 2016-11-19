@@ -57,7 +57,8 @@ def clean_message(message_entity):
 """
 Detects if the message is a command for Mac
 """
-def is_command(message):
+def is_command(message_entity):
+    message = clean_message(message_entity)
     macCommand = message[:4]
     return macCommand == "mac," or is_shorcut(message)
 
