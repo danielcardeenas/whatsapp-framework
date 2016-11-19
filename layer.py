@@ -10,6 +10,7 @@ from app.receiver import receiver
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_contacts.protocolentities import *
+from cleverbot import Cleverbot
 
 from yowsup.layers.protocol_groups.protocolentities import *
 
@@ -154,4 +155,7 @@ def handle_message(self, command, predicate, message_entity, who, conversation):
                 basic_boll = poll.WAPoll(self, conversation, who, title, identifier)
                 basic_boll.send_poll()
     else:
-        return
+        # No command for this so use IA
+        cb = Cleverbot()
+        answer = cb.ask(command + " " + predicate)
+        mac.send_message(self, answer, conversation)
