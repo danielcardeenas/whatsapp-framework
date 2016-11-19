@@ -9,4 +9,4 @@ class WAPoll(object):
 
     def sendPoll(self):
         answer = self.title + "\n" + "Message from poll"
-        self.instance.toLower(helper.makeMessage(answer, self.conversation))
+        self.instance.toLower(helper.make_message(answer, self.conversation))
