@@ -9,7 +9,7 @@ class YesNo(object):
         self.instance = instance
         self.conversation = conversation
         self.caption = "Si"
-        self.image_path = "app/images/yes.gif"
+        self.image_path = "app/images/si.gif"
         self.get_yes_no()
 
     def get_yes_no(self):
