@@ -25,8 +25,6 @@ from yowsup.layers.network import YowNetworkLayer
 from yowsup.common import YowConstants
 from yowsup.layers.protocol_groups.protocolentities import *
 
-name = "MacPresence"
-
 
 class MacLayer(YowInterfaceLayer):
     PROP_CONTACTS = "org.openwhatsapp.yowsup.prop.syncdemo.contacts"
@@ -65,39 +63,32 @@ class MacLayer(YowInterfaceLayer):
             #####################################################################
             # Set received (double v)
             self.toLower(message_entity.ack())
-            time.sleep(random.uniform(0.5, 2))
 
-            if should_write(message_entity):
+            # Add message to queue to ACK later
+            mac.ack_queue.append(message_entity)
+
+            if mac.should_write(message_entity):
                 # Set name Presence
-                self.toLower(PresenceProtocolEntity(name=name))
+                mac.presence(self)
 
                 # Set online
-                self.toLower(AvailablePresenceProtocolEntity())
+                mac.online(self)
                 time.sleep(random.uniform(0.5, 1.5))
 
                 # Set read (double v blue)
                 mac.ack_messages(self, message_entity.getFrom())
 
                 # Set is writing
-                self.toLower(OutgoingChatstateProtocolEntity(
-                    OutgoingChatstateProtocolEntity.STATE_TYPING,
-                    Jid.normalize(message_entity.getFrom(False))
-                ))
+                mac.start_typing(self, message_entity)
                 time.sleep(random.uniform(0.5, 2))
 
                 # Set it not writing
-                self.toLower(OutgoingChatstateProtocolEntity(
-                    OutgoingChatstateProtocolEntity.STATE_PAUSED,
-                    Jid.normalize(message_entity.getFrom(False))
-                ))
+                mac.stop_typing(self, message_entity)
                 time.sleep(random.uniform(0.3, 0.7))
 
                 # Send the answer, here magic happens
                 self.onTextMessage(message_entity)
-                time.sleep(3)
-
-            # Add message to queue to ACK later
-            mac.ack_queue.append(message_entity)
+                time.sleep(1)
 
             # Finally Set offline
             self.toLower(UnavailablePresenceProtocolEntity())
@@ -120,10 +111,6 @@ class MacLayer(YowInterfaceLayer):
 
         if (helper.is_command(message)):
             handle_message(self, message_entity, predicate, who, message_entity.getFrom())
-
-
-def should_write(message_entity):
-    return helper.is_command(helper.clean_message(message_entity))
 
 
 def handle_message(self, message_entity, message, who, conversation):

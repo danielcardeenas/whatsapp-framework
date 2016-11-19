@@ -1,10 +1,41 @@
 from yowsup.layers.protocol_presence.protocolentities import *
+from yowsup.layers.protocol_chatstate.protocolentities import *
+from yowsup.common.tools import Jid
 
+from app.utils import helper
+
+name = "MacPresence"
 ack_queue = []
+
+
+def presence(self):
+    self.toLower(PresenceProtocolEntity(name=name))
+
+
+def online(self):
+    self.toLower(AvailablePresenceProtocolEntity())
 
 
 def disconnect(self):
     self.toLower(UnavailablePresenceProtocolEntity())
+
+
+def start_typing(self, message_entity):
+    self.toLower(OutgoingChatstateProtocolEntity(
+        OutgoingChatstateProtocolEntity.STATE_TYPING,
+        Jid.normalize(message_entity.getFrom(False))
+    ))
+
+
+def stop_typing(self, message_entity):
+    self.toLower(OutgoingChatstateProtocolEntity(
+        OutgoingChatstateProtocolEntity.STATE_PAUSED,
+        Jid.normalize(message_entity.getFrom(False))
+    ))
+
+
+def should_write(message_entity):
+    return helper.is_command(helper.clean_message(message_entity))
 
 
 def ack_messages(self, conversation):
