@@ -1,5 +1,8 @@
+import os.path
 from yowsup.layers.protocol_presence.protocolentities import *
 from yowsup.layers.protocol_chatstate.protocolentities import *
+from yowsup.layers.protocol_media.protocolentities import *
+from yowsup.layers.protocol_media.mediauploader import MediaUploader
 from yowsup.common.tools import Jid
 
 from app.utils import helper
@@ -71,3 +74,22 @@ def remove_conversation_from_queue(conversation):
 
 def send_message(self, message, conversation):
     self.toLower(helper.make_message(message, conversation))
+
+
+def send_image(self, number, path, caption=None):
+    if os.path.isfile(path):
+        self.media_send(number, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE, caption)
+    else:
+        print("Image doesn't exists")
+
+
+def media_send(self, number, path, media_type, caption=None):
+    if self.assertConnected():
+        jid = self.aliasToJid(number)
+        entity = RequestUploadIqProtocolEntity(media_type, filePath=path)
+        fn_success = lambda success_entity, original_entity: self.onRequestUploadResult(jid, media_type, path,
+                                                                                       success_entity, original_entity,
+                                                                                     caption)
+        fn_error = lambda error_entity, original_entity: self.onRequestUploadError(jid, path, error_entity, original_entity)
+        self._sendIq(entity, fn_success, fn_error)
+

@@ -41,12 +41,14 @@ class MacLayer(YowInterfaceLayer):
     def on_sync_result(self,
                         resultSyncIqProtocolEntity,
                         originalIqProtocolEntity):
-        print("Sync result:\n" + resultSyncIqProtocolEntity)
+        print("Sync result:")
+        print(resultSyncIqProtocolEntity)
 
     def on_sync_error(self,
                        errorSyncIqProtocolEntity,
                        originalIqProtocolEntity):
-        print("Sync error:\n" + errorSyncIqProtocolEntity)
+        print("Sync error:")
+        print(errorSyncIqProtocolEntity)
 
     # Just ignore everything above (this block)
     #####################################################################
@@ -105,8 +107,14 @@ class MacLayer(YowInterfaceLayer):
         who = message_entity.getNotify().split(" ")[0]
 
         # Detect command and the predicate of the message
-        command = helper.predicate(message_entity).split(' ', 1)[0]
-        predicate = helper.predicate(message_entity).split(' ', 1)[1]
+        command = ""
+        predicate = ""
+
+        try:
+            command = helper.predicate(message_entity).split(' ', 1)[0]
+            predicate = helper.predicate(message_entity).split(' ', 1)[1]
+        except IndexError:
+            print("Could not find predicate")
 
         if helper.is_command(message_entity):
             handle_message(self, predicate, command, who, message_entity.getFrom())
@@ -123,9 +131,11 @@ def handle_message(self, predicate, command, who, conversation):
         mac.send_message(self, answer, conversation)
         print(answer)
 
+    elif command == "siono":
+        print("Sending")
+
     elif command == "poll":
         args = [x.strip() for x in predicate.split(',')]
         _poll = poll.WAPoll(self, args, who)
-
     else:
         return
