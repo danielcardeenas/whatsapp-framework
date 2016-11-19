@@ -2,7 +2,7 @@ from ..utils import helper
 
 
 class WAPoll(object):
-    def __init__(self, instance, title, conversation, type, identifier="+"):
+    def __init__(self, instance, title, conversation, type="normal", identifier="+"):
         self.instance = instance
         self.title = title
         self.conversation = conversation
@@ -10,9 +10,9 @@ class WAPoll(object):
         self.identifier = identifier
 
     def send_poll(self):
-        if type == "gupo":
+        if type == "grupo":
             self.send_group_poll()
-        else
+        else:
             self.send_default_poll()
 
     def send_group_poll(self):

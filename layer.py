@@ -58,6 +58,8 @@ class MacLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
     def onMessage(self, message_entity):
+        print ("Type: " + message_entity.getType())
+        print("Msg: " + helper.clean_message(message_entity))
         if message_entity.getType() == 'text':
             # Basic flow. DO NOT TOUCH
             #####################################################################
@@ -66,8 +68,6 @@ class MacLayer(YowInterfaceLayer):
 
             # Add message to queue to ACK later
             mac.ack_queue.append(message_entity)
-
-            print("Msg: " + helper.clean_message(message_entity))
 
             if mac.should_write(message_entity):
                 # Set name Presence
@@ -103,7 +103,7 @@ class MacLayer(YowInterfaceLayer):
 
     def on_text_message(self, message_entity):
         # Log
-        # helper.log_mac(message_entity)
+        helper.log_mac(message_entity)
 
         # Nigga who send the message (first name only)
         who = message_entity.getNotify().split(" ")[0]
@@ -128,15 +128,14 @@ def handle_message(self, predicate, who, conversation):
 
     elif predicate == "poll":
         # Remove command from predicate
-        predicate = predicate.replace("poll", "")
+        predicate = predicate.replace("poll ", "")
 
         attributes = [x.strip() for x in predicate.split(',')]
         poll_title = attributes[0]
-        poll_type = attributes[1]
+        poll_type = ""
 
         _poll = poll.WAPoll(self, poll_title, conversation, poll_type)
-        _poll.sendPoll()
+        _poll.send_poll()
 
     else:
         return
-        #helper.log_mac(message_entity)

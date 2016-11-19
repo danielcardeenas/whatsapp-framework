@@ -22,6 +22,7 @@ def log_mac(message_entity):
 
     # Message
     message = clean_message(message_entity)
+    dirty = message_entity.getBody().strip()
 
     # Warn
     print("logging something...")
@@ -31,7 +32,9 @@ def log_mac(message_entity):
     file.write(
         "------------------------" +
         "\n" + "Sender:" + "\n" + who + "\n" + "Number sender:" + "\n" + conversation +
-        "\n" + "Message text:" + "\n" + message + "\n" + "------------------------" + "\n" + "\n")
+        "\n" + "Real msg:" + "\n" + dirty + "\n" +
+        "\n" + "Clean msg:" + "\n" + message + "\n" +
+        "------------------------" + "\n" + "\n")
     file.close()
 
 """
