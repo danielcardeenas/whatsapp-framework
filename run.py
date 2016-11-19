@@ -13,26 +13,26 @@ from layer import MacLayer
 
 # Config
 credentials = ("5218111287273", "8SZ+l7XErk2N4QRlTsZ8L//TJKo=")
-encryptionEnabled = True
+encryption = True
 
+contacts_numbers = ["5218114140740", "5218115112713"]
 contacts = {
     "5218114140740": "Daniel Cardenas",
     "5218115112713": "Otniel"
 }
 
-contactsNumbers = ["5218114140740", "5218115112713"]
 
 class MacStack(object):
     def __init__(self):
-        stackBuilder = YowStackBuilder()
+        builder = YowStackBuilder()
 
-        self.stack = stackBuilder\
-            .pushDefaultLayers(encryptionEnabled)\
+        self.stack = builder\
+            .pushDefaultLayers(encryption)\
             .push(MacLayer)\
             .build()
 
         self.stack.setCredentials(credentials)
-        self.stack.setProp(MacLayer.PROP_CONTACTS, contactsNumbers)
+        self.stack.setProp(MacLayer.PROP_CONTACTS, contacts_numbers)
         self.stack.setProp(PROP_IDENTITY_AUTOTRUST, True)
 
     def start(self):
