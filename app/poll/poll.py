@@ -15,7 +15,7 @@ class WAPoll(Receiver):
 
     def handle_answer(self, message_entity=None):
         self.votes += 1
-        print("Got vote: " + self.votes)
+        print("Got vote: " + str(self.votes))
 
     def send_poll(self):
         answer = "Encuesta: *" + self.title + "*" + "\n" + self.identifier + " para votar"
@@ -25,7 +25,7 @@ class WAPoll(Receiver):
 def finish_my_poll(self, creator):
     poll = get_poll_from_user(creator)
     if poll:
-        message = "*" + poll.title + "\nVotos: " + poll.votes
+        message = "*" + poll.title + "*\nVotos: " + str(poll.votes)
         mac.send_message(self, message, poll.conversation)
 
     # Make sure to remove the poll from this creator
