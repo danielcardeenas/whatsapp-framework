@@ -35,20 +35,35 @@ def log_mac(message_entity):
     file.close()
 
 """
+Returns predicate of the message
+"""
+def predicate(message):
+    message = clean_message(message)
+    if is_shorcut(message):
+        return message[1:]
+    else:
+        return message[4:]
+
+"""
 Cleans all the garbage and non-ASCII characters in the message (idk why whatsapp appends all that garbage)
 """
 def clean_message(message_entity):
     message = message_entity.getBody().lower()
-    message = message.strip();
+    message = message.strip()
     message = ''.join(filter(lambda x: x in string.printable, message))
-    return message;
+    message = message.strip()
+    return message
 
 """
 Detects if the message is a command for Mac
 """
 def is_command(message):
     macCommand = message[:4]
-    return macCommand == "mac,"
+    return macCommand == "mac," or is_shorcut(message)
+
+def is_shorcut(message):
+    macShorcut = message[:1]
+    return macShorcut == "!"
 
 """
 Converts a list insto a comma separated string
