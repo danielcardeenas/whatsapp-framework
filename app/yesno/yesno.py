@@ -10,9 +10,9 @@ class YesNo(object):
         self.conversation = conversation
         self.caption = "Si"
         self.image_path = "app/images/si.gif"
-        self.get_yes_no()
+        self.build()
 
-    def get_yes_no(self):
+    def build(self):
         response = requests.get(api_url)
         json = response.json()
         self.caption = translate_caption(json["answer"])

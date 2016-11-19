@@ -27,7 +27,7 @@ class MacLayer(YowInterfaceLayer):
 
     # Callback function when there is a successful connection to Whatsapp server
     @ProtocolEntityCallback("success")
-    def onSuccess(self, success_entity):
+    def on_success(self, success_entity):
         contacts = self.getProp(self.__class__.PROP_CONTACTS, [])
         print("Sync contacts sucess: " + helper.nice_list(contacts))
         contact_entity = GetSyncIqProtocolEntity(contacts)
@@ -47,13 +47,14 @@ class MacLayer(YowInterfaceLayer):
 
 
     @ProtocolEntityCallback("receipt")
-    def onReceipt(self, entity):
+    def on_receipt(self, entity):
         self.toLower(entity.ack())
         #print(entity.ack())
 
 
     @ProtocolEntityCallback("message")
-    def onMessage(self, message_entity):
+    def on_message(self, message_entity):
+        print(message_entity)
         if helper.is_text_message(message_entity):
 
             # Set received (double v) and add to ack queue
@@ -120,12 +121,10 @@ def handle_message(self, command, predicate, message_entity, conversation):
     if command == "hi" or command == "hola":
         answer = "Hola *" + who + "*"
         mac.send_message(self, answer, conversation)
-        print(answer)
 
     elif command == "help":
         answer = "Hola *" + who + "*\nNo puedo ayudarte por ahora"
         mac.send_message(self, answer, conversation)
-        print(answer)
 
     elif command == "siono":
         yesno = YesNo(self, conversation)
