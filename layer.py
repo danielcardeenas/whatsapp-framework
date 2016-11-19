@@ -67,6 +67,8 @@ class MacLayer(YowInterfaceLayer):
             # Add message to queue to ACK later
             mac.ack_queue.append(message_entity)
 
+            print("Msg: " + helper.clean_message(message_entity))
+
             if mac.should_write(message_entity):
                 # Set name Presence
                 mac.presence(self)
@@ -124,7 +126,10 @@ def handle_message(self, predicate, who, conversation):
         self.toLower(helper.make_message(answer, conversation))
         print(answer)
 
-    elif predicate == "poll" or "encuesta":
+    elif predicate == "poll":
+        # Remove command from predicate
+        predicate = predicate.replace("poll", "")
+
         attributes = [x.strip() for x in predicate.split(',')]
         poll_title = attributes[0]
         poll_type = attributes[1]

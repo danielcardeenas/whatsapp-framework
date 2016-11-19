@@ -42,7 +42,7 @@ def predicate(message):
     if is_shorcut(message):
         return message[1:]
     else:
-        return message[4:]
+        return message
 
 """
 Cleans all the garbage and non-ASCII characters in the message (idk why whatsapp appends all that garbage)
@@ -59,8 +59,7 @@ Detects if the message is a command for Mac
 """
 def is_command(message_entity):
     message = clean_message(message_entity)
-    macCommand = message[:4]
-    return macCommand == "mac," or is_shorcut(message)
+    return is_shorcut(message)
 
 def is_shorcut(message):
     macShorcut = message[:1]

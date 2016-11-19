@@ -35,7 +35,7 @@ def stop_typing(self, message_entity):
 
 
 def should_write(message_entity):
-    return helper.is_command(helper.clean_message(message_entity))
+    return helper.is_command(message_entity)
 
 
 def ack_messages(self, conversation):
