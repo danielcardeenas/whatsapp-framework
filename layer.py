@@ -3,7 +3,7 @@ import time
 import random
 
 from app.utils import helper
-from app.poll import poll
+from app.poll.poll import WAPoll
 from app.mac import mac
 from app.yesno.yesno import YesNo
 from app.receiver import receiver
@@ -89,8 +89,12 @@ class MacLayer(YowInterfaceLayer):
         # Log
         # helper.log_mac(message_entity)
 
+        who = message_entity.getFrom()
+        if message_entity.isGroupMessage():
+            who = message_entity.getParticipant()
+
         if helper.is_command(message_entity):
-            handle_message(self, predicate, command, message_entity, message_entity.getFrom())
+            handle_message(self, command, predicate, message_entity, who, message_entity.getFrom())
 
 '''
 Just ignore everything above (this block)
@@ -110,20 +114,20 @@ For ex.
     @self = the MacLayer (You need this to send reply with mac -> mac.send_message())
     @command = What comes after '!'. In this case "hola"
     @predicate = What comes after command. In this case "a todos"
-    @who = Who sent this. In this case daniel (check below for retrieving the name)
+    @who = The jID of the person who sent this. In this case daniel (check below for retrieving the name)
     @conversation = The jId of the conversation. In this case the group "ITS".
                     NOTE: You can only send messages to conversations
 '''
-def handle_message(self, command, predicate, message_entity, conversation):
+def handle_message(self, command, predicate, message_entity, who, conversation):
     # Nigga who send the message (first name)
-    who = message_entity.getNotify().split(" ")[0]
+    who_name = message_entity.getNotify().split(" ")[0]
 
     if command == "hi" or command == "hola":
-        answer = "Hola *" + who + "*"
+        answer = "Hola *" + who_name + "*"
         mac.send_message(self, answer, conversation)
 
     elif command == "help":
-        answer = "Hola *" + who + "*\nNo puedo ayudarte por ahora"
+        answer = "Hola *" + who_name + "*\nNo puedo ayudarte por ahora"
         mac.send_message(self, answer, conversation)
 
     elif command == "siono":
@@ -131,7 +135,19 @@ def handle_message(self, command, predicate, message_entity, conversation):
         yesno.send_yesno()
 
     elif command == "poll":
+        # args = <title>, <identifier (optional)>
         args = [x.strip() for x in predicate.split(',')]
-        _poll = poll.WAPoll(self, args, who)
+        if len(args) <= 0:
+            mac.send_message(self, "_Argumentos invalidos_", conversation)
+            return
+        elif len(args) == 1:
+            title = args[0]
+            poll = WAPoll(self, who, title)
+            poll.send_poll()
+        elif len(args) >= 2:
+            title = args[0]
+            identifier = args[1]
+            poll = WAPoll(self, who, title, identifier)
+            poll.send_poll()
     else:
         return
