@@ -22,27 +22,32 @@ class WAPoll(Receiver):
         self.instance.toLower(helper.make_message(answer, self.conversation))
 
 
-def finish_my_poll(self, creator):
-    poll = get_poll_from_user(creator)
+def finish_my_poll(self, creator, conversation):
+    poll = get_poll_from_user_conversation(creator, conversation)
     if poll:
         message = "*" + poll.title + "*\nVotos: " + str(poll.votes)
         mac.send_message(self, message, poll.conversation)
 
     # Make sure to remove the poll from this creator
-    remove_poll_from_receivers(creator)
+    remove_poll_from_receivers(creator, conversation)
 
 
-def get_poll_from_user(creator):
+def get_poll_from_user_conversation(creator, conversation):
     for poll in receiver.receivers:
-        if is_poll_from_creator(poll, creator):
+        if is_poll_from_creator(poll, creator) and is_poll_from_conversation(poll, conversation):
             return poll
 
     return None
 
 
-def remove_poll_from_receivers(creator):
-    receiver.receivers[:] = [poll for poll in receiver.receivers if is_poll_from_creator(poll, creator)]
+def remove_poll_from_receivers(creator, conversation):
+    receiver.receivers[:] = [poll for poll in receiver.receivers if not is_poll_from_creator(poll, creator)
+                             and not is_poll_from_conversation(poll, conversation)]
 
 
 def is_poll_from_creator(poll, creator):
     return type(poll) is WAPoll and poll.creator == creator
+
+
+def is_poll_from_conversation(poll, conversation):
+    return poll.conversation == conversation

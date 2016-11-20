@@ -143,7 +143,7 @@ def handle_message(self, command, predicate, message_entity, who, conversation):
             return
         if len(args) >= 1:
             if args[0] == "finish":
-                poll.finish_my_poll(self, who)
+                poll.finish_my_poll(self, who, conversation)
                 return
             if len(args) == 1:
                 title = args[0]
