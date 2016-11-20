@@ -123,55 +123,55 @@ def media_send(self, number, path, media_type, caption=None):
 '''
 Callbacks. Do not touch
 '''
-def on_request_upload_result(self, jid, mediaType, filePath, resultRequestUploadIqProtocolEntity,
-                             requestUploadIqProtocolEntity, caption = None):
-    if resultRequestUploadIqProtocolEntity.isDuplicate():
-        doSendMedia(self, mediaType, filePath, resultRequestUploadIqProtocolEntity.getUrl(), jid,
-                         resultRequestUploadIqProtocolEntity.getIp(), caption)
+def on_request_upload_result(self, jid, media_type, file_path, result_request_upload_entity,
+                             request_upload_entity, caption=None):
+    if result_request_upload_entity.isDuplicate():
+        do_send_media(self, media_type, file_path, result_request_upload_entity.getUrl(), jid,
+                      result_request_upload_entity.getIp(), caption)
     else:
-        successFn = lambda filePath, jid, url: doSendMedia(self,
-                                                           mediaType,
-                                                           filePath,
-                                                           url,
-                                                           jid,
-                                                           resultRequestUploadIqProtocolEntity.getIp(),
-                                                           caption)
-        mediaUploader = MediaUploader(jid,
-                                      self.getOwnJid(),
-                                      filePath,
-                                      resultRequestUploadIqProtocolEntity.getUrl(),
-                                      resultRequestUploadIqProtocolEntity.getResumeOffset(),
-                                      successFn,
-                                      onUploadError(self,
-                                                    filePath,
-                                                    jid),
-                                      onUploadProgress(self,
-                                                       filePath,
-                                                       jid,
-                                                       resultRequestUploadIqProtocolEntity.getResumeOffset()),
-                                      async=False)
-        mediaUploader.start()
+        success_fn = lambda file_path, jid, url: do_send_media(self,
+                                                               media_type,
+                                                               file_path,
+                                                               url,
+                                                               jid,
+                                                               result_request_upload_entity.getIp(),
+                                                               caption)
+        media_uploader = MediaUploader(jid,
+                                       self.getOwnJid(),
+                                       file_path,
+                                       result_request_upload_entity.getUrl(),
+                                       result_request_upload_entity.getResumeOffset(),
+                                       success_fn,
+                                       on_upload_error(self, file_path, jid),
+                                       on_upload_progress(self,
+                                                          file_path,
+                                                          jid,
+                                                          result_request_upload_entity.getResumeOffset()),
+                                       async=False)
+        media_uploader.start()
 
 
-def on_request_upload_error(self, jid, path, errorRequestUploadIqProtocolEntity, requestUploadIqProtocolEntity):
+def on_request_upload_error(self, jid, path, error_request_upload_iq_entity, request_upload_iq_entity):
     logger.error("Request upload for file %s for %s failed" % (path, jid))
 
 
-def doSendMedia(self, mediaType, filePath, url, to, ip=None, caption=None):
-    if mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE:
-        entity = ImageDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption=caption)
-    elif mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_AUDIO:
-        entity = AudioDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to)
-    elif mediaType == RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO:
-        entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption=caption)
-    self.toLower(entity)
+def do_send_media(self, media_type, file_path, url, to, ip=None, caption=None):
+    if media_type == RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE:
+        entity = ImageDownloadableMediaMessageProtocolEntity.fromFilePath(file_path, url, ip, to, caption=caption)
+        self.toLower(entity)
+    elif media_type == RequestUploadIqProtocolEntity.MEDIA_TYPE_AUDIO:
+        entity = AudioDownloadableMediaMessageProtocolEntity.fromFilePath(file_path, url, ip, to)
+        self.toLower(entity)
+    elif media_type == RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO:
+        entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(file_path, url, ip, to, caption=caption)
+        self.toLower(entity)
 
 
-def onUploadError(self, filePath, jid):
+def on_upload_error(self, filePath, jid):
     logger.error("Upload file %s to %s failed!" % (filePath, jid))
 
 
-def onUploadProgress(self, filePath, jid, progress):
+def on_upload_progress(self, filePath, jid, progress):
     sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
     sys.stdout.flush()
 
