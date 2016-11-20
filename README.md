@@ -12,4 +12,6 @@ Mac is a whatsapp bot I made as a weekend project. The project itself has all yo
 + **`!<message>`**: If command is not recognized uses IA from Cleverbot to answer
 
 ## Contributing
-Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info
+Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
+
+Just do merge request and I'll publish the changes to the server
