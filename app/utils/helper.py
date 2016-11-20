@@ -94,7 +94,7 @@ def predicate(message):
 Cleans all the garbage and non-ASCII characters in the message (idk why whatsapp appends all that garbage)
 """
 def clean_message(message_entity):
-    message = message_entity.getBody().lower()
+    message = message_entity.getBody()
     message = message.strip()
     message = ''.join(filter(lambda x: x in string.printable, message))
     message = message.strip()

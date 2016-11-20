@@ -7,6 +7,7 @@ from app.poll import poll
 from app.mac import mac
 from app.yesno.yesno import YesNo
 from app.receiver import receiver
+from app.youtube.mac_youtube import WAYoutube
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_contacts.protocolentities import *
@@ -133,6 +134,9 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
     elif command == "siono":
         yesno = YesNo(instance, conversation)
         yesno.send_yesno()
+
+    elif command == "yt":
+        WAYoutube(instance, who, conversation)
 
     elif command == "poll":
         # args = <title>, <identifier (optional)>
