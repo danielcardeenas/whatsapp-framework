@@ -110,6 +110,13 @@ def send_image(self, number, path, caption=None):
         print("Image doesn't exists")
 
 
+def send_video(self, number, path, caption=None):
+    if os.path.isfile(path):
+        media_send(self, number, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO)
+    else:
+        print("Video doesn't exists")
+
+
 def media_send(self, number, path, media_type, caption=None):
     jid = number
     entity = RequestUploadIqProtocolEntity(media_type, filePath=path)

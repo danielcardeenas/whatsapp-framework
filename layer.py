@@ -55,7 +55,6 @@ class MacLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
     def on_message(self, message_entity):
-        print(message_entity)
         if helper.is_text_message(message_entity):
 
             # Set received (double v) and add to ack queue
@@ -112,50 +111,50 @@ Modifying this block automatically makes you a piece of shit
 This method gets all you need in a command message.
 For ex.
     In group "ITS", daniel sent "!hola a todos"
-    @self = the MacLayer (You need this to send reply with mac -> mac.send_message())
+    @instance = the MacLayer (You need this to send reply with mac -> mac.send_message())
     @command = What comes after '!'. In this case "hola"
     @predicate = What comes after command. In this case "a todos"
     @who = The jID of the person who sent this. In this case daniel (check below for retrieving the name)
     @conversation = The jId of the conversation. In this case the group "ITS".
                     NOTE: You can only send messages to conversations
 '''
-def handle_message(self, command, predicate, message_entity, who, conversation):
+def handle_message(instance, command, predicate, message_entity, who, conversation):
     # Nigga who send the message (first name)
     who_name = message_entity.getNotify().split(" ")[0]
 
     if command == "hi" or command == "hola":
         answer = "Hola *" + who_name + "*"
-        mac.send_message(self, answer, conversation)
+        mac.send_message(instance, answer, conversation)
 
     elif command == "help":
         answer = "Hola *" + who_name + "*\nNo puedo ayudarte por ahora"
-        mac.send_message(self, answer, conversation)
+        mac.send_message(instance, answer, conversation)
 
     elif command == "siono":
-        yesno = YesNo(self, conversation)
+        yesno = YesNo(instance, conversation)
         yesno.send_yesno()
 
     elif command == "poll":
         # args = <title>, <identifier (optional)>
         args = [x.strip() for x in predicate.split(',')]
         if len(args) <= 0:
-            mac.send_message(self, "_Argumentos invalidos_", conversation)
+            mac.send_message(instance, "_Argumentos invalidos_", conversation)
             return
         if len(args) >= 1:
             if args[0] == "finish":
-                poll.finish_my_poll(self, who, conversation)
+                poll.finish_my_poll(instance, who, conversation)
                 return
             if len(args) == 1:
                 title = args[0]
-                basic_boll = poll.WAPoll(self, conversation, who, title)
+                basic_boll = poll.WAPoll(instance, conversation, who, title)
                 basic_boll.send_poll()
             elif len(args) >= 2:
                 title = args[0]
                 identifier = args[1]
-                basic_boll = poll.WAPoll(self, conversation, who, title, identifier)
+                basic_boll = poll.WAPoll(instance, conversation, who, title, identifier)
                 basic_boll.send_poll()
     else:
         # No command for this so use IA
         cb = Cleverbot()
         answer = cb.ask(command + " " + predicate)
-        mac.send_message(self, answer, conversation)
+        mac.send_message(instance, answer, conversation)

@@ -1,4 +1,5 @@
 import requests
+import moviepy.editor as mp
 from app.mac import mac
 
 api_url = "https://yesno.wtf/api/"
@@ -19,7 +20,33 @@ class YesNo(object):
         self.image_path = get_image(json["image"], self.caption)
 
     def send_yesno(self):
-        mac.send_image(self.instance, self.conversation, self.image_path, self.caption)
+        # Converts gif to mp4 and sends as video
+        mac.send_video(self.instance, self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
+
+        # Sends gif as image
+        # mac.send_image(self.instance, self.conversation, self.image_path, self.caption)
+
+        # Sends just the answer
+        # mac.send_message(self.instance, "*" + self.caption + "*", self.conversation)
+
+
+'''
+Converts gif to video (mp4)
+return video file path
+'''
+
+
+def gif_to_video(image_path, caption):
+    path = "app/images/" + caption + ".mp4"
+    clip = mp.VideoFileClip(image_path)
+    clip.write_videofile(path)
+    return path
+
+
+'''
+Downloads image from url
+returns image file path
+'''
 
 
 def get_image(url, caption):
