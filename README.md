@@ -5,10 +5,10 @@ Whatsapp bot
 Mac responds to message begining with **!**
 
 Current functions:
-+ Say hi `!hi`
-+ Random yes or no function (returns gif and answer from [yesno.wtf/api](https://yesno.wtf/api/) ) `!siono`
-+ Make polls (taking chat as input) `!poll <title>, <identifier (optional)>`
-+ If command is not recognized uses IA from Cleverbot to answer `!<message>`
++ **`!hi`**: Says hi to sender
++ **`!siono`**: Random yes or no function (returns gif and answer from [yesno.wtf/api](https://yesno.wtf/api/))
++ **`!poll <title>, <identifier (optional)>`**: Make polls (taking chat as input)
++ **`!<message>`**: If command is not recognized uses IA from Cleverbot to answer
 
 
 ### Prototypes:
