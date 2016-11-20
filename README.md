@@ -8,6 +8,7 @@ Current functions:
 + Say hi
 + Random yes or no funcion (sends images)
 + Make polls (taking chat as input)
++ If command is not recognized uses IA from Cleverbot to answer
 
 
 ### Prototypes:
