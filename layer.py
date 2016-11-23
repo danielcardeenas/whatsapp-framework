@@ -9,8 +9,8 @@ from app.yesno.yesno import YesNo
 from app.receiver import receiver
 from app.youtube.mac_youtube import WAYoutube
 
-from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
-from yowsup.layers.protocol_contacts.protocolentities import *
+from yowsup.yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
+from yowsup.yowsup.layers.protocol_contacts.protocolentities import *
 from cleverbot import Cleverbot
 
 from yowsup.layers.protocol_groups.protocolentities import *
