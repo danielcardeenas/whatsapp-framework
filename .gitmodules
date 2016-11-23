@@ -1,0 +1,3 @@
+[submodule "yowsup"]
+	path = yowsup
+	url = https://github.com/danielcardeenas/yowsup
