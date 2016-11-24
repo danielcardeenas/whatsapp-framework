@@ -12,7 +12,7 @@ from layer import MacLayer
 # logging.basicConfig(level=logging.DEBUG)
 
 # Config
-credentials = ("xxxxxxxx", "xxxxxxxxxxxxxx")
+credentials = ("5218111287273", "8SZ+l7XErk2N4QRlTsZ8L//TJKo=")
 encryption = True
 
 contacts_numbers = ["5218114140740",
@@ -63,6 +63,5 @@ class MacStack(object):
             sys.exit(0)
 
 if __name__ == "__main__":
-    print("dsd")
-    #c = MacStack()
-    #c.start()
+    c = MacStack()
+    c.start()
