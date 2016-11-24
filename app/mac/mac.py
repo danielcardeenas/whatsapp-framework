@@ -11,7 +11,7 @@ from yowsup.common.tools import Jid
 
 from app.utils import helper
 
-name = "MacPresence"
+name = "Mac"
 ack_queue = []
 logger = logging.getLogger(__name__)
 
