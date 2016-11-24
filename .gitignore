@@ -3,3 +3,4 @@ run.py
 app/build/
 app/dist/
 app/mac_bot.egg-info/
+app/assets/*
