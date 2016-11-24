@@ -29,7 +29,7 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
 
     elif command == "help":
         answer = "Hola *" + who_name + "*\nNo puedo ayudarte por ahora"
-        mac.send_message(instance, answer, conversation)
+        mac.send_message(instance, answer, conversation) 
 
     elif command == "siono":
         yesno = YesNo(instance, conversation)

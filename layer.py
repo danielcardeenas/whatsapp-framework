@@ -87,12 +87,11 @@ class MacLayer(YowInterfaceLayer):
         # Log
         # helper.log_mac(message_entity)
 
-        who = message_entity.getFrom()
-        if message_entity.isGroupMessage():
-            who = message_entity.getParticipant()
+        who = helper.get_who_send(message_entity)
+        conversation = message_entity.getFrom()
 
         if helper.is_command(message_entity):
-            main.handle_message(self, command, predicate, message_entity, who, message_entity.getFrom())
+            main.handle_message(self, command, predicate, message_entity, who, conversation)
 
 '''
 Just ignore everything above (this block)

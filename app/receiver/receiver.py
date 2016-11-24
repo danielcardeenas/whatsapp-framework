@@ -3,11 +3,18 @@ receivers = []
 
 
 class Receiver(object):
-    def __init__(self, identifier, creator, fn=None):
+    def __init__(self, identifier, conversation, creator, fn=None):
         self.identifier = identifier
+        self.conversation = conversation
         self.creator = creator
         self.fn = fn
         receivers.append(self)
+        
+    def destroy(self):
+        receivers[:] = [receiver for receiver in receivers 
+                            if not receiver == self]
+                             
+        helper.nice_list(receivers)
 
 
 def intercept(self, message_entity):
@@ -17,17 +24,19 @@ def intercept(self, message_entity):
     if receivers_have_global():
         print("Handling globals")
         handle_global_receivers(message_entity)
-
+        
 
 def should_intercept(message_entity):
     if len(receivers) == 0:
         return False
 
     # Get receiver if any
-    receiver = message_has_identifier(message_entity)
+    receiver = get_receiver(message_entity)
+    
     if receiver:
         print("Found receiver with id: " + receiver.identifier)
         receiver.fn(message_entity)
+        return True
     else:
         return False
 
@@ -46,15 +55,13 @@ def handle_global_receivers(message_entity):
             receiver.fn(message_entity)
 
 
-def message_has_identifier(message_entity):
+def get_receiver(message_entity):
     for receiver in receivers:
         message = helper.clean_message(message_entity)
         id_len = len(receiver.identifier)
         if message[:id_len] == receiver.identifier:
-            return receiver
+            # Matches identifier. Check if it belongs to the same conversation
+            if helper.get_conversation(message_entity) == receiver.conversation:
+                return receiver
 
     return None
-
-
-def destroy_receivers(identifier):
-    print("Destroying receivers with identifier: " + identifier)

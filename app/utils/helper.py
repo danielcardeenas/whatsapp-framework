@@ -2,6 +2,17 @@ from yowsup.layers.protocol_messages.protocolentities import *
 import string
 log_file = "maclog.txt"
 
+def get_who_send(message_entity):
+    who = message_entity.getFrom()
+    if message_entity.isGroupMessage():
+        who = message_entity.getParticipant()
+        
+    return who
+    
+
+def get_conversation(message_entity):
+    return message_entity.getFrom()
+
 """
 Detects if the message entity is text type.
 """

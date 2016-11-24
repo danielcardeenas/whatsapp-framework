@@ -17,3 +17,4 @@ Mac is a whatsapp bot I made as a weekend project. The project itself has all yo
 Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
 
 Just do merge request and I'll publish the changes to the server
+ 
