@@ -10,7 +10,7 @@ class YesNo(object):
         self.instance = instance
         self.conversation = conversation
         self.caption = "Si"
-        self.image_path = "app/images/si.gif"
+        self.image_path = "app/assets/images/si.gif"
         self.build()
 
     def build(self):
@@ -37,7 +37,7 @@ return video file path
 
 
 def gif_to_video(image_path, caption):
-    path = "app/images/" + caption + ".mp4"
+    path = "app/assets/images/" + caption + ".mp4"
     clip = mp.VideoFileClip(image_path)
     clip.write_videofile(path)
     return path
@@ -50,7 +50,7 @@ returns image file path
 
 
 def get_image(url, caption):
-    path = "app/images/" + caption + ".gif"
+    path = "app/assets/images/" + caption + ".gif"
     file = open(path, 'wb')
     file.write(requests.get(url).content)
     file.close()

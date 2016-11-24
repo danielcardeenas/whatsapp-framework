@@ -17,10 +17,10 @@ class WAYoutube(Receiver):
         if is_youtube_url(message):
             try:
                 yt = YouTube(message)
-                video = yt.get('mp4', '720p')
-                video.download('app/videos')
-                path = "app/videos/" + yt.filename + ".mp4"
-                mac.send_video(self.instance, self.conversation, path, self.caption)
+                video = yt.get('mp4')
+                video.download('app/assets/videos')
+                path = "app/assets/videos/" + yt.filename + ".mp4"
+                mac.send_video(self.instance, self.conversation, path, caption="video")
             except:
                 print("Could send video")
 
