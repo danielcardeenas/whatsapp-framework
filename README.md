@@ -11,7 +11,7 @@ Mac is a whatsapp bot I made as a weekend project. The project itself has all yo
 + **`!yt`**: Activates youtube detection
 + **`!siono`**: Random yes or no function. Returns gif and answer from [**yesno.wtf/api**](https://yesno.wtf/api/)
 + **`!poll <title>, <identifier (optional)>`**: Make polls (taking chat as input)
-+ **`!<message>`**: If command is not recognized uses IA from Cleverbot to answer
++ **`!<message>`**: If command is not recognized uses IA from ~~Cleverbot~~ Wolframalpha to answer
 
 ## Contributing
 Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
