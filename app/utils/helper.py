@@ -1,4 +1,4 @@
-from yowsup.yowsup.layers.protocol_messages.protocolentities import *
+from yowsup.layers.protocol_messages.protocolentities import *
 import string
 log_file = "maclog.txt"
 

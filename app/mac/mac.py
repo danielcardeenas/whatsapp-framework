@@ -3,11 +3,11 @@ import logging
 import sys
 import time
 import random
-from yowsup.yowsup.layers.protocol_presence.protocolentities import *
-from yowsup.yowsup.layers.protocol_chatstate.protocolentities import *
-from yowsup.yowsup.layers.protocol_media.protocolentities import *
-from yowsup.yowsup.layers.protocol_media.mediauploader import MediaUploader
-from yowsup.yowsup.common.tools import Jid
+from yowsup.layers.protocol_presence.protocolentities import *
+from yowsup.layers.protocol_chatstate.protocolentities import *
+from yowsup.layers.protocol_media.protocolentities import *
+from yowsup.layers.protocol_media.mediauploader import MediaUploader
+from yowsup.common.tools import Jid
 
 from app.utils import helper
 

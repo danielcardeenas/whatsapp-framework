@@ -1,10 +1,10 @@
 import sys, logging
 
-from yowsup.yowsup.layers.auth import AuthError
-from yowsup.yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
-from yowsup.yowsup.stacks import YowStackBuilder
-from yowsup.yowsup.layers import YowLayerEvent
-from yowsup.yowsup.layers.network import YowNetworkLayer
+from yowsup.layers.auth import AuthError
+from yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
+from yowsup.stacks import YowStackBuilder
+from yowsup.layers import YowLayerEvent
+from yowsup.layers.network import YowNetworkLayer
 
 from layer import MacLayer
 
@@ -63,5 +63,6 @@ class MacStack(object):
             sys.exit(0)
 
 if __name__ == "__main__":
-    c = MacStack()
-    c.start()
+    print("dsd")
+    #c = MacStack()
+    #c.start()

@@ -21,7 +21,7 @@ else:
 
 setup(
     name='mac bot',
-    version=yowsup.__version__,
+    version=1,
     url='http://github.com/danielcardeenas/MacBot',
     license='GPL-3+',
     author='Daniel Cárdenas',
