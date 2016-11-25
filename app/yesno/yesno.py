@@ -9,8 +9,8 @@ class YesNo(object):
     def __init__(self, instance, conversation):
         self.instance = instance
         self.conversation = conversation
-        self.caption = "Si"
-        self.image_path = "app/assets/images/si.gif"
+        self.caption = ""
+        self.image_path = ""
         self.build()
 
     def build(self):
@@ -21,13 +21,13 @@ class YesNo(object):
 
     def send_yesno(self):
         # Converts gif to mp4 and sends as video
-        mac.send_video(self.instance, self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
+        # mac.send_video(self.instance, self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
 
         # Sends gif as image
         # mac.send_image(self.instance, self.conversation, self.image_path, self.caption)
 
         # Sends just the answer
-        # mac.send_message(self.instance, "*" + self.caption + "*", self.conversation)
+        mac.send_message(self.instance, "*" + self.caption + "*", self.conversation)
 
 
 '''

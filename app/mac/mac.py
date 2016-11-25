@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os.path
 import logging
 import sys
@@ -100,7 +102,14 @@ def remove_conversation_from_queue(conversation):
 
 
 def send_message(self, message, conversation):
+    message = decode_string(message)
     self.toLower(helper.make_message(message, conversation))
+    
+
+def decode_string(message):
+    message = message.encode('latin-1')
+    message = message.decode('utf-8')
+    return message
 
 
 def send_image(self, number, path, caption=None):

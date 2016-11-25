@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
 from yowsup.layers.protocol_messages.protocolentities import *
 import string
+
 log_file = "maclog.txt"
 
 def get_who_send(message_entity):
@@ -129,3 +132,7 @@ Converts a list into a comma separated string
 """
 def nice_list(list):
     return "[" + ", ".join( str(x) for x in list) + "]"
+    
+
+def remove_non_ascii(text):
+    return unidecode(unicode(text, encoding = "utf-8"))

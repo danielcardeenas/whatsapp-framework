@@ -20,8 +20,8 @@ For ex.
     @conversation = The whatsapp conversation object. In this case the group "ITS".
 '''
 def handle_message(instance, command, predicate, message_entity, who, conversation):
-    # Nigga who send the message (first name)
-    who_name = message_entity.getNotify().split(" ")[0]
+    # Nigga who send the message
+    who_name = message_entity.getNotify()
 
     if command == "hi" or command == "hola":
         answer = "Hola *" + who_name + "*"
@@ -29,7 +29,7 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
 
     elif command == "help":
         answer = "Hola *" + who_name + "*\nNo puedo ayudarte por ahora"
-        mac.send_message(instance, answer, conversation) 
+        mac.send_message(instance, answer, conversation)
 
     elif command == "siono":
         yesno = YesNo(instance, conversation)

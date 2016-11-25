@@ -13,8 +13,6 @@ class Receiver(object):
     def destroy(self):
         receivers[:] = [receiver for receiver in receivers 
                             if not receiver == self]
-                             
-        helper.nice_list(receivers)
 
 
 def intercept(self, message_entity):

@@ -2,25 +2,23 @@ from app.utils import helper
 from app.receiver.receiver import Receiver
 from app.receiver import receiver
 from app.mac import mac
+from app.poll.voter import Voter
 
 
 class WAPoll(Receiver):
     def __init__(self, instance, conversation, creator, title, identifier="#"):
-        # Allow only one poll per user-conversation
-        if user_has_poll(creator, conversation):
-            mac.send_message(self.instance, "_Tienes una poll activa_", conversation)
-            return
-        
+        # Finish poll if user already has one in this conversation
+        finish_my_poll(instance, creator, conversation)
         Receiver.__init__(self, identifier, conversation, creator, self.handle_answer)
         self.instance = instance
         self.title = title
-        self.votes = 0
+        self.voters = []
 
     def handle_answer(self, message_entity=None):
-        print(self)
-        if self is not None:
-            self.votes += 1
-            print("Got vote: " + str(self.votes))
+        if message_entity is not None:
+            voter = Voter(message_entity)
+            self.voters.append(voter)
+            print("Got vote")
 
     def send_poll(self):
         answer = "Encuesta: *" + self.title + "*" + "\n" + self.identifier + " para votar"
@@ -31,12 +29,19 @@ class WAPoll(Receiver):
         
     def is_conversation(self, conversation):
         return self.conversation == conversation
-
+        
+    def voters_string(self):
+        answer = ""
+        for voter in self.voters:
+            answer += "\n" + voter.who_name
+            
+        return answer
 
 def finish_my_poll(self, creator, conversation):
     poll = poll_from_user_conversation(creator, conversation)
     if poll:
-        message = "*" + poll.title + "*\nVotos: " + str(poll.votes)
+        message = "*" + poll.title + "*"
+        message += poll.voters_string()
         mac.send_message(self, message, poll.conversation)
         poll.destroy()
 
