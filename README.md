@@ -2,9 +2,9 @@
 Mac is a whatsapp bot I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
 ### Screenshots:
-<img src="http://i.imgur.com/vp7vXMJ.png" height="450" />
-<img src="http://i.imgur.com/USQ7Mws.png" height="450" />
 <img src="http://i.imgur.com/QuK7BpD.png" height="450" />
+<img src="http://i.imgur.com/kJREVpi.png" height="450" />
+<img src="http://i.imgur.com/R9U79lT.png" height="450" />
 
 ## Current functions:
 + **`!hi`**: Says hi to sender
