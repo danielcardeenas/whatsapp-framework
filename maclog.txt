@@ -1,0 +1,48 @@
+------------------------
+Sender:
+Daniel
+Number sender:
+5218114140740-1479526082@g.us
+Real msg:
+!poll asd, 🙋🏻‍♂
+
+Clean msg:
+!poll asd,
+------------------------
+
+------------------------
+Sender:
+Daniel
+Number sender:
+5218114140740-1479526082@g.us
+Real msg:
+!poll asd, 🙋🏻‍♂
+
+Clean msg:
+!poll asd,
+------------------------
+
+------------------------
+Sender:
+Daniel
+Number sender:
+5218114140740-1479526082@g.us
+Real msg:
+!poll asd, 🙋🏻‍♂
+
+Clean msg:
+!poll asd,
+------------------------
+
+------------------------
+Sender:
+Daniel
+Number sender:
+5218114140740-1479526082@g.us
+Real msg:
+!poll asd, 🙋🏻‍♂
+
+Clean msg:
+!poll asd,
+------------------------
+

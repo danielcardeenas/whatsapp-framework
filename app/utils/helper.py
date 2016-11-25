@@ -76,7 +76,11 @@ def log_mac(message_entity):
     conversation = message_entity.getFrom()
 
     # Message
-    message = clean_message(message_entity)
+    message = message_entity.getBody()
+    message = message.strip()
+    message = ''.join(filter(lambda x: x in string.printable, message))
+    message = message.strip()
+    
     dirty = message_entity.getBody().strip()
 
     # Warn
@@ -110,7 +114,7 @@ Cleans all the garbage and non-ASCII characters in the message (idk why whatsapp
 def clean_message(message_entity):
     message = message_entity.getBody()
     message = message.strip()
-    message = ''.join(filter(lambda x: x in string.printable, message))
+    #message = ''.join(filter(lambda x: x in string.printable, message))
     message = message.strip()
     return message
 
@@ -133,6 +137,3 @@ Converts a list into a comma separated string
 def nice_list(list):
     return "[" + ", ".join( str(x) for x in list) + "]"
     
-
-def remove_non_ascii(text):
-    return unidecode(unicode(text, encoding = "utf-8"))

@@ -55,9 +55,8 @@ def handle_global_receivers(message_entity):
 
 def get_receiver(message_entity):
     for receiver in receivers:
-        message = helper.clean_message(message_entity)
-        id_len = len(receiver.identifier)
-        if message[:id_len] == receiver.identifier:
+        message = message_entity.getBody()
+        if receiver.identifier in message: 
             # Matches identifier. Check if it belongs to the same conversation
             if helper.get_conversation(message_entity) == receiver.conversation:
                 return receiver

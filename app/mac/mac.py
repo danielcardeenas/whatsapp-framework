@@ -107,9 +107,12 @@ def send_message(self, message, conversation):
     
 
 def decode_string(message):
-    message = message.encode('latin-1')
-    message = message.decode('utf-8')
-    return message
+    try:
+        message = message.encode('latin-1')
+        message = message.decode('utf-8')
+        return message
+    except:
+        return message
 
 
 def send_image(self, number, path, caption=None):
