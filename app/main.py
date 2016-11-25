@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import string
+
 from app.poll import poll
 from app.mac import mac
 from app.utils import helper
@@ -61,6 +64,7 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         # No command for this so use IA
         #answer = cleverbot_answer(command + " " + predicate)
         answer = wolfram_answer(command + " " + predicate, who_name)
+        answer = ''.join(filter(lambda x: x in string.printable, answer))
         mac.send_message(instance, str(answer), conversation)
         
 def celeverbot_answer(message):
