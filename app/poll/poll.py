@@ -33,14 +33,15 @@ class WAPoll(Receiver):
     def voters_string(self):
         answer = ""
         for voter in self.voters:
-            answer += "\n" + voter.who_name
+            answer += "\n+ " + voter.who_name
             
         return answer
 
 def finish_my_poll(self, creator, conversation):
     poll = poll_from_user_conversation(creator, conversation)
     if poll:
-        message = "*" + poll.title + "*"
+        message = "*" + poll.title + ":*\n"
+        message += "Total: " + str(len(poll.voters))
         message += poll.voters_string()
         mac.send_message(self, message, poll.conversation)
         poll.destroy()
