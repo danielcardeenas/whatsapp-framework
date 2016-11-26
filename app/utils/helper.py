@@ -77,7 +77,7 @@ Logs message to a txt file (maclog.txt, defined above of this class)
 """
 def log_mac(message_entity):
     # Nigga who send the message (first name)
-    who = message_entity.getNotify().split(" ")[0]
+    who = who = sender_name(message_entity)
 
     # Conversation
     conversation = message_entity.getFrom()
