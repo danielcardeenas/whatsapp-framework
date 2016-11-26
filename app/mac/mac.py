@@ -5,6 +5,7 @@ import logging
 import sys
 import time
 import random
+import string
 from yowsup.layers.protocol_presence.protocolentities import *
 from yowsup.layers.protocol_chatstate.protocolentities import *
 from yowsup.layers.protocol_media.protocolentities import *
@@ -103,8 +104,11 @@ def remove_conversation_from_queue(conversation):
 
 def send_message(self, message, conversation):
     message = decode_string(message)
-    self.toLower(helper.make_message(message, conversation))
-    
+    try:
+        self.toLower(helper.make_message(message, conversation))
+    except ValueError:
+        message = ''.join(filter(lambda x: x in string.printable, message))
+        self.toLower(helper.make_message(message, conversation))
 
 def decode_string(message):
     try:

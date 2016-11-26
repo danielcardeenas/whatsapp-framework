@@ -64,23 +64,26 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         # No command for this so use IA
         #answer = cleverbot_answer(command + " " + predicate)
         answer = wolfram_answer(command + " " + predicate, who_name)
-        answer = ''.join(filter(lambda x: x in string.printable, answer))
         mac.send_message(instance, str(answer), conversation)
         
-def celeverbot_answer(message):
-    cb = Cleverbot()
-    answer = cb.ask(message)
-    return answer
     
 def wolfram_answer(message, who=""):
     app_id = "WL543X-974Q523T8P"
     client = wolframalpha.Client(app_id)
-    res = client.query(message)
     try:
+        res = client.query(message)
+        
         if hasattr(res, 'pods'):
             return next(res.results).text
         else:
-            return ("Sorry *" + who + "*, I don't have the answer for that")
+            return cleverbot_answer(message)
+            #return ("Sorry *" + who + "*, I don't have the answer for that")
     except:
-        return ("Sorry *" + who + "*, I don't have the answer for that")
-        
+        return cleverbot_answer(message)
+        #return ("Sorry *" + who + "*, I don't have the answer for that")
+
+
+def cleverbot_answer(message):
+    cb = Cleverbot()
+    answer = cb.ask(message)
+    return answer
