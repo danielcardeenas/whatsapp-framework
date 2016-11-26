@@ -24,7 +24,7 @@ For ex.
 '''
 def handle_message(instance, command, predicate, message_entity, who, conversation):
     # Nigga who send the message
-    who_name = message_entity.getNotify()
+    who_name = helper.sender_name(message_entity)
 
     if command == "hi" or command == "hola":
         answer = "Hola *" + who_name + "*"
@@ -64,7 +64,8 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         # No command for this so use IA
         #answer = cleverbot_answer(command + " " + predicate)
         answer = wolfram_answer(command + " " + predicate, who_name)
-        mac.send_message(instance, str(answer), conversation)
+        #answer = ''.join(filter(lambda x: x in string.printable, answer))
+        mac.send_message(instance, answer, conversation)
         
     
 def wolfram_answer(message, who=""):
@@ -72,7 +73,6 @@ def wolfram_answer(message, who=""):
     client = wolframalpha.Client(app_id)
     try:
         res = client.query(message)
-        
         if hasattr(res, 'pods'):
             return next(res.results).text
         else:

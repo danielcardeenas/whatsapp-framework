@@ -104,19 +104,17 @@ def remove_conversation_from_queue(conversation):
 
 def send_message(self, message, conversation):
     message = decode_string(message)
-    try:
-        self.toLower(helper.make_message(message, conversation))
-    except ValueError:
-        message = ''.join(filter(lambda x: x in string.printable, message))
-        self.toLower(helper.make_message(message, conversation))
+    self.toLower(helper.make_message(message, conversation))
 
 def decode_string(message):
+    print(type(message))
+    print(message)
     try:
-        message = message.encode('latin-1')
-        message = message.decode('utf-8')
+        if type(message) is bytes:
+            message = message.decode(encoding='latin1', errors='ignore')
         return message
     except:
-        return message
+        return message.decode('utf-8','ignore').encode("utf-8")
 
 
 def send_image(self, number, path, caption=None):

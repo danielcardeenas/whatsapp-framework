@@ -12,6 +12,13 @@ def get_who_send(message_entity):
         
     return who
     
+    
+def sender_name(message_entity):
+    name = message_entity.getNotify()
+    name = name.encode('latin-1')
+    name = name.decode('utf-8')
+    return name
+
 
 def get_conversation(message_entity):
     return message_entity.getFrom()
