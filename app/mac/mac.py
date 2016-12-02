@@ -16,6 +16,13 @@ from app.utils import helper
 
 name = "Mac"
 ack_queue = []
+commands = [ 
+    "hi",
+    "poll",
+    "yt",
+    "help",
+    "siono"
+]
 logger = logging.getLogger(__name__)
 
 
@@ -72,7 +79,18 @@ def stop_typing(self, message_entity):
 
 
 def should_write(message_entity):
-    return helper.is_command(message_entity)
+    return helper.is_command(message_entity) and is_in_command_list(message_entity)
+
+
+def is_in_command_list(message_entity):
+    try:
+        command = helper.predicate(message_entity).split(' ', 1)[0]
+        if command in commands:
+            return True
+    except:
+        return False
+        
+    return False
 
 
 def ack_messages(self, conversation):
