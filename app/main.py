@@ -69,7 +69,7 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         
     
 def wolfram_answer(message, who=""):
-    app_id = "WL543X-974Q523T8P"
+    app_id = "xxxxxxxxxxxxx"
     client = wolframalpha.Client(app_id)
     try:
         res = client.query(message)
