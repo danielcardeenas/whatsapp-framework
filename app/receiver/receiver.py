@@ -16,7 +16,7 @@ class Receiver(object):
 
 
 def intercept(self, message_entity):
-    if should_intercept(message_entity):
+    if intercept_with_identifier(message_entity):
         print("Handling identifier")
 
     if receivers_have_global():
@@ -24,7 +24,7 @@ def intercept(self, message_entity):
         handle_global_receivers(message_entity)
         
 
-def should_intercept(message_entity):
+def intercept_with_identifier(message_entity):
     if len(receivers) == 0:
         return False
 
@@ -38,7 +38,6 @@ def should_intercept(message_entity):
     else:
         return False
 
-
 def receivers_have_global():
     for receiver in receivers:
         if receiver.identifier == "__global__":
@@ -50,7 +49,8 @@ def receivers_have_global():
 def handle_global_receivers(message_entity):
     for receiver in receivers:
         if receiver.identifier == "__global__":
-            receiver.fn(message_entity)
+            if helper.get_conversation(message_entity) == receiver.conversation:
+                receiver.fn(message_entity)
 
 
 def get_receiver(message_entity):

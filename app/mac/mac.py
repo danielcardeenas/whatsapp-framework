@@ -107,8 +107,6 @@ def send_message(self, message, conversation):
     self.toLower(helper.make_message(message, conversation))
 
 def decode_string(message):
-    print(type(message))
-    print(message)
     try:
         if type(message) is bytes:
             message = message.decode(encoding='latin1', errors='ignore')

@@ -79,7 +79,8 @@ def wolfram_answer(message, who=""):
             return cleverbot_answer(message)
             #return ("Sorry *" + who + "*, I don't have the answer for that")
     except:
-        return cleverbot_answer(message)
+        return "*?*"
+        #return cleverbot_answer(message)
         #return ("Sorry *" + who + "*, I don't have the answer for that")
 
 

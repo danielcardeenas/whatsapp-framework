@@ -8,7 +8,7 @@ from pytube import YouTube
 
 class WAYoutube(Receiver):
     def __init__(self, instance, creator, conversation, identifier="__global__"):
-        Receiver.__init__(self, identifier, creator, self.handle_answer)
+        Receiver.__init__(self, identifier, conversation, creator, self.handle_answer)
         self.instance = instance
         self.creator = creator
         self.conversation = conversation
