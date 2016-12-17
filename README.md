@@ -12,6 +12,7 @@ Mac is a whatsapp bot I made as a weekend project. The project itself has all yo
 + **`!yt`**: Activates youtube detection
 + **`!siono`**: Random yes or no function. Returns gif and answer from [**yesno.wtf/api**](https://yesno.wtf/api/)
 + **`!poll <title>, <identifier (optional)>`**: Make polls (taking chat as input)
++ **`!poll2 <title>, <cantidates>...`**: Make polls (taking chat as input)
 + **`!<message>`**: If command is not recognized uses IA from ~~Cleverbot~~ Wolframalpha to answer
 
 ## Contributing
