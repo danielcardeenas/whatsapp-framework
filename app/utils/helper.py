@@ -122,7 +122,6 @@ def clean_message(message_entity):
     message = message_entity.getBody()
     message = message.strip()
     #message = ''.join(filter(lambda x: x in string.printable, message))
-    message = message.strip()
     return message
 
 

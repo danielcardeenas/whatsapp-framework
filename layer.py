@@ -54,6 +54,7 @@ class MacLayer(YowInterfaceLayer):
     @ProtocolEntityCallback("message")
     def on_message(self, message_entity):
         if helper.is_text_message(message_entity):
+            print (message_entity.getBody())
 
             # Set received (double v) and add to ack queue
             mac.receive_message(self, message_entity)

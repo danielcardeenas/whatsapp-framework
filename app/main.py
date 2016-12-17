@@ -2,6 +2,7 @@
 import string
 
 from app.poll import poll
+from app.poll2.poll2 import PollKing
 from app.mac import mac
 from app.utils import helper
 from app.yesno.yesno import YesNo
@@ -40,7 +41,11 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
 
     elif command == "yt":
         WAYoutube(instance, who, conversation)
-
+        
+    elif command == "poll2":
+        poll = PollKing(instance, conversation, who, predicate)
+        poll.send_poll()
+        
     elif command == "poll":
         # args = <title>, <identifier (optional)>
         args = [x.strip() for x in predicate.split(',')]
@@ -64,12 +69,11 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         # No command for this so use IA
         #answer = cleverbot_answer(command + " " + predicate)
         answer = wolfram_answer(command + " " + predicate, who_name)
-        #answer = ''.join(filter(lambda x: x in string.printable, answer))
         mac.send_message(instance, answer, conversation)
         
     
 def wolfram_answer(message, who=""):
-    app_id = "xxxxxxxxxxxxx"
+    app_id = "WL543X-974Q523T8P"
     client = wolframalpha.Client(app_id)
     try:
         res = client.query(message)
