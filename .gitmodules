@@ -3,5 +3,5 @@
 	url = https://github.com/danielcardeenas/yowsup
 	
 [submodule "python-axolotl"]
-	path = yowsup
+	path = python-axolotl
 	url = https://github.com/danielcardeenas/python-axolotl
