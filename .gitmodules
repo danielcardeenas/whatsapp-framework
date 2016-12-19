@@ -1,3 +1,7 @@
 [submodule "yowsup"]
 	path = yowsup
 	url = https://github.com/danielcardeenas/yowsup
+	
+[submodule "python-axolotl"]
+	path = yowsup
+	url = https://github.com/danielcardeenas/python-axolotl
