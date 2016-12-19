@@ -43,8 +43,8 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         WAYoutube(instance, who, conversation)
         
     elif command == "poll2":
-        poll = PollKing(instance, conversation, who, predicate)
-        poll.send_poll()
+        poll2 = PollKing(instance, conversation, who, predicate)
+        poll2.send_poll()
         
     elif command == "poll":
         # args = <title>, <identifier (optional)>
