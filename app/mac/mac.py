@@ -80,7 +80,7 @@ def stop_typing(self, message_entity):
 
 
 def should_write(message_entity):
-    return helper.is_command(message_entity) and is_in_command_list(message_entity)
+    return helper.is_command(message_entity) #and is_in_command_list(message_entity)
 
 
 def is_in_command_list(message_entity):
