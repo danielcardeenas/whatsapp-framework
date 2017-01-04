@@ -23,6 +23,7 @@ def ranks(smash):
 ####################################################################
 def query(query):
     try:
+        print(query)
         cursor = conn.execute(query)
         columns = list(map(lambda x: x[0], cursor.description))
         t = PrettyTable(columns)

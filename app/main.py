@@ -46,7 +46,8 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
     elif command == "elo":
         args = [x.strip() for x in predicate.split(',')]
         if args[0] == "query":
-            results = elo.query(args[1])
+            query = predicate.split(', ', 1)[-1]
+            results = elo.query(query)
             mac.send_message(instance, results, conversation)
         else:
             ranks = elo.ranks(predicate)
