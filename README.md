@@ -1,3 +1,4 @@
+
 # Mac
 Mac is a whatsapp bot I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
@@ -6,6 +7,7 @@ Mac is a whatsapp bot I made as a weekend project. The project itself has all yo
 <img src="http://i.imgur.com/kJREVpi.png" height="450" />
 <img src="http://i.imgur.com/R9U79lT.png" height="450" />
 <img src="http://i.imgur.com/Ll7En5z.png" height="450" />
+<img src="http://i.imgur.com/O6LRuJM.png" height="450" />
 
 ## Current functions:
 + **`!hi`**: Says hi to sender
