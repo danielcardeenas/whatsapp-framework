@@ -22,7 +22,8 @@ commands = [
     "yt",
     "help",
     "siono",
-    "poll2"
+    "poll2",
+    "elo"
 ]
 logger = logging.getLogger(__name__)
 

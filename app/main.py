@@ -7,7 +7,7 @@ from app.mac import mac
 from app.utils import helper
 from app.yesno.yesno import YesNo
 from app.youtube.mac_youtube import WAYoutube
-from app.elo import elo
+from app.elo import elo, match
 
 import wolframalpha
 from cleverbot import Cleverbot
@@ -44,8 +44,18 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         WAYoutube(instance, who, conversation)
         
     elif command == "elo":
-        ranks = elo.get_ranks(predicate)
-        mac.send_message(instance, str(ranks), conversation)
+        ranks = elo.ranks(predicate)
+        mac.send_message(instance, ranks, conversation)
+        
+    elif command == "match":
+        args = [x.strip() for x in predicate.split(',')]
+        if len(args) <= 0:
+            mac.send_message(instance, "missing game and results", conversation)
+        elif len(args) == 1:
+            mac.send_message(instance, "missgin results", conversation)
+        elif len(args) >= 2:
+            confirmation = match.record_match(args[0], args[1])
+            mac.send_message(instance, confirmation, conversation)
         
     elif command == "poll2":
         poll2 = PollKing(instance, conversation, who, predicate)
