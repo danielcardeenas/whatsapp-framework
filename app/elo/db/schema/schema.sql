@@ -38,3 +38,10 @@ CREATE TABLE smash4 (
   id_player INTEGER NOT NULL,
   FOREIGN KEY(id_player) REFERENCES players(id)
 );
+
+CREATE TABLE matches (
+  id INTEGER PRIMARY KEY,
+  winners TEXT NOT NULL,
+  losers TEXT NOT NULL,
+  game TEXT NOT NULL
+);

@@ -17,6 +17,27 @@ def ranks(smash):
         return brawl_rank();
     elif smash.lower() == 'smash4':
         return smash4_rank();
+        
+        
+# Query
+####################################################################
+def query(query):
+    try:
+        cursor = conn.execute(query)
+        columns = list(map(lambda x: x[0], cursor.description))
+        t = PrettyTable(columns)
+        index = 0
+        for row in cursor:
+            t.add_row(row)
+            index += 1
+            
+        return str(t)
+        
+    except sqlite3.OperationalError as ex:
+        return str(ex)
+    except:
+        return "Invalid query"
+
 
 # Smash N64
 ####################################################################
@@ -34,16 +55,7 @@ def n64_players():
     
 
 def n64_save_rank(teams):
-    query = ""
-    for team in teams:
-        for player in team:
-            query += "update n64 "
-            query += "set mu = " + str(player.rank.mu) + ", sigma = " + str(player.rank.sigma) + ", "
-            query += "last_mu = " + str(player.last_mu) + " "
-            query += "where id_player = " + str(player.id_player) + ";"
-            query += "\n"
-            
-    conn.executescript(query)
+    save_rank(teams, "n64")
     
 # Melee
 ####################################################################
@@ -61,16 +73,7 @@ def melee_players():
     
     
 def melee_save_rank(teams):
-    query = ""
-    for team in teams:
-        for player in team:
-            query += "update melee "
-            query += "set mu = " + str(player.rank.mu) + ", sigma = " + str(player.rank.sigma) + ", "
-            query += "last_mu = " + str(player.last_mu) + " "
-            query += "where id_player = " + str(player.id_player) + ";"
-            query += "\n"
-            
-    conn.executescript(query)
+    save_rank(teams, "melee")
     
 # Brawl
 ####################################################################
@@ -88,16 +91,7 @@ def brawl_players():
     
     
 def brawl_save_rank(teams):
-    query = ""
-    for team in teams:
-        for player in team:
-            query += "update brawl "
-            query += "set mu = " + str(player.rank.mu) + ", sigma = " + str(player.rank.sigma) + ", "
-            query += "last_mu = " + str(player.last_mu) + " "
-            query += "where id_player = " + str(player.id_player) + ";"
-            query += "\n"
-            
-    conn.executescript(query)
+    save_rank(teams, "brawl")
     
 # Smash4
 ####################################################################
@@ -112,25 +106,49 @@ def smash4_players():
         
     return players
     
-    
+
 def smash4_save_rank(teams):
+    save_rank(teams, "smash4")
+
+
+# Common functions
+####################################################################
+def save_rank(teams, smash):
     query = ""
     for team in teams:
         for player in team:
-            query += "update smash4 "
+            query += "update " + smash + " "
             query += "set mu = " + str(player.rank.mu) + ", sigma = " + str(player.rank.sigma) + ", "
             query += "last_mu = " + str(player.last_mu) + " "
             query += "where id_player = " + str(player.id_player) + ";"
             query += "\n"
             
     conn.executescript(query)
-
-
+    
+    save_match(teams, smash)
+    
+    
+def save_match(teams, smash):
+    # First team is the winner
+    # Every team after first is loser
+    winners = teams[0]
+    losers = teams[1:]
+    
+    winners_text = ' '.join([str(x.name) for x in winners])
+    losers_text = ' '.join([j.name for i in losers for j in i])
+    
+    query = "insert into matches(winners, losers, game) "
+    query += "values ('" + winners_text + "', '" + losers_text + "', '" + smash + "');"
+    
+    print(query)
+    conn.executescript(query)
+    
+    
 def make_table(players, smash_name):
     t = PrettyTable(['🔰', 'Elo', 'Player'])
     index = 0
     for player in players:
-        t.add_row([player_status(player, index), '*{0:.2f}*'.format(player.rank.mu), player.name])
+        t.add_row([player_status(player, index), '*{0:.2f}*'.format(player.rank.mu), '{s:{c}^{n}}'.format(s=player.name, n=5, c=' ')])
         index += 1
         
     return "*" + smash_name + " ranking:*\n" + str(t)

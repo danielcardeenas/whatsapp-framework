@@ -44,8 +44,13 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         WAYoutube(instance, who, conversation)
         
     elif command == "elo":
-        ranks = elo.ranks(predicate)
-        mac.send_message(instance, ranks, conversation)
+        args = [x.strip() for x in predicate.split(',')]
+        if args[0] == "query":
+            results = elo.query(args[1])
+            mac.send_message(instance, results, conversation)
+        else:
+            ranks = elo.ranks(predicate)
+            mac.send_message(instance, ranks, conversation)
         
     elif command == "match":
         args = [x.strip() for x in predicate.split(',')]
