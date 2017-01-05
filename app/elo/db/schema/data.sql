@@ -1,3 +1,4 @@
+-- Values
 insert into n64 (mu, sigma, id_player) values(25.0, 8.33333333333333, 1);
 insert into n64 (mu, sigma, id_player) values(25.0, 8.33333333333333, 2);
 insert into n64 (mu, sigma, id_player) values(25.0, 8.33333333333333, 3);

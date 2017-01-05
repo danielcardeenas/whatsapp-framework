@@ -7,7 +7,7 @@ players = []
 
 def record_match(smash, text):
     # Verify smash
-    smash_name = parse_smash(smash)
+    smash_name = elo.parse_game(smash)
     if smash_name is None:
         return "Invalid smash"
     
@@ -51,16 +51,17 @@ def match_confirmation(teams, smash):
     
 
 def make_match(teams, smash):
-    results_teams = [[] for i in range(len(teams))]
-    #Fill results with loses (1) except first one. (0) = win
-    result = [1 for i in range(len(teams))]
-    result[0] = 0
-    
+    #Fill results with loses (1, 2, 3...) except first one. (0) = win
+    results = [0 for i in range(len(teams))]
+    for index, item in enumerate(results):
+        results[index] = index
+        
     # Extract rank object of each player
     rating_teams = extract_ranks(teams)
     
-    env = TrueSkill() 
-    results_teams = env.rate(rating_teams, ranks=result)
+    env = TrueSkill()
+    results_teams = [[] for i in range(len(teams))]
+    results_teams = env.rate(rating_teams, ranks=results)
     
     # Map results back to teams list
     for rank_team, team in zip(results_teams, teams):
@@ -72,14 +73,7 @@ def make_match(teams, smash):
             
             
 def save_ranks(teams, smash):
-    if smash.lower() == 'n64':
-        elo.n64_save_rank(teams)
-    elif smash.lower() == 'melee':
-        elo.melee_save_rank(teams)
-    elif smash.lower() == 'brawl':
-        elo.brawl_save_rank(teams)
-    elif smash.lower() == 'smash4':
-        elo.smash4_save_rank(teams)
+    elo.save_rank(teams, smash)
 
 
 def extract_ranks(teams):
@@ -110,25 +104,5 @@ def get_player(smash, name):
 def get_players(smash):
     if not elo.is_valid_smash(smash):
         return None
-    
-    if smash.lower() == 'n64':
-        return elo.n64_players();
-    elif smash.lower() == 'melee':
-        return elo.melee_players();
-    elif smash.lower() == 'brawl':
-        return elo.brawl_players();
-    elif smash.lower() == 'smash4':
-        return elo.smash4_players();
-        
-def parse_smash(smash):
-    if not elo.is_valid_smash(smash):
-        return None
-    
-    if smash.lower() == 'n64':
-        return "Smash N64";
-    elif smash.lower() == 'melee':
-        return "Smash Melee";
-    elif smash.lower() == 'brawl':
-        return "Smash Brawl";
-    elif smash.lower() == 'smash4':
-        return "Smash 4";
+    else:
+        return elo.get_players(smash)

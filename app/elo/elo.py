@@ -3,20 +3,13 @@ from trueskill import Rating
 from app.elo.player import Player
 import sqlite3
 
-conn = sqlite3.connect('app/elo/db/elo.db')
+conn = sqlite3.connect('app/elo/db/trueskill.db')
 
 def ranks(smash):
     if not is_valid_smash(smash):
         return "Invalid smash"
-    
-    if smash.lower() == 'n64':
-        return n64_rank();
-    elif smash.lower() == 'melee':
-        return melee_rank();
-    elif smash.lower() == 'brawl':
-        return brawl_rank();
-    elif smash.lower() == 'smash4':
-        return smash4_rank();
+    else:
+        return rank(smash)
         
         
 # Query
@@ -40,78 +33,6 @@ def query(query):
         return "Invalid query"
 
 
-# Smash N64
-####################################################################
-def n64_rank():
-    players = n64_players()
-    return make_table(players, "Smash N64")
-        
-
-def n64_players():
-    players = []
-    for row in conn.execute('select mu, sigma, name, players.id, last_mu from players join n64 on players.id = n64.id_player order by mu desc'):                                                                                                                                           
-        players.append(Player(row[2], row[3], row[4], Rating(mu=row[0], sigma=row[1])))
-        
-    return players
-    
-
-def n64_save_rank(teams):
-    save_rank(teams, "n64")
-    
-# Melee
-####################################################################
-def melee_rank():
-    players = melee_players()
-    return make_table(players, "Smash Melee")
-        
-
-def melee_players():
-    players = []
-    for row in conn.execute('select mu, sigma, name, players.id, last_mu from players join melee on players.id = melee.id_player order by mu desc'):                                                                                                                                           
-        players.append(Player(row[2], row[3], row[4], Rating(mu=row[0], sigma=row[1])))
-        
-    return players
-    
-    
-def melee_save_rank(teams):
-    save_rank(teams, "melee")
-    
-# Brawl
-####################################################################
-def brawl_rank():
-    players = brawl_players()
-    return make_table(players, "Smash Brawl")
-        
-
-def brawl_players():
-    players = []
-    for row in conn.execute('select mu, sigma, name, players.id, last_mu from players join brawl on players.id = brawl.id_player order by mu desc'):                                                                                                                                           
-        players.append(Player(row[2], row[3], row[4], Rating(mu=row[0], sigma=row[1])))
-        
-    return players
-    
-    
-def brawl_save_rank(teams):
-    save_rank(teams, "brawl")
-    
-# Smash4
-####################################################################
-def smash4_rank():
-    players = smash4_players()
-    return make_table(players, "Smash4")
-
-def smash4_players():
-    players = []
-    for row in conn.execute('select mu, sigma, name, players.id, last_mu from players join smash4 on players.id = smash4.id_player order by mu desc'):                                                                                                                                           
-        players.append(Player(row[2], row[3], row[4], Rating(mu=row[0], sigma=row[1])))
-        
-    return players
-    
-
-def smash4_save_rank(teams):
-    save_rank(teams, "smash4")
-
-
 # Common functions
 ####################################################################
 def save_rank(teams, smash):
@@ -127,6 +48,19 @@ def save_rank(teams, smash):
     conn.executescript(query)
     
     save_match(teams, smash)
+    
+
+def rank(game):
+    players = get_players(game)
+    return make_table(players, parse_game(game))
+
+
+def get_players(game):
+    players = []
+    for row in conn.execute('select mu, sigma, name, players.id, last_mu from players join ' + game + ' on players.id = ' + game + '.id_player order by mu desc'):                                                                                                                                           
+        players.append(Player(row[2], row[3], row[4], Rating(mu=row[0], sigma=row[1])))
+        
+    return players
     
     
 def save_match(teams, smash):
@@ -174,3 +108,30 @@ def is_valid_smash(smash):
         return True
     elif smash.lower() == 'brawl':
         return True
+    else:
+        return False
+        
+        
+def is_valid_game(smash):
+    if is_valid_smash(smash):
+        return True
+    elif smash.lower() == 'basket':
+        return True
+    else:
+        return False
+        
+        
+def parse_game(game):
+    if not is_valid_smash(game):
+        return None
+    
+    if game.lower() == 'n64':
+        return "Smash N64";
+    elif game.lower() == 'melee':
+        return "Smash Melee";
+    elif game.lower() == 'brawl':
+        return "Smash Brawl";
+    elif game.lower() == 'smash4':
+        return "Smash 4";
+    #elif game.lower() == 'basket':
+    #    return "Basket"

@@ -18,7 +18,7 @@ from cleverbot import Cleverbot
 This method gets all you need in a command message.
 For ex.
     In group "ITS", daniel sent "!hola a todos"
-    @self = the instance (You need this to send reply with mac -> mac.send_message(instance,...))
+    @instance = the instance (You need this to send reply with mac -> mac.send_message(instance,...))
     @command = What comes after '!'. In this case "hola"
     @predicate = What comes after command. In this case "a todos"
     @who = The whatsapp user object who sent this. In this case daniel (check below for retrieving the name)
@@ -60,8 +60,15 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         elif len(args) == 1:
             mac.send_message(instance, "missgin results", conversation)
         elif len(args) >= 2:
-            confirmation = match.record_match(args[0], args[1])
-            mac.send_message(instance, confirmation, conversation)
+            if elo.is_valid_smash(args[0]) and (who == helper.me):
+                confirmation = match.record_match(args[0], args[1])
+                mac.send_message(instance, confirmation, conversation)
+            elif elo.is_valid_smash(args[0]) and (who != helper.me):
+                response = "@" + who_name + ", not alllowed"
+                mac.send_message(instance, response, conversation)
+            else:
+                confirmation = match.record_match(args[0], args[1])
+                mac.send_message(instance, confirmation, conversation)
         
     elif command == "poll2":
         poll2 = PollKing(instance, conversation, who, predicate)

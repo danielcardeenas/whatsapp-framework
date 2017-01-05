@@ -4,6 +4,7 @@ from yowsup.layers.protocol_messages.protocolentities import *
 import string
 
 log_file = "maclog.txt"
+me = "5218114140740@s.whatsapp.net"
 
 def get_who_send(message_entity):
     who = message_entity.getFrom()
