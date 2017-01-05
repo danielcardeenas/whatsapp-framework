@@ -16,6 +16,8 @@ Mac is a whatsapp bot I made as a weekend project. The project itself has all yo
 + **`!poll <title>, <identifier (optional)>`**: Make polls (taking chat as input)
 + **`!poll2 <title>, <cantidates>...`**: Make polls (taking chat as input)
 + **`!<message>`**: If command is not recognized uses IA from ~~Cleverbot~~ Wolframalpha to answer
++ **`!elo <game>`**: Retrieves rankings of the game
++ **`!match <game>, <results>`**: Records a match to the specified game
 
 ## Contributing
 Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
