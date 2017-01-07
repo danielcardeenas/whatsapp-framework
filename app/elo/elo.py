@@ -6,7 +6,7 @@ import sqlite3
 conn = sqlite3.connect('app/elo/db/trueskill.db')
 
 def ranks(smash):
-    if not is_valid_smash(smash):
+    if not is_valid_game(smash):
         return "Invalid smash"
     else:
         return rank(smash)
@@ -122,7 +122,7 @@ def is_valid_game(smash):
         
         
 def parse_game(game):
-    if not is_valid_smash(game):
+    if not is_valid_game(game):
         return None
     
     if game.lower() == 'n64':
@@ -133,5 +133,5 @@ def parse_game(game):
         return "Smash Brawl";
     elif game.lower() == 'smash4':
         return "Smash 4";
-    #elif game.lower() == 'basket':
-    #    return "Basket"
+    elif game.lower() == 'basket':
+        return "Basket"

@@ -102,7 +102,7 @@ def get_player(smash, name):
 
 
 def get_players(smash):
-    if not elo.is_valid_smash(smash):
+    if not elo.is_valid_game(smash):
         return None
     else:
         return elo.get_players(smash)
