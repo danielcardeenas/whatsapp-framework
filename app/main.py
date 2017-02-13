@@ -8,6 +8,7 @@ from app.utils import helper
 from app.yesno.yesno import YesNo
 from app.youtube.mac_youtube import WAYoutube
 from app.elo import elo, match
+from app.trip import trip
 
 import wolframalpha
 from cleverbot import Cleverbot
@@ -42,6 +43,10 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
 
     elif command == "yt":
         WAYoutube(instance, who, conversation)
+        
+    elif command == "✔":
+        response = match.confirm_match()
+        mac.send_message(instance, response, conversation)
         
     elif command == "elo":
         args = [x.strip() for x in predicate.split(',')]
@@ -93,6 +98,10 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
                 identifier = args[1]
                 basic_boll = poll.WAPoll(instance, conversation, who, title, identifier)
                 basic_boll.send_poll()
+                
+    elif command == "trip":
+        mac.send_message(instance, trip.print_debts(), conversation)
+        
     else:
         # No command for this so use IA
         #answer = cleverbot_answer(command + " " + predicate)

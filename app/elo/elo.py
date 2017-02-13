@@ -117,6 +117,8 @@ def is_valid_game(smash):
         return True
     elif smash.lower() == 'basket':
         return True
+    elif smash.lower() == 'test':
+        return True
     else:
         return False
         
@@ -135,3 +137,5 @@ def parse_game(game):
         return "Smash 4";
     elif game.lower() == 'basket':
         return "Basket"
+    elif game.lower() == 'test':
+        return "Test"

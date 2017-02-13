@@ -4,6 +4,8 @@ from app.elo.player import Player
 import sqlite3
 
 players = []
+check = "✔"
+match_to_confirm = ()
 
 def record_match(smash, text):
     # Verify smash
@@ -27,6 +29,7 @@ def record_match(smash, text):
         index += 1
         
     make_match(teams, smash)
+    #match_to_confirm = (teams, smash)
     return match_confirmation(teams, smash_name)
 
 def match_confirmation(teams, smash):
@@ -49,6 +52,13 @@ def match_confirmation(teams, smash):
         
     return msg
     
+    
+def confirm_match():
+    print("Match: ", match_to_confirm)
+    if match_to_confirm is None:
+        return "No hay partida por confirmar"
+    else:
+        make_match(match_to_confirm[0], match_to_confirm[1])
 
 def make_match(teams, smash):
     #Fill results with loses (1, 2, 3...) except first one. (0) = win
@@ -70,6 +80,8 @@ def make_match(teams, smash):
             player.rank = rank
             
     save_ranks(teams, smash)
+    match_to_confirm = None
+    return "Partida registrada"
             
             
 def save_ranks(teams, smash):
