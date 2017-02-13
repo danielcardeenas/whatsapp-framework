@@ -2,6 +2,10 @@
 # Mac
 Mac is a whatsapp bot I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
+### How to use:
+Inside file run.py change your credentials then run the project.
+To get your whatsapp credentials you need to register a number using yowsup-cli
+
 ### Screenshots:
 <img src="http://i.imgur.com/QuK7BpD.png" height="450" />
 <img src="http://i.imgur.com/kJREVpi.png" height="450" />
