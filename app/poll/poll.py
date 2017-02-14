@@ -16,7 +16,8 @@ class WAPoll(Receiver):
     def handle_answer(self, message_entity=None):
         if message_entity is not None:
             voter = Voter(message_entity)
-            self.voters.append(voter)
+            if not any(voter.who == v.who for v in self.voters):
+                self.voters.append(voter)
             print("Got vote")
 
     def send_poll(self):
