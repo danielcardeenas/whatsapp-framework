@@ -12,17 +12,26 @@ from layer import MacLayer
 # logging.basicConfig(level=logging.DEBUG)
 
 # Config
-credentials = ("xxxxxxxxxxxxxxx", "xxxxxxxxxxxxxx")
+credentials = ("5218118478492", "5c+7Yr5pCvJVUtN45ty3A+QEVkE=")
 encryption = True
 
-contacts_numbers = ["xxxxxxxxxxxxxxx",
-                    "xxxxxxxxxxxxxx",
-                    "xxxxxxxxxxx"]
+contacts_numbers = ["5218114140740",
+                    "5218115112713",
+                    "5218116559100",
+                    "5218111834751",
+                    "5218116133161",
+                    "5218116616897",
+                    "5218114901244",
+                    "5218118419493"]
 contacts = {
-    "xxxxxxxxxx": "Daniel Cardenas",
-    "xxxx": "Otniel",
-    "sxxxsss": "Aaron de Leon",
-    "xx": "Kof"
+    "5218114140740": "Daniel Cardenas",
+    "5218115112713": "Otniel",
+    "5218116559100": "Aaron de leon",
+    "5218111834751": "Kof",
+    "5218116133161": "Lucario",
+    "5218116616897": "Berni",
+    "5218114901244": "Casta",
+    "5218118419493": "Luis Muphu"
 }
 
 

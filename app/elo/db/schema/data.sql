@@ -85,7 +85,25 @@ insert into smash4 (mu, sigma, id_player) values(25.0, 8.33333333333333, 14);
 insert into smash4 (mu, sigma, id_player) values(25.0, 8.33333333333333, 15);
 insert into smash4 (mu, sigma, id_player) values(25.0, 8.33333333333333, 16);
 
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 1);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 2);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 3);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 4);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 5);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 6);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 7);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 8);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 9);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 10);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 11);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 12);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 13);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 14);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 15);
+insert into mp2 (mu, sigma, id_player) values(25.0, 8.33333333333333, 16);
+
 update n64 set last_mu = 25.0 where last_mu is null or last_mu = '';
 update melee set last_mu = 25.0 where last_mu is null or last_mu = '';
 update brawl set last_mu = 25.0 where last_mu is null or last_mu = '';
 update smash4 set last_mu = 25.0 where last_mu is null or last_mu = '';
+update mp2 set last_mu = 25.0 where last_mu is null or last_mu = '';

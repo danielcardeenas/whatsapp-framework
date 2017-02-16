@@ -11,7 +11,7 @@ def record_match(smash, text):
     # Verify smash
     smash_name = elo.parse_game(smash)
     if smash_name is None:
-        return "Invalid smash"
+        return "Invalid game"
     
     _teams = [x.strip() for x in text.split('-')]
     teams = [[] for i in range(len(_teams))]
