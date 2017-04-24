@@ -106,7 +106,10 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         # No command for this so use IA
         #answer = cleverbot_answer(command + " " + predicate)
         answer = wolfram_answer(command + " " + predicate, who_name)
-        mac.send_message(instance, answer, conversation)
+        if answer == "*?*":
+            return
+        else:
+            mac.send_message(instance, answer, conversation)
         
     
 def wolfram_answer(message, who=""):
@@ -114,6 +117,7 @@ def wolfram_answer(message, who=""):
     client = wolframalpha.Client(app_id)
     try:
         res = client.query(message)
+        print("Answer:", res)
         if hasattr(res, 'pods'):
             return next(res.results).text
         else:
