@@ -117,7 +117,6 @@ def wolfram_answer(message, who=""):
     client = wolframalpha.Client(app_id)
     try:
         res = client.query(message)
-        print("Answer:", res)
         if hasattr(res, 'pods'):
             return next(res.results).text
         else:

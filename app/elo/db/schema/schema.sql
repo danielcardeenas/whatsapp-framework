@@ -3,7 +3,7 @@ CREATE TABLE players (
   name TEXT NOT NULL
 );
 
-CREATE TABLE n64 (
+CREATE TABLE smash64 (
   id INTEGER PRIMARY KEY,
   mu REAL NOT NULL,
   sigma REAL NOT NULL,

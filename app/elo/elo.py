@@ -100,7 +100,7 @@ def player_status(player, position):
         return "⬇"
 
 def is_valid_smash(smash):
-    if smash.lower() == 'n64':
+    if smash.lower() == 'smash64':
         return True
     elif smash.lower() == 'melee':
         return True
@@ -115,8 +115,6 @@ def is_valid_smash(smash):
 def is_valid_game(smash):
     if is_valid_smash(smash):
         return True
-    elif smash.lower() == 'basket':
-        return True
     elif smash.lower() == 'mp2':
         return True
     else:
@@ -127,7 +125,7 @@ def parse_game(game):
     if not is_valid_game(game):
         return None
     
-    if game.lower() == 'n64':
+    if game.lower() == 'smash64':
         return "Smash N64";
     elif game.lower() == 'melee':
         return "Smash Melee";
@@ -135,7 +133,5 @@ def parse_game(game):
         return "Smash Brawl";
     elif game.lower() == 'smash4':
         return "Smash 4";
-    elif game.lower() == 'basket':
-        return "Basket"
     elif game.lower() == 'mp2':
         return "Mario Party 2"

@@ -6,7 +6,7 @@ import sys
 
 # Main dependences
 # Custom dependences
-deps = ['requests', 'cleverbot', 'pytube', 'moviepy', 'wolframalpha', 'prettytable', 'trueskill']
+deps = ['requests', 'cleverbot', 'pytube', 'moviepy', 'wolframalpha', 'prettytable', 'trueskill', 'deuces']
 
 if sys.version_info < (2,7):
     deps += ['importlib']
@@ -24,7 +24,7 @@ setup(
     version=1,
     url='http://github.com/danielcardeenas/MacBot',
     license='GPL-3+',
-    author='Daniel Cárdenas',
+    author='Daniel Cardenas',
     tests_require=[],
     install_requires = deps,
     #cmdclass={'test': PyTest},
