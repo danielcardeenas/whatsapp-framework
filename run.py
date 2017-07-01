@@ -12,7 +12,7 @@ from layer import MacLayer
 # logging.basicConfig(level=logging.DEBUG)
 
 # Config
-credentials = ("5218118478492", "5c+7Yr5pCvJVUtN45ty3A+QEVkE=")
+credentials = ("YOUR_PHONE", "YOUR_PASSWORD")
 encryption = True
 
 contacts_numbers = ["5218114140740",
