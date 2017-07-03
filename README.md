@@ -25,12 +25,11 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 ```
 
 ### Modules examples:
-![](http://i.imgur.com/QuK7BpD.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/QuK7BpD.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/kJREVpi.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/R9U79lT.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/Ll7En5z.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/O6LRuJM.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/kJvah19.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/ZRlk5Uj.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/JmPbPXB.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/L4ebZql.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/B2igFQd.png "Logo Title Text 1")
 
 ## Current functions:
 + **`!hi`**: Says hi to sender
