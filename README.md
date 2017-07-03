@@ -2,7 +2,7 @@
 
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
-### Setup:
+## Setup:
 1. Clone this repository (with submodules)
 ```sh
 > git clone --recursive https://github.com/danielcardeenas/whatsapp-framework.git
@@ -17,6 +17,7 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 
 3. Register your phone and get a password with yowsup-cli: [_Documentation_](https://github.com/tgalal/yowsup/wiki/yowsup-cli-2.0)
 
+
 4. Open **config.py** and add set credentials
 
 5. Ready to go! (Now you can add your own whatsapp modules)
@@ -24,14 +25,14 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 > ./start
 ```
 
-### Modules examples:
-![alt text](http://i.imgur.com/kJvah19.png "Youtube module")
-![alt text](http://i.imgur.com/ZRlk5Uj.png "Poll module")
-![alt text](http://i.imgur.com/JmPbPXB.png "Elo module")
-![alt text](http://i.imgur.com/L4ebZql.png "Multiple poll module")
-![alt text](http://i.imgur.com/B2igFQd.png "Wolfram alpha module")
+## Modules examples:
+![alt text](http://i.imgur.com/kJvah19.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/ZRlk5Uj.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/JmPbPXB.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/L4ebZql.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/B2igFQd.png "Logo Title Text 1")
 
-## Current functions:
+##### Current modules:
 + **`!hi`**: Says hi to sender
 + **`!yt`**: Activates youtube detection
 + **`!siono`**: Random yes or no function. Returns gif and answer from [**yesno.wtf/api**](https://yesno.wtf/api/)
