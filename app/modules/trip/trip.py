@@ -1,8 +1,8 @@
 from app.mac import mac
-from app.trip.person import Person
+from app.modules.trip.person import Person
 import sqlite3
 
-conn = sqlite3.connect('app/trip/db/gdl.db')
+conn = sqlite3.connect('app/modules/trip/db/gdl.db')
 
 def get_debters():
     people = []

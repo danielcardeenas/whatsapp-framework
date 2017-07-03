@@ -22,7 +22,7 @@ else:
 setup(
     name='mac bot',
     version=1,
-    url='http://github.com/danielcardeenas/MacBot',
+    url='http://github.com/danielcardeenas/whatsapp-framework',
     license='GPL-3+',
     author='Daniel Cardenas',
     tests_require=[],

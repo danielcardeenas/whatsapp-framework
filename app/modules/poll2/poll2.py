@@ -2,7 +2,7 @@ from app.utils import helper
 from app.receiver.receiver import Receiver
 from app.receiver import receiver
 from app.mac import mac
-from app.poll.voter import Voter
+from app.modules.poll.voter import Voter
 
 identifiers = ["0⃣", "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣", "🔟"]
 class PollKing(Receiver):
