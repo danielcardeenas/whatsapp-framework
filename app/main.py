@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import string
 
-from app.modules.poll import poll
-from app.modules.poll2.poll2 import PollKing
 from app.mac import mac
 from app.utils import helper
-from app.modules.yesno.yesno import YesNo
-from app.modules.youtube.mac_youtube import WAYoutube
-from app.modules.elo import elo, match
-from app.modules.trip import trip
+from modules.poll import poll
+from modules.poll2.poll2 import PollKing
+from modules.yesno.yesno import YesNo
+from modules.youtube.mac_youtube import WAYoutube
+from modules.elo import elo, match
+from modules.trip import trip
 
 import wolframalpha
 

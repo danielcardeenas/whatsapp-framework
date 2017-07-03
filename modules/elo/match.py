@@ -1,6 +1,6 @@
 from trueskill import TrueSkill, Rating
-from app.modules.elo import elo
-from app.modules.elo.player import Player
+from modules.elo import elo
+from modules.elo.player import Player
 import sqlite3
 
 players = []

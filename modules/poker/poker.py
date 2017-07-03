@@ -1,9 +1,9 @@
-from app.libs.deuces import Card
+from modules.libs.deuces import Card
 from app.utils import helper
 from app.receiver.receiver import Receiver
 from app.receiver import receiver
-from app.modules.mac import mac
-from app.modules.poll.voter import Voter
+from app.mac import mac
+from modules.poll.voter import Voter
 
 class Poker(Receiver):
     def __init__(self, instance, conversation, creator, identifier="#"):
