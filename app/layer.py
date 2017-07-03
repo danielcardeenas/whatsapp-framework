@@ -28,7 +28,7 @@ class MacLayer(YowInterfaceLayer):
     @ProtocolEntityCallback("success")
     def on_success(self, success_entity):
         contacts = self.getProp(self.__class__.PROP_CONTACTS, [])
-        #print("Sync contacts sucess: " + helper.nice_list(contacts))
+        print("Sync contacts sucess: " + helper.nice_list(contacts))
         contact_entity = GetSyncIqProtocolEntity(contacts)
         self._sendIq(contact_entity, self.on_sync_result, self.on_sync_error)
 

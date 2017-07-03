@@ -6,7 +6,7 @@ from yowsup.stacks import YowStackBuilder
 from yowsup.layers import YowLayerEvent
 from yowsup.layers.network import YowNetworkLayer
 
-from layer import MacLayer
+from app.layer import MacLayer
 
 # Uncomment to log
 # logging.basicConfig(level=logging.DEBUG)
@@ -14,27 +14,6 @@ from layer import MacLayer
 # Config
 credentials = (config.credentials['phone'], config.credentials['password'])
 encryption = True
-
-contacts_numbers = ["5218114140740",
-                    "5218115112713",
-                    "5218116559100",
-                    "5218111834751",
-                    "5218116133161",
-                    "5218116616897",
-                    "5218114901244",
-                    "5218118419493",
-                    "5218123198861"]
-contacts = {
-    "5218114140740": "Daniel Cardenas",
-    "5218115112713": "Otniel",
-    "5218116559100": "Aaron de leon",
-    "5218111834751": "Kof",
-    "5218116133161": "Lucario",
-    "5218116616897": "Berni",
-    "5218114901244": "Casta",
-    "5218118419493": "Luis Muphu",
-    "5218123198861": "Idk"
-}
 
 
 class MacStack(object):
@@ -47,7 +26,7 @@ class MacStack(object):
             .build()
 
         self.stack.setCredentials(credentials)
-        self.stack.setProp(MacLayer.PROP_CONTACTS, contacts_numbers)
+        self.stack.setProp(MacLayer.PROP_CONTACTS,  list(config.contacts.keys()))
         self.stack.setProp(PROP_IDENTITY_AUTOTRUST, True)
 
     def start(self):

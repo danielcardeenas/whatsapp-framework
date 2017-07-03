@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import string
 
-from app.mac import mac
-from app.utils import helper
 from modules.poll import poll
 from modules.poll2.poll2 import PollKing
+from app.mac import mac
+from app.utils import helper
 from modules.yesno.yesno import YesNo
 from modules.youtube.mac_youtube import WAYoutube
 from modules.elo import elo, match
