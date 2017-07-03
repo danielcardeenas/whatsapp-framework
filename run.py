@@ -1,4 +1,4 @@
-import sys, logging
+import sys, logging, config
 
 from yowsup.layers.auth import AuthError
 from yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
@@ -12,7 +12,7 @@ from layer import MacLayer
 # logging.basicConfig(level=logging.DEBUG)
 
 # Config
-credentials = ("YOUR_PHONE", "YOUR_PASSWORD")
+credentials = (config.credentials['phone'], config.credentials['password'])
 encryption = True
 
 contacts_numbers = ["5218114140740",

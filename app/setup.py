@@ -6,7 +6,7 @@ import sys
 
 # Main dependences
 # Custom dependences
-deps = ['requests', 'cleverbot', 'pytube', 'moviepy', 'wolframalpha', 'prettytable', 'trueskill', 'deuces']
+deps = ['requests', 'pytube', 'moviepy', 'wolframalpha', 'prettytable', 'trueskill', 'deuces']
 
 if sys.version_info < (2,7):
     deps += ['importlib']

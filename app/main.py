@@ -11,7 +11,6 @@ from app.elo import elo, match
 from app.trip import trip
 
 import wolframalpha
-from cleverbot import Cleverbot
 
 ####################################################################################################################
 
@@ -104,7 +103,6 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         
     else:
         # No command for this so use IA
-        #answer = cleverbot_answer(command + " " + predicate)
         answer = wolfram_answer(command + " " + predicate, who_name)
         if answer == "*?*":
             return
@@ -113,22 +111,15 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
         
     
 def wolfram_answer(message, who=""):
-    app_id = "WL543X-974Q523T8P"
+    app_id = "WL543X-U2TEJ4HT6J"
     client = wolframalpha.Client(app_id)
     try:
         res = client.query(message)
         if hasattr(res, 'pods'):
             return next(res.results).text
         else:
-            return cleverbot_answer(message)
-            #return ("Sorry *" + who + "*, I don't have the answer for that")
+            return ("Sorry *" + who + "*, I don't have the answer for that")
     except:
-        return "*?*"
+        return "?"
         #return cleverbot_answer(message)
         #return ("Sorry *" + who + "*, I don't have the answer for that")
-
-
-def cleverbot_answer(message):
-    cb = Cleverbot()
-    answer = cb.ask(message)
-    return answer
