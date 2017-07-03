@@ -1,17 +1,35 @@
+# mac (Whatsapp framework)
 
-# Mac
-Mac is a whatsapp bot I made as a weekend project. The project itself has all you need to make your own custom functions easily.
+Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
-### How to use:
-Inside file run.py change your credentials then run the project.
-To get your whatsapp credentials you need to register a number using yowsup-cli
+### Setup:
+1. Clone this repository (with submodules)
+```sh
+> git clone --recursive https://github.com/danielcardeenas/whatsapp-framework.git
+```
+2. Install submodules
+```sh
+> cd libs/python-axolotl
+> python3.5 setup.py install
+> cd ../yowsup
+> python3.5 setup.py install
+```
 
-### Screenshots:
-<img src="http://i.imgur.com/QuK7BpD.png" height="450" />
-<img src="http://i.imgur.com/kJREVpi.png" height="450" />
-<img src="http://i.imgur.com/R9U79lT.png" height="450" />
-<img src="http://i.imgur.com/Ll7En5z.png" height="450" />
-<img src="http://i.imgur.com/O6LRuJM.png" height="450" />
+3. Register your phone and get a password with yowsup-cli: [_Documentation_](https://github.com/tgalal/yowsup/wiki/yowsup-cli-2.0)
+
+4. Open **config.py** and add set credentials
+
+5. Ready to go! (Now you can add your own whatsapp modules)
+```sh
+> ./start
+```
+
+### Modules examples:
+![alt text](http://i.imgur.com/kJvah19.png "Youtube module")
+![alt text](http://i.imgur.com/ZRlk5Uj.png "Poll module")
+![alt text](http://i.imgur.com/JmPbPXB.png "Elo module")
+![alt text](http://i.imgur.com/L4ebZql.png "Multiple poll module")
+![alt text](http://i.imgur.com/B2igFQd.png "Wolfram alpha module")
 
 ## Current functions:
 + **`!hi`**: Says hi to sender
@@ -25,6 +43,3 @@ To get your whatsapp credentials you need to register a number using yowsup-cli
 
 ## Contributing
 Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
-
-Just do merge request and I'll publish the changes to the server
- 
