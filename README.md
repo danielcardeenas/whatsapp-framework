@@ -1,4 +1,6 @@
-# mac (Whatsapp framework)
+# mac (Whatsapp framework) 
+![Version](https://img.shields.io/badge/version-0.0.7-brightgreen.svg?style=flat-square)
+![Version](https://img.shields.io/badge/release-alpha-yellow.svg?style=flat-square)
 
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
@@ -26,11 +28,11 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 ```
 
 ## Modules examples:
-![alt text](http://i.imgur.com/kJvah19.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/ZRlk5Uj.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/JmPbPXB.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/L4ebZql.png "Logo Title Text 1")
-![alt text](http://i.imgur.com/B2igFQd.png "Logo Title Text 1")
+![alt text](http://i.imgur.com/kJvah19.png)
+![alt text](http://i.imgur.com/ZRlk5Uj.png)
+![alt text](http://i.imgur.com/JmPbPXB.png)
+![alt text](http://i.imgur.com/L4ebZql.png)
+![alt text](http://i.imgur.com/B2igFQd.png)
 
 ##### Current modules:
 + **`!hi`**: Says hi to sender
