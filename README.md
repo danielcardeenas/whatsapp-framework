@@ -28,7 +28,6 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 ```
 
 ## Modules examples:
-![alt text](http://i.imgur.com/kJvah19.png)
 ![alt text](http://i.imgur.com/ZRlk5Uj.png)
 ![alt text](http://i.imgur.com/JmPbPXB.png)
 ![alt text](http://i.imgur.com/L4ebZql.png)
