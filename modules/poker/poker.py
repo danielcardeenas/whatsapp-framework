@@ -1,4 +1,3 @@
-from modules.libs.deuces import Card
 from app.utils import helper
 from app.receiver.receiver import Receiver
 from app.receiver import receiver

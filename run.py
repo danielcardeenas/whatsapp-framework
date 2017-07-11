@@ -42,7 +42,18 @@ class MacStack(object):
         except KeyboardInterrupt:
             print("\nYowsdown")
             sys.exit(0)
+            
+def run_infinite():
+    while True:
+        try:
+            c = MacStack()
+            c.start()
+        except:
+            pass
+        else:
+            break
 
 if __name__ == "__main__":
+    #run_infinite()
     c = MacStack()
     c.start()
