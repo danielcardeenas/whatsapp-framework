@@ -5,7 +5,7 @@
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
 ## Setup:
-1. Clone this repository (with submodules)
+1. Clone this repository (with submodules since it uses tgalal's yowsup library)
 ```sh
 > git clone --recursive https://github.com/danielcardeenas/whatsapp-framework.git
 ```
