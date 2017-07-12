@@ -3,6 +3,7 @@
 ![Version](https://img.shields.io/badge/release-alpha-yellow.svg?style=flat-square)
 
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
+
 _This needs **Python 3.5**_
 
 ## Setup:

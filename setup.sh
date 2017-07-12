@@ -16,24 +16,6 @@ install_requirements() {
     fi
 }
 
-install_modules() {
-    echo "Configuring modules"
-    echo "--------------------------"
-    cd modules
-    for D in *; do
-        if [ -d "${D}" ] && [ "${D}" != "__pycache__" ]; then
-            if [ -f ${D}/requirements.txt ]; then
-                echo "[${CYAN}${D}${NC}] Installing dependencies..."
-                module_requirements="${D}/requirements.txt"
-                install_requirements "$module_requirements"
-            else 
-                echo "[${CYAN}${D}${NC}]All good..."
-            fi
-        fi
-    done
-    wait
-}
-
 install_forked_yowsup() {
     printf "Installing ${ORANGE}yowsup libraries${NC}\n"
     echo "--------------------------"
@@ -48,6 +30,39 @@ install_forked_yowsup() {
     cd ../../
 }
 
+install_modules() {
+    echo "Configuring modules"
+    echo "--------------------------"
+    cd modules
+    for D in *; do
+        if [ -d "${D}" ] && [ "${D}" != "__pycache__" ]; then
+            if [ -f ${D}/requirements.txt ]; then
+                echo "[${CYAN}${D}${NC}] Installing dependencies..."
+                module_requirements="${D}/requirements.txt"
+                install_requirements "$module_requirements"
+            else 
+                echo "[${CYAN}${D}${NC}] All good..."
+            fi
+        fi
+    done
+    wait
+    
+    echo "--------------------------"
+    
+    # Return to root
+    cd ../
+}
+
+install_app_dependencies() {
+    echo "Configuring framework"
+    echo "--------------------------"
+    echo "[${CYAN}mac${NC}] Installing dependencies..."
+    
+    app_requirements="app/requirements.txt"
+    install_requirements "$app_requirements"
+    wait
+}
+
 # Step 1
 install_forked_yowsup
 
@@ -55,4 +70,4 @@ install_forked_yowsup
 install_modules
 
 # Step 3
-sudo python3.5 run.py
+install_app_dependencies
