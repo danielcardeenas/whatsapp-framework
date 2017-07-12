@@ -29,7 +29,6 @@ _This needs **Python 3.5**_
 ![alt text](http://i.imgur.com/ZRlk5Uj.png)
 ![alt text](http://i.imgur.com/JmPbPXB.png)
 ![alt text](http://i.imgur.com/L4ebZql.png)
-![alt text](http://i.imgur.com/B2igFQd.png)
 
 ##### Current modules:
 + **`!hi`**: Says hi to sender
