@@ -18,7 +18,7 @@ Actual module code
 ==========================================================
 '''
 def hi(message):
-    who_name = helper.sender_name(message.message_entity)
+    who_name = message.who_name
     answer = "Hi *" + who_name + "*"
     mac.send_message(answer, message.conversation)
     
