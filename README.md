@@ -26,20 +26,34 @@ _This needs **Python 3.5**_
 > ./start.sh
 ```
 
-## Modules examples:
+## Quickstart
+Create your own module inside [`modules/`](https://github.com/danielcardeenas/whatsapp-framework/tree/master/modules) directory
+```python
+# modules/hi_module.py
+
+from app.mac import mac, signals
+
+@signals.message_received.connect
+def handle(message):
+    if message.command == "hi":
+        mac.send_message("Hello", message.conversation)
+```
+Now you should only add it into [`modules/__init__.py`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/__init__.py) to enable the module
+```python
+# modules/__init__.py
+...
+from modules import hi_module
+...
+```
+And that's it! You are ready to go.
+
+###### _You can take [hihelp module](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/hihelp/hihelp.py) as an example._
+
+
+## Modules screenshots:
 ![alt text](http://i.imgur.com/ZRlk5Uj.png)
 ![alt text](http://i.imgur.com/JmPbPXB.png)
 ![alt text](http://i.imgur.com/L4ebZql.png)
-
-##### Current modules:
-+ **`!hi`**: Says hi to sender
-+ **`!yt`**: Activates youtube detection
-+ **`!siono`**: Random yes or no function. Returns gif and answer from [**yesno.wtf/api**](https://yesno.wtf/api/)
-+ **`!poll <title>, <identifier (optional)>`**: Make polls (taking chat as input)
-+ **`!poll2 <title>, <cantidates>...`**: Make polls (taking chat as input)
-+ **`!<message>`**: If command is not recognized uses IA from ~~Cleverbot~~ Wolframalpha to answer
-+ **`!elo <game>`**: Retrieves rankings of the game
-+ **`!match <game>, <results>`**: Records a match to the specified game
 
 ## Contributing
 Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
