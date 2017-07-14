@@ -47,7 +47,9 @@ from modules import hi_module
 ```
 And that's it! You are ready to go.
 
-###### _You can take [hihelp module](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/hihelp/hihelp.py) as an example._
+###### If your module needs libraries from pip you should add them into a `requirements.txt` and run `sudo ./setup.sh` to download the dependencies
+
+###### _You can take [`hihelp module`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/hihelp/hihelp.py) as an example._
 
 
 ### Example screenshots:
