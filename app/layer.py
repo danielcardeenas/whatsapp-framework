@@ -2,7 +2,6 @@
 import time
 import random
 
-from app import main
 from app.utils import helper
 from app.mac import mac, signals
 from app.receiver import receiver
@@ -66,26 +65,11 @@ class MacLayer(YowInterfaceLayer):
             # Send signal
             self.send_message_signal(message_entity)
 
-            # Send the answer, here magic happens
-            #self.on_text_message(message_entity)
-
-            # Finally Set offline
+            # Finally set offline
             mac.disconnect(self)
-
-    def on_text_message(self, message_entity):
-        # Detect command and the predicate of the message
-        command = helper.message(message_entity).split(' ', 1)[0]
-        predicate = helper.message(message_entity).split(' ', 1)[1]
-
-        who = helper.get_who_send(message_entity)
-        conversation = message_entity.getFrom()
-
-        if helper.is_command(message_entity):
-            main.handle_message(self, command, predicate, message_entity, who, conversation)
             
     def send_message_signal(self, message_entity):
-        # Log
-        # helper.log_mac(message_entity)
+        #helper.log_mac(message_entity) # Log the messages into txt file
         signals.message_received.send(Message(message_entity))
 
 '''

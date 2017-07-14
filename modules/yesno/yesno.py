@@ -1,26 +1,9 @@
 import requests
 import moviepy.editor as mp
 from app.mac import mac
-from app.mac import signals
 
 api_url = "https://yesno.wtf/api/"
 
-'''
-Signals this module listents to:
-+ When a message is received (signals.message_received)
-==========================================================
-'''
-def handle(message):
-    if message.command == "siono":
-        yesno = YesNo(message.conversation)
-        yesno.send_yesno()
-
-signals.message_received.connect(handle)
-
-'''
-Actual module code
-==========================================================
-'''
 class YesNo(object):
     def __init__(self, conversation):
         self.conversation = conversation
