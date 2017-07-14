@@ -14,6 +14,9 @@ from yowsup.common.tools import Jid
 
 from app.utils import helper
 
+# Globar entity
+entity = None
+
 name = "Mac"
 ack_queue = []
 commands = [ 
@@ -27,6 +30,10 @@ commands = [
 ]
 logger = logging.getLogger(__name__)
 
+def set_entity(instance):
+    global entity
+    entity = instance
+
 
 def receive_message(self, message_entity):
     self.toLower(message_entity.ack())
@@ -34,7 +41,7 @@ def receive_message(self, message_entity):
     ack_queue.append(message_entity)
 
 
-def prepate_answer(self, message_entity):
+def prepate_answer(self, conversation):
     # Set name Presence
     make_presence(self)
 
@@ -43,14 +50,14 @@ def prepate_answer(self, message_entity):
     time.sleep(random.uniform(0.5, 1.5))
 
     # Set read (double v blue)
-    ack_messages(self, message_entity.getFrom())
+    ack_messages(self, conversation)
 
     # Set is writing
-    start_typing(self, message_entity)
+    start_typing(self, conversation)
     time.sleep(random.uniform(0.5, 2))
 
     # Set it not writing
-    stop_typing(self, message_entity)
+    stop_typing(self, conversation)
     time.sleep(random.uniform(0.3, 0.7))
 
 
@@ -66,22 +73,18 @@ def disconnect(self):
     self.toLower(UnavailablePresenceProtocolEntity())
 
 
-def start_typing(self, message_entity):
+def start_typing(self, conversation):
     self.toLower(OutgoingChatstateProtocolEntity(
         OutgoingChatstateProtocolEntity.STATE_TYPING,
-        Jid.normalize(message_entity.getFrom(False))
+        Jid.normalize(conversation)
     ))
 
 
-def stop_typing(self, message_entity):
+def stop_typing(self, conversation):
     self.toLower(OutgoingChatstateProtocolEntity(
         OutgoingChatstateProtocolEntity.STATE_PAUSED,
-        Jid.normalize(message_entity.getFrom(False))
+        Jid.normalize(conversation)
     ))
-
-
-def should_write(message_entity):
-    return helper.is_command(message_entity) #and is_in_command_list(message_entity)
 
 
 def is_in_command_list(message_entity):
@@ -122,9 +125,12 @@ def remove_conversation_from_queue(conversation):
     ack_queue[:] = [entity for entity in ack_queue if not same_conversation(entity, conversation)]
 
 
-def send_message(self, message, conversation):
-    message = decode_string(message)
-    self.toLower(helper.make_message(message, conversation))
+def send_message(str_message, conversation):
+    message = decode_string(str_message)
+    
+    # Prepare mac to answer (Human behavior)
+    prepate_answer(entity, conversation)
+    entity.toLower(helper.make_message(message, conversation))
 
 def decode_string(message):
     try:

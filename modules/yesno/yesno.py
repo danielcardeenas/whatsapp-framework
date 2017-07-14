@@ -1,16 +1,32 @@
 import requests
 import moviepy.editor as mp
 from app.mac import mac
+from app.mac import signals
 
 api_url = "https://yesno.wtf/api/"
 
+'''
+Signals this module listents to:
++ When a message is received (signals.message_received)
+==========================================================
+'''
+def handle(message):
+    if message.command == "siono":
+        yesno = YesNo(message.conversation)
+        yesno.send_yesno()
 
+signals.message_received.connect(handle)
+
+'''
+Actual module code
+==========================================================
+'''
 class YesNo(object):
-    def __init__(self, instance, conversation):
-        self.instance = instance
+    def __init__(self, conversation):
         self.conversation = conversation
         self.caption = ""
         self.image_path = ""
+        
         self.build()
 
     def build(self):
@@ -24,18 +40,16 @@ class YesNo(object):
         # mac.send_video(self.instance, self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
 
         # Sends gif as image
-        # mac.send_image(self.instance, self.conversation, self.image_path, self.caption)
+        #mac.send_image(self.instance, self.conversation, self.image_path, self.caption)
 
         # Sends just the answer
-        mac.send_message(self.instance, "*" + self.caption + "*", self.conversation)
+        mac.send_message("*" + self.caption + "*", self.conversation)
 
 
 '''
 Converts gif to video (mp4)
 return video file path
 '''
-
-
 def gif_to_video(image_path, caption):
     path = "app/assets/images/" + caption + ".mp4"
     clip = mp.VideoFileClip(image_path)
@@ -47,8 +61,6 @@ def gif_to_video(image_path, caption):
 Downloads image from url
 returns image file path
 '''
-
-
 def get_image(url, caption):
     path = "app/assets/images/" + caption + ".gif"
     file = open(path, 'wb')

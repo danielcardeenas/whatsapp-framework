@@ -108,9 +108,9 @@ def log_mac(message_entity):
 """
 Returns predicate of the message
 """
-def predicate(message):
+def message(message):
     message = clean_message(message)
-    if is_shorcut(message):
+    if is_command(message):
         return message[1:]
     else:
         return message
@@ -129,11 +129,7 @@ def clean_message(message_entity):
 """
 Detects if the message is a command for Mac
 """
-def is_command(message_entity):
-    message = clean_message(message_entity)
-    return is_shorcut(message) and len(message) > 1
-
-def is_shorcut(message):
+def is_command(message):
     macShorcut = message[:1]
     return macShorcut == "!"
 
@@ -143,4 +139,32 @@ Converts a list into a comma separated string
 """
 def nice_list(list):
     return "[" + ", ".join( str(x) for x in list) + "]"
+    
+
+"""
+Retrieves the command from the message.
+command is what goes after the '!'
+"""
+def command(message_entity):
+    command = ""
+    try:
+        command = message(message_entity).split(' ', 1)[0]
+    except IndexError:
+        print("Command error")
+    
+    return command
+    
+    
+"""
+Retrieves the predicate from the message.
+predicate is what goes after the command
+"""     
+def predicate(message_entity):
+    rest = ""
+    try:
+        rest = message(message_entity).split(' ', 1)[1]
+    except IndexError:
+        print("No predicate")
+    
+    return rest
     
