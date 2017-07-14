@@ -164,7 +164,7 @@ def predicate(message_entity):
     try:
         rest = message(message_entity).split(' ', 1)[1]
     except IndexError:
-        print("No predicate")
+        pass
     
     return rest
     

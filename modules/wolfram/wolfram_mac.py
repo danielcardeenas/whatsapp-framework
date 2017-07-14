@@ -7,12 +7,12 @@ Signals this module listents to:
 1. When a message is received (signals.message_received)
 ==========================================================
 '''
+@signals.message_received.connect
 def handle(message):
     request = shoudl_answer(message)
     if request != '':
         mac.send_message(wolfram_answer(request), message.conversation)
 
-signals.message_received.connect(handle)
 
 '''
 Actual module code

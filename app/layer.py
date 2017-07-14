@@ -23,6 +23,7 @@ class MacLayer(YowInterfaceLayer):
 
     def __init__(self):
         super(MacLayer, self).__init__()
+        signals.initialized.send(self)
 
     # Callback function when there is a successful connection to Whatsapp server
     @ProtocolEntityCallback("success")
@@ -48,7 +49,6 @@ class MacLayer(YowInterfaceLayer):
     @ProtocolEntityCallback("receipt")
     def on_receipt(self, entity):
         self.toLower(entity.ack())
-        #print(entity.ack())
 
 
     @ProtocolEntityCallback("message")

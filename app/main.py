@@ -96,18 +96,3 @@ def handle_message(instance, command, predicate, message_entity, who, conversati
                 
     elif command == "trip":
         mac.send_message(instance, trip.print_debts(), conversation)
-
-    
-#def wolfram_answer(message, who=""):
-#    app_id = "WL543X-U2TEJ4HT6J"
-#    client = wolframalpha.Client(app_id)
-#    try:
-#        res = client.query(message)
-#        if hasattr(res, 'pods'):
-#            return next(res.results).text
-#        else:
-#            return ("Sorry *" + who + "*, I don't have the answer for that")
-#    except:
-#        return "?"
-#        #return cleverbot_answer(message)
-#        #return ("Sorry *" + who + "*, I don't have the answer for that")
