@@ -3,6 +3,7 @@ from trueskill import Rating
 from modules.elo.player import Player
 import sqlite3
 
+print("Imported elo")
 conn = sqlite3.connect('modules/elo/db/trueskill.db')
 
 def ranks(smash):
