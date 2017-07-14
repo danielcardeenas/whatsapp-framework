@@ -59,8 +59,9 @@ class MacLayer(YowInterfaceLayer):
             # Set received (double v) and add to ack queue
             mac.receive_message(self, message_entity)
 
-            # Handle intercepts if needed
-            receiver.intercept(self, message_entity)
+            # Handle intercepts if needed}
+            # Not needed anymore
+            #receiver.intercept(self, message_entity)
             
             # Send signal
             self.send_message_signal(message_entity)
