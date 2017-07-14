@@ -6,7 +6,7 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 
 _This needs **Python 3.5**_
 
-## Setup:
+# Setup:
 1. Clone this repository (with submodules since it uses tgalal's yowsup library)
 ```sh
 > git clone --recursive https://github.com/danielcardeenas/whatsapp-framework.git
@@ -26,7 +26,7 @@ _This needs **Python 3.5**_
 > ./start.sh
 ```
 
-## Quickstart
+# Quickstart
 Create your own module inside [`modules/`](https://github.com/danielcardeenas/whatsapp-framework/tree/master/modules) directory
 ```python
 # modules/hi_module.py
@@ -50,10 +50,10 @@ And that's it! You are ready to go.
 ###### _You can take [hihelp module](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/hihelp/hihelp.py) as an example._
 
 
-## Modules screenshots:
+### Example screenshots:
 ![alt text](http://i.imgur.com/ZRlk5Uj.png)
 ![alt text](http://i.imgur.com/JmPbPXB.png)
 ![alt text](http://i.imgur.com/L4ebZql.png)
 
-## Contributing
+### Contributing
 Adding your own funcitons to Mac is very easy. Check the [**wiki**](https://github.com/danielcardeenas/MacBot/wiki) for more info.
