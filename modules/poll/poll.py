@@ -4,8 +4,6 @@ from app.receiver import receiver
 from app.mac import mac
 from modules.poll.voter import Voter
 
-receivers = []
-
 class WAPoll(Receiver):
     def __init__(self, conversation, creator, title, identifier="#"):
         # Finish poll if user already has one in this conversation
