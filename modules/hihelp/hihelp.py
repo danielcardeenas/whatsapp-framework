@@ -1,5 +1,4 @@
 from app.mac import mac, signals
-from app.utils import helper
 
 '''
 Signals this module listents to:
