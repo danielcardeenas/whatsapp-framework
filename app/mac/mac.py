@@ -131,6 +131,14 @@ def send_message(str_message, conversation):
     # Prepare mac to answer (Human behavior)
     prepate_answer(entity, conversation)
     entity.toLower(helper.make_message(message, conversation))
+    
+    
+def send_image(conversation, path, caption=None):
+    if os.path.isfile(path):
+        media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE, caption)
+    else:
+        print("Image doesn't exists")
+
 
 def decode_string(message):
     try:
@@ -139,13 +147,6 @@ def decode_string(message):
         return message
     except:
         return message.decode('utf-8','ignore').encode("utf-8")
-
-
-def send_image(self, number, path, caption=None):
-    if os.path.isfile(path):
-        media_send(self, number, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE, caption)
-    else:
-        print("Image doesn't exists")
 
 
 def send_video(self, number, path, caption=None):
