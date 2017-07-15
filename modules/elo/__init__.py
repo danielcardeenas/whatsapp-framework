@@ -42,10 +42,10 @@ def handle_match(message):
     elif len(args) == 1:
         mac.send_message("missgin results", message.conversation)
     elif len(args) >= 2:
-        if elo.is_valid_smash(args[0]) and (message.who == helper.me):
+        if elo.is_valid_game(args[0]) and (message.who == helper.me):
             confirmation = match.record_match(args[0], args[1])
             mac.send_message(confirmation, message.conversation)
-        elif elo.is_valid_smash(args[0]) and (message.who != helper.me):
+        elif elo.is_valid_game(args[0]) and (message.who != helper.me):
             response = "@" + message.who_name + ", not alllowed"
             mac.send_message(response, message.conversation)
         else:

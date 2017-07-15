@@ -5,3 +5,4 @@ from modules.wolfram import wolfram_mac
 from modules.hihelp import hihelp
 from modules.poll import poll
 from modules. elo import elo
+from modules import poker

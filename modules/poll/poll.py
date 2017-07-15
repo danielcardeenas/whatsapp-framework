@@ -5,7 +5,7 @@ from modules.poll.voter import Voter
 active_polls = []
 
 class WAPoll(object):
-    def __init__(self, conversation, creator, title, identifier="#"):
+    def __init__(self, conversation, creator, title, identifier="✋"):
         # Finish poll if user already has one in this conversation
         self.finish_my_poll(creator, conversation)
         
@@ -15,7 +15,7 @@ class WAPoll(object):
         
         # Conversation where the poll was created
         self.conversation = conversation
-        # Text that makes a vote
+        # Vote identifier
         self.identifier = identifier
         # who object
         self.creator = creator
@@ -35,7 +35,7 @@ class WAPoll(object):
     def is_creator(self, creator):
         return self.creator == creator
         
-    def is_same_conversation(self, conversation):
+    def is_conversation(self, conversation):
         return self.conversation == conversation
         
     def voters_print(self):
@@ -59,7 +59,7 @@ class WAPoll(object):
     def handle_vote(self, message):
         for poll in active_polls:
             if poll.identifier in message.message:
-                if poll.is_same_conversation(message.conversation):
+                if poll.is_conversation(message.conversation):
                     poll.put_vote(Voter(message))
     
     '''
@@ -113,7 +113,7 @@ Finds a poll by it's creator and its conversation
 def poll_from_user_conversation(creator, conversation):
     for poll in active_polls:
         if poll.is_creator(creator):
-            if poll.is_same_conversation(conversation):
+            if poll.is_conversation(conversation):
                 return poll
 
     return None

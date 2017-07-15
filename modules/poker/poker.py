@@ -1,27 +1,120 @@
+# -*- coding: utf-8 -*-
+from enum import Enum
 from app.utils import helper
-from app.receiver.receiver import Receiver
-from app.receiver import receiver
 from app.mac import mac
-from modules.poll.voter import Voter
+from modules.poker.player import Player
+from modules.poker.deuces import Card, Deck, Evaluator
 
-class Poker(Receiver):
-    def __init__(self, instance, conversation, creator, identifier="#"):
+active_games = []
+
+class TexasStatus(Enum):
+    PREFLOP = 1
+    FLOP = 2
+    TURN = 3
+    RIVER = 4
+    SHOWDOWN = 5
+
+class WAPoker(object):
+    def __init__(self, conversation, creator, join_identifier="#"):
         # Finish poll if user already has one in this conversation
-        finish_my_game(instance, creator, conversation)
-        Receiver.__init__(self, identifier, conversation, creator, self.handle_answer)
-        self.instance = instance
-        self.voters = []
-
-    def handle_answer(self, message_entity=None):
-        if message_entity is not None:
-            voter = Voter(message_entity)
-            if not any(voter.who == v.who for v in self.voters):
-                self.voters.append(voter)
-            print("Got vote")
-
-    def send_poll(self):
-        answer = "Texas Hold'em"
-        mac.send_message(self.instance, answer, self.conversation)
+        self.finish_my_game(creator, conversation)
+        self.conversation = conversation
+        self.creator = creator
+        self.join_identifier = join_identifier
+        self.started = False
+        self.players = []
+        self.deck = Deck()
+        self.board = None
+        self.status = TexasStatus.PREFLOP
+        
+    # Ask "who's playing?"
+    def initialize_game(self):
+        if chat_has_game(self.conversation):
+            mac.send_message("There is already a game going on", self.conversation)
+            return
+        
+        answer = "*Texas Hold'em*" + "\n" + self.join_identifier + " to join"
+        mac.send_message(answer, self.conversation)
+        active_games.append(self)
+        
+    # Show players and start game
+    def start(self):
+        # If no players
+        if len(self.players) <= 1:
+            mac.send_message("Not enough players to start", self.conversation)
+        
+        elif self.started:
+            mac.send_message("Your game already started", self.conversation)
+        else:
+            print("Starting game")
+            mac.send_message(self.print_players(), self.conversation)
+            self.started = True
+        
+        # Dsitribute cards to each player
+        self.deal_hands()
+        self.deal_board_cards()
+        
+        # Make bets... pre-flop
+        self.start_preflop()
+        
+        # Start flops
+        #self.show_flop()
+        #self.show_turn()
+        self.show_river()
+        self.show_results()
+    
+    
+    def start_preflop(self):
+        self.show_actions()
+        
+    def show_actions(self):
+        mac.send_message("*Actions:*\nCheck: ✅ or check\nBet: bet <number>\nFold: fold, culeo or ❌", self.conversation)
+    
+    def show_flop(self):
+        mac.send_message("Flop:\n" + Card.print_pretty_cards(self.board[:3]) + "[ ] [ ]", self.conversation)
+            
+    def show_turn(self):
+        mac.send_message("Turn:\n" + Card.print_pretty_cards(self.board[:4]) + "[ ]", self.conversation)
+        
+    def show_river(self):
+        mac.send_message("River:\n" + Card.print_pretty_cards(self.board[:5]), self.conversation)
+        
+    def show_results(self):
+        results = "*Results:*"
+        evaluator = Evaluator()
+        for player in self.players:
+            print(player.who_name, Card.print_pretty_cards(player.hand))
+            player_score = evaluator.evaluate(self.board, player.hand)
+            player_class = evaluator.get_rank_class(player_score)
+            
+            
+            results += "\n• " + player.who_name + " Rank: " + str(player_score) + ", Play: " + evaluator.class_to_string(player_class) + " " + Card.print_pretty_cards(player.hand)
+            
+        mac.send_message(results, self.conversation)
+    
+    def deal_hands(self):
+        for player in self.players:
+            player.hand = self.deck.draw(2)
+            player.notify_hand()
+            
+    def deal_board_cards(self):
+        self.board = self.deck.draw(5)
+        
+    def join(self, player):
+        self.players.append(player)
+        
+    
+    def print_players(self):
+        players_str = "*Players:*"
+        for player in self.players:
+            players_str += "\n+ " + player.who_name
+            
+        return players_str
+        
+        
+    def finish(self):
+        active_games.remove(self)
+        
         
     def is_creator(self, creator):
         return self.creator == creator
@@ -29,38 +122,52 @@ class Poker(Receiver):
     def is_conversation(self, conversation):
         return self.conversation == conversation
         
-    def voters_string(self):
-        answer = ""
-        for voter in self.voters:
-            answer += "\n+ " + voter.who_name
+    
+    @classmethod
+    def find_my_game(self, conversation, creator):
+        return game_from_user_conversation(conversation, creator)
+        
+        
+    @classmethod
+    def handle_action(self, message):
+        try_join_game(message)
+        
+    
+    '''
+    Finds the poll of this user in this conversation
+    Finishes the poll
+    '''
+    @classmethod
+    def finish_my_game(self, creator, conversation):
+        game = game_from_user_conversation(conversation, creator)
+        if game:
+            game.finish()
             
-        return answer
+            
 
-def finish_my_game(self, creator, conversation):
-    poll = poll_from_user_conversation(creator, conversation)
-    if poll:
-        message = "*Terminando juego anterior:*"
-        mac.send_message(self, message, poll.conversation)
-        poll.destroy()
+def chat_has_game(conversation):
+    for game in active_games:
+        if game.is_conversation(conversation):
+            return True
+    
+    return False
 
-
-def poll_from_user_conversation(creator, conversation):
-    for poll in receiver.receivers:
-        if is_Poker(poll):
-            if poll.is_creator(creator):
-                if poll.is_conversation(conversation):
-                    return poll
+'''
+Finds a poll by it's creator and its conversation
+'''
+def game_from_user_conversation(conversation, creator):
+    for game in active_games:
+        if game.is_creator(creator):
+            if game.is_conversation(conversation):
+                return game
 
     return None
     
-    
-def user_has_poll(creator, conversation):
-    for poll in receiver.receivers:
-        if poll.is_creator(creator):
-            if poll.is_conversation(conversation):
-                return True
-                
-    return False
-
-def is_Poker(obj):
-    return type(obj) is Poker
+'''
+Tries to join a game
+'''
+def try_join_game(message):
+    for game in active_games:
+        if game.join_identifier in message.message:
+            if game.is_conversation(message.conversation):
+                game.join(Player(message))

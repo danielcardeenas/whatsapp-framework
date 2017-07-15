@@ -28,5 +28,5 @@ def handle(message):
 Prints help (how to use example)
 '''
 def show_help(message):
-    answer = "*Poll*\n*Usage:* !poll [title], [voter]\n*Example:* !poll who is gay?, ✋"
+    answer = "*Poll*\n*Usage:* !poll [title], [voter]\n*Example:* !poll who is gay?, ✋\nFinish poll: !poll finish"
     mac.send_message(answer, message.conversation)
