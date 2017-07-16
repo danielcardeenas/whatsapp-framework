@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from enum import Enum
 from app.utils import helper
 from app.mac import mac
 from modules.poker.player import Player
 from modules.poker.deuces import Card, Deck, Evaluator
+from modules.poker.constants import TexasStatus, PlayerActions
 
 active_games = []
 actions_arr = [
@@ -12,27 +12,16 @@ actions_arr = [
     "bet",
     "culeo",
     "fold",
-    "❌"
+    "❌",
+    "call"
 ]
 
 actions = dict(
     check = ["check", "✅"],
     fold = ["fold", "culeo", "❌"],
-    bet = ["bet"]
+    bet = ["bet"],
+    call = ["call"]
 )
-
-class TexasStatus(Enum):
-    PREFLOP = 1
-    FLOP = 2
-    TURN = 3
-    RIVER = 4
-    SHOWDOWN = 5
-    BLOCKED = 6
-    
-class TexasActions(Enum):
-    CHECK = 1
-    BET = 2
-    FOLD = 3
 
 class WAPoker(object):
     def __init__(self, conversation, creator, join_identifier="#"):
@@ -46,6 +35,9 @@ class WAPoker(object):
         self.deck = Deck()
         self.board = None
         self.status = TexasStatus.PREFLOP
+        self.block_actions = False
+        self.pot = 0
+        self.highest_bet = 0
         
     # Ask "who's playing?"
     def initialize_game(self):
@@ -60,7 +52,7 @@ class WAPoker(object):
     # Show players and start game
     def start(self):
         # If no players
-        if len(self.players) <= 1:
+        if len(self.players) < 1:
             mac.send_message("Not enough players to start", self.conversation)
             return
         
@@ -72,6 +64,9 @@ class WAPoker(object):
             mac.send_message(self.print_players(), self.conversation)
             self.started = True
         
+        # Block incoming
+        self.block_actions = True
+        
         # Dsitribute cards to each player
         self.deal_hands()
         self.deal_board_cards()
@@ -79,11 +74,9 @@ class WAPoker(object):
         # Begin game flow
         self.begin_game_flow()
         
-        # Start flops
-        #self.show_flop()
-        #self.show_turn()
-        self.show_river()
-        self.show_results()
+        # Unblock
+        self.block_actions = False
+        
         
     def begin_game_flow(self):
         self.status = TexasStatus.PREFLOP
@@ -97,12 +90,15 @@ class WAPoker(object):
         mac.send_message("*Actions:*\nCheck: check, ✅\nBet: bet <number>\nFold: fold, culeo, ❌", self.conversation)
     
     def show_flop(self):
+        self.status = TexasStatus.FLOP
         mac.send_message("Flop:\n" + Card.print_pretty_cards(self.board[:3]) + "[ ] [ ]", self.conversation)
             
     def show_turn(self):
+        self.status = TexasStatus.TURN
         mac.send_message("Turn:\n" + Card.print_pretty_cards(self.board[:4]) + "[ ]", self.conversation)
         
     def show_river(self):
+        self.status = TexasStatus.RIVER
         mac.send_message("River:\n" + Card.print_pretty_cards(self.board[:5]), self.conversation)
         
     def show_results(self):
@@ -113,9 +109,10 @@ class WAPoker(object):
             player_score = evaluator.evaluate(self.board, player.hand)
             player_class = evaluator.get_rank_class(player_score)
             
-            results += "\n• " + player.who_name + " Rank: " + str(player_score) + ", Play: " + evaluator.class_to_string(player_class) + " " + Card.print_pretty_cards(player.hand)
+            results += "\n• " + player.who_name + " Rank: " + str(player_score) + ", Play: " + evaluator.class_to_string(player_class) + "\n" + Card.print_pretty_cards(player.hand)
             
         mac.send_message(results, self.conversation)
+        self.finish()
     
     
     def deal_hands(self):
@@ -137,9 +134,16 @@ class WAPoker(object):
     def print_players(self):
         players_str = "*Players:*"
         for player in self.players:
-            players_str += "\n+ " + player.who_name
+            players_str += "\n• " + player.who_name
             
         return players_str
+        
+    def print_players_stauts(self):
+        players_status = "*Pot*: " + str(self.pot) + "\n*Players:*"
+        for player in self.players:
+            players_status += "\n• " + player.pretty_status(self.highest_bet)
+            
+        return players_status
         
     
     def finish(self):
@@ -155,14 +159,107 @@ class WAPoker(object):
         
     
     def is_player_in_game(self, who):
-        return who in self.players
+        return any(who == p.who for p in self.players)
         
     
-    def take_action(self, action, who):
-        if self.status == TexasStatus.BLOCKED:
-            return
+    def player_in_game(self, who):
+        return next((p for p in self.players if p.who == who), None)
+    
+    def every_bet_good(self):
+        for player in self.players:
+            if player.money <= 0:
+                continue
+            if player.current_bet < self.highest_bet:
+                return False
+        
+        return True
+        
+    def can_advance(self):
+        if len(self.players) <= 1:
+            # Not enough players, finish the game
+            if self.status != TexasStatus.RIVER or self.status != TexasStatus.SHOWDOWN:
+                self.show_river()
+            
+            self.status = TexasStatus.RIVER
+            return True
+        if self.is_everyone_checked():
+            # Everyone checked case
+            return True
+        if self.every_bet_good():
+            return True
+        else:
+            return False
+            
+    
+    def reset_players_status(self):
+        for player in self.players:
+            player.reset_status()
+            
+    
+    def reset_checked_players(self):
+        for player in self.players:
+            if player.action == PlayerActions.CHECK:
+                player.action = None
+            
+    
+    def do_next_turn(self):
+        # Ignore incoming actions
+        self.highest_bet = 0
+        self.block_actions = True
+        self.reset_players_status()
+        
+        # If preflop -> flop
         if self.status == TexasStatus.PREFLOP:
-            pass
+            self.show_flop()
+            self.block_actions = False
+            return
+            
+        # If flop -> turn
+        if self.status == TexasStatus.FLOP:
+            self.show_turn()
+            self.block_actions = False
+            return
+            
+        # If turn -> river
+        if self.status == TexasStatus.TURN:
+            self.show_river()
+            self.block_actions = False
+            return
+            
+        # If river -> showdown
+        if self.status == TexasStatus.RIVER:
+            self.show_results()
+            self.block_actions = False
+            return
+    
+        
+    def is_everyone_checked(self):
+        return all(player.status == PlayerActions.CHECK for player in self.players)
+        
+        
+    def set_bet(self, bet):
+        if bet > self.highest_bet:
+            highest_bet = bet
+        self.reset_checked_players()
+        self.pot = self.pot + bet
+        
+    
+    def take_action(self, action, player, bet=0):
+        if self.block_actions:
+            return
+        if action == PlayerActions.CHECK:
+            if player.set_action(PlayerActions.CHECK, self.players):
+                mac.send_message(self.print_players_stauts(), self.conversation)
+        elif action == PlayerActions.FOLD:
+            if player.set_action(PlayerActions.FOLD, self.players):
+                self.players.remove(player)
+                mac.send_message(player.who_name + " folded", self.conversation)
+        elif action == PlayerActions.BET:
+            if player.set_action(PlayerActions.BET, self.players, bet):
+                self.set_bet(bet)
+                mac.send_message(self.print_players_stauts(), self.conversation)
+        if self.can_advance():
+            self.do_next_turn()
         
     '''
     Public function of the inside function called basically
@@ -186,7 +283,7 @@ class WAPoker(object):
     
     '''
     Finds the poll of this user in this conversation
-    Finishes the poll
+    Finishes the game
     '''
     @classmethod
     def finish_my_game(self, creator, conversation):
@@ -194,7 +291,6 @@ class WAPoker(object):
         if game:
             game.finish()
             
-
             
 '''
 Verifies if this chat has a game going on
@@ -254,32 +350,32 @@ Returns the action chosed by the player
 def get_action(message):
     if is_action(message):
         if is_check_action(message):
-            return TexasActions.CHECK
+            return PlayerActions.CHECK
         elif is_bet_action(message):
-            return TexasActions.BET
+            return PlayerActions.BET
         elif is_fold_action(message):
-            return TexasActions.FOLD
+            return PlayerActions.FOLD
     
     return None
     
 
 def is_check_action(message):
-    if message.message in actions["check"]:
+    if message.message.lower() in actions["check"]:
         return True
         
 def is_bet_action(message):
-    if message.message in actions["bet"]:
+    if message.message.lower() in actions["bet"]:
         return True
         
 def is_fold_action(message):
-    if message.message in actions["fold"]:
+    if message.message.lower() in actions["fold"]:
         return True
     
 '''
 Check if the message is an action
 '''
 def is_action(message):
-    if message.message in actions_arr:
+    if message.message.lower() in actions_arr:
         return True
     else:
         return False
@@ -289,5 +385,17 @@ Tries to interpret the action
 '''
 def try_action(action, message):
     game = find_chat_game(message.conversation)
-    if game and game.is_player_in_game(message.who):
-        game.take_action(action, message.who)
+    player = game.player_in_game(message.who)
+    if game and player:
+        if action == PlayerActions.BET:
+            game.take_action(action, player, bet_from_message(message))
+        else:
+            game.take_action(action, player)
+            
+def bet_from_message(message):
+    arg = message.predicate.split(' ')[1]
+    try: 
+        float(arg)
+        return float(arg)
+    except ValueError:
+        return 0
