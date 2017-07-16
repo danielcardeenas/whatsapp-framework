@@ -102,8 +102,8 @@ def ack_messages(self, conversation):
     # Filter messages from this conversation
     queue = [message_entity for message_entity in ack_queue if same_conversation(message_entity, conversation)]
 
-    # Get only last 10 messages (Will discard reading the others)
-    queue = queue[-10:]
+    # Get only last 20 messages (Will discard reading the others)
+    queue = queue[-20:]
 
     # Ack every message in queue
     for message_entity in queue:

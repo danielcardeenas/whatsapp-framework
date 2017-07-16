@@ -13,17 +13,24 @@ class Player(object):
         self.action = None
         self.current_bet = 0
         self.money = 10
+        self.locked = False
 
     def notify_hand(self):
         chat_info = "Hand: " + Card.print_pretty_cards(self.hand) 
         mac.send_message(chat_info, self.who)
 
     def pretty_status(self, highest_bet=0):
-        base = "(💲" +str( self.money) + ")" + self.who_name + ": " + self.status_str()
+        base = "($" + str( self.money) + ") " + self.who_name + ": " + self.status_str()
         if highest_bet > 0 and highest_bet - self.current_bet > 0:
             base += " ($" + str(highest_bet - self.current_bet) + " to bet)"
             
         return base
+        
+    def unlock(self):
+        if not self.is_all_in():
+            self.locked = False
+        else:
+            self.locked = True
         
     def status_str(self):
         if self.action == PlayerActions.CHECK:
@@ -38,6 +45,7 @@ class Player(object):
     def reset_status(self):
         self.action = None
         self.current_bet = 0
+        self.unlock()
         
     '''
     Tries to set an action like bet, check or fold
@@ -56,21 +64,26 @@ class Player(object):
             return False
         else:
             self.action = PlayerActions.CHECK
+            self.locked = True
             return True
             
     def try_fold_action(self, players):
-        # I cannot think of a condition to fold so...
         self.action = PlayerActions.FOLD
         return True
         
     def try_bet_action(self, players, bet):
-        if bet == None or bet == "":
+        if bet == None or bet == "" or bet == 0:
             return False
         
-        if bet >= 0 and bet <= self.money:
-            self.current_bet = bet
+        if bet <= self.money:
+            self.current_bet = bet + self.current_bet
             self.money = self.money - bet
             self.action = PlayerActions.BET
+            self.locked = True
             return True
         else:
+            self.action = None
             return False
+            
+    def is_all_in(self):
+        return self.money <= 0

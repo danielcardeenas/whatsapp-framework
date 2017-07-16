@@ -5,17 +5,8 @@ from modules.poker.player import Player
 from modules.poker.deuces import Card, Deck, Evaluator
 from modules.poker.constants import TexasStatus, PlayerActions
 
+MIN_PLAYERS = 1
 active_games = []
-actions_arr = [
-    "check",
-    "✅",
-    "bet",
-    "culeo",
-    "fold",
-    "❌",
-    "call"
-]
-
 actions = dict(
     check = ["check", "✅"],
     fold = ["fold", "culeo", "❌"],
@@ -52,7 +43,7 @@ class WAPoker(object):
     # Show players and start game
     def start(self):
         # If no players
-        if len(self.players) < 1:
+        if len(self.players) < MIN_PLAYERS:
             mac.send_message("Not enough players to start", self.conversation)
             return
         
@@ -60,7 +51,6 @@ class WAPoker(object):
             mac.send_message("Your game already started", self.conversation)
             return
         else:
-            print("Starting game")
             mac.send_message(self.print_players(), self.conversation)
             self.started = True
         
@@ -102,10 +92,9 @@ class WAPoker(object):
         mac.send_message("River:\n" + Card.print_pretty_cards(self.board[:5]), self.conversation)
         
     def show_results(self):
-        results = "*Results:*"
+        results = "*💰*: $" + str(self.pot) + "\n*Results:*"
         evaluator = Evaluator()
         for player in self.players:
-            print(player.who_name, Card.print_pretty_cards(player.hand))
             player_score = evaluator.evaluate(self.board, player.hand)
             player_class = evaluator.get_rank_class(player_score)
             
@@ -134,12 +123,12 @@ class WAPoker(object):
     def print_players(self):
         players_str = "*Players:*"
         for player in self.players:
-            players_str += "\n• " + player.who_name
+            players_str += "\n• " + player.who_name + " ($" + str(player.money) + ")"
             
         return players_str
         
     def print_players_stauts(self):
-        players_status = "*Pot*: " + str(self.pot) + "\n*Players:*"
+        players_status = "*💰*: " + str(self.pot) + "\n*Players:*"
         for player in self.players:
             players_status += "\n• " + player.pretty_status(self.highest_bet)
             
@@ -163,44 +152,42 @@ class WAPoker(object):
         
     
     def player_in_game(self, who):
-        return next((p for p in self.players if p.who == who), None)
-    
-    def every_bet_good(self):
         for player in self.players:
-            if player.money <= 0:
-                continue
-            if player.current_bet < self.highest_bet:
+            if player.who == who:
+                return player
+                
+        return None
+        
+    def all_players_locked(self):
+        for player in self.players:
+            if not player.locked:
                 return False
         
         return True
         
+    def go_to_end(self):
+        if self.status != TexasStatus.RIVER or self.status != TexasStatus.SHOWDOWN:
+            self.show_river()
+        self.show_results()
+        
+    def nothing_to_do(self):
+        if all(player.money <= 0 for player in self.players):
+            return True
+        
     def can_advance(self):
-        if len(self.players) <= 1:
+        if len(self.players) <= MIN_PLAYERS:
             # Not enough players, finish the game
-            if self.status != TexasStatus.RIVER or self.status != TexasStatus.SHOWDOWN:
-                self.show_river()
+            self.go_to_end()
+            return False
             
-            self.status = TexasStatus.RIVER
-            return True
-        if self.is_everyone_checked():
-            # Everyone checked case
-            return True
-        if self.every_bet_good():
+        if self.nothing_to_do():
+            self.go_to_end()
+            return False
+            
+        if self.all_players_locked():
             return True
         else:
             return False
-            
-    
-    def reset_players_status(self):
-        for player in self.players:
-            player.reset_status()
-            
-    
-    def reset_checked_players(self):
-        for player in self.players:
-            if player.action == PlayerActions.CHECK:
-                player.action = None
-            
     
     def do_next_turn(self):
         # Ignore incoming actions
@@ -215,38 +202,54 @@ class WAPoker(object):
             return
             
         # If flop -> turn
-        if self.status == TexasStatus.FLOP:
+        elif self.status == TexasStatus.FLOP:
             self.show_turn()
             self.block_actions = False
             return
             
         # If turn -> river
-        if self.status == TexasStatus.TURN:
+        elif self.status == TexasStatus.TURN:
             self.show_river()
             self.block_actions = False
             return
             
         # If river -> showdown
-        if self.status == TexasStatus.RIVER:
+        elif self.status == TexasStatus.RIVER:
             self.show_results()
             self.block_actions = False
             return
     
+    def reset_players_status(self):
+        for player in self.players:
+            player.reset_status()
+            
+    
+    def reset_checked_players(self):
+        for player in self.players:
+            if player.action == PlayerActions.CHECK:
+                player.action = None
+                player.unlock()
         
     def is_everyone_checked(self):
-        return all(player.status == PlayerActions.CHECK for player in self.players)
+        return all(player.action == PlayerActions.CHECK for player in self.players)
         
+    def reset_lower_bets(self):
+        for player in self.players:
+            if player.current_bet < self.highest_bet:
+                player.unlock()
         
-    def set_bet(self, bet):
-        if bet > self.highest_bet:
-            highest_bet = bet
+    def set_bet(self, bet, player):
+        if player.current_bet > self.highest_bet:
+            self.highest_bet = player.current_bet
         self.reset_checked_players()
+        self.reset_lower_bets()
         self.pot = self.pot + bet
         
     
     def take_action(self, action, player, bet=0):
         if self.block_actions:
             return
+        
         if action == PlayerActions.CHECK:
             if player.set_action(PlayerActions.CHECK, self.players):
                 mac.send_message(self.print_players_stauts(), self.conversation)
@@ -256,8 +259,9 @@ class WAPoker(object):
                 mac.send_message(player.who_name + " folded", self.conversation)
         elif action == PlayerActions.BET:
             if player.set_action(PlayerActions.BET, self.players, bet):
-                self.set_bet(bet)
+                self.set_bet(bet, player)
                 mac.send_message(self.print_players_stauts(), self.conversation)
+                
         if self.can_advance():
             self.do_next_turn()
         
@@ -348,15 +352,14 @@ def try_join_game(message):
 Returns the action chosed by the player
 '''
 def get_action(message):
-    if is_action(message):
-        if is_check_action(message):
-            return PlayerActions.CHECK
-        elif is_bet_action(message):
-            return PlayerActions.BET
-        elif is_fold_action(message):
-            return PlayerActions.FOLD
-    
-    return None
+    if is_check_action(message):
+        return PlayerActions.CHECK
+    elif is_bet_action(message):
+        return PlayerActions.BET
+    elif is_fold_action(message):
+        return PlayerActions.FOLD
+    else:
+        return None
     
 
 def is_check_action(message):
@@ -364,7 +367,7 @@ def is_check_action(message):
         return True
         
 def is_bet_action(message):
-    if message.message.lower() in actions["bet"]:
+    if message.message.lower().split(" ")[0] in actions["bet"]:
         return True
         
 def is_fold_action(message):
@@ -372,30 +375,23 @@ def is_fold_action(message):
         return True
     
 '''
-Check if the message is an action
-'''
-def is_action(message):
-    if message.message.lower() in actions_arr:
-        return True
-    else:
-        return False
-    
-'''
 Tries to interpret the action
 '''
 def try_action(action, message):
     game = find_chat_game(message.conversation)
-    player = game.player_in_game(message.who)
+    player = None
+    if game:
+        player = game.player_in_game(message.who)
     if game and player:
-        if action == PlayerActions.BET:
-            game.take_action(action, player, bet_from_message(message))
-        else:
-            game.take_action(action, player)
+        if not player.locked:
+            if action == PlayerActions.BET:
+                game.take_action(action, player, bet_from_message(message))
+            else:
+                game.take_action(action, player)
             
 def bet_from_message(message):
-    arg = message.predicate.split(' ')[1]
-    try: 
-        float(arg)
+    try:
+        arg = message.message.split(' ')[1]
         return float(arg)
-    except ValueError:
+    except:
         return 0

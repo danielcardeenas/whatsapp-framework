@@ -36,6 +36,10 @@ def handle_command(message):
             game.start()
         else:
             mac.send_message("No game found in this chat", message.conversation)
+    elif arg == "status":
+        game = WAPoker.find_my_game(message.conversation, message.who)
+        if game:
+            mac.send_message(game.print_players_stauts(), message.conversation)
     else:
         if arg == '':
             game = WAPoker(message.conversation, message.who)
