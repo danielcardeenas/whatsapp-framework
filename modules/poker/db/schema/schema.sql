@@ -1,0 +1,6 @@
+CREATE TABLE players (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  money REAL NOT NULL,
+  phone TEXT NOT NULL
+);

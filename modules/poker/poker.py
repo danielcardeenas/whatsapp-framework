@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import threading, time
 from app.utils import helper
 from app.mac import mac
 from modules.poker.player import Player
@@ -13,6 +14,8 @@ actions = dict(
     bet = ["bet"],
     call = ["call"]
 )
+
+future_message = None
 
 class WAPoker(object):
     def __init__(self, conversation, creator, join_identifier="#"):
@@ -51,6 +54,7 @@ class WAPoker(object):
             mac.send_message("Your game already started", self.conversation)
             return
         else:
+            Player.retrieve_players(self.players)
             mac.send_message(self.print_players(), self.conversation)
             self.started = True
         
@@ -77,32 +81,51 @@ class WAPoker(object):
         self.show_actions()
         
     def show_actions(self):
-        mac.send_message("*Actions:*\nCheck: check, ✅\nBet: bet <number>\nFold: fold, culeo, ❌", self.conversation)
+        mac.send_message("*Actions:*\nCheck: check, ✅\nBet: bet <number>\nFold: fold, culeo, ❌", self.conversation, False)
     
     def show_flop(self):
         self.status = TexasStatus.FLOP
-        mac.send_message("Flop:\n" + Card.print_pretty_cards(self.board[:3]) + "[ ] [ ]", self.conversation)
+        cancel_future_message()
+        mac.send_message("Flop:\n" + Card.print_pretty_cards(self.board[:3]) + "[ ] [ ]", self.conversation, False)
             
     def show_turn(self):
         self.status = TexasStatus.TURN
-        mac.send_message("Turn:\n" + Card.print_pretty_cards(self.board[:4]) + "[ ]", self.conversation)
+        cancel_future_message()
+        mac.send_message("Turn:\n" + Card.print_pretty_cards(self.board[:4]) + "[ ]", self.conversation, False)
         
     def show_river(self):
         self.status = TexasStatus.RIVER
-        mac.send_message("River:\n" + Card.print_pretty_cards(self.board[:5]), self.conversation)
+        cancel_future_message()
+        mac.send_message("River:\n" + Card.print_pretty_cards(self.board[:5]), self.conversation, False)
         
     def show_results(self):
         results = "*💰*: $" + str(self.pot) + "\n*Results:*"
         evaluator = Evaluator()
         for player in self.players:
-            player_score = evaluator.evaluate(self.board, player.hand)
-            player_class = evaluator.get_rank_class(player_score)
+            play_rank = evaluator.evaluate(self.board, player.hand)
+            player_class = evaluator.get_rank_class(play_rank)
+            player.play_rank = play_rank
             
-            results += "\n• " + player.who_name + " Rank: " + str(player_score) + ", Play: " + evaluator.class_to_string(player_class) + "\n" + Card.print_pretty_cards(player.hand)
-            
-        mac.send_message(results, self.conversation)
+            results += "\n• " + player.who_name + " Rank: " + str(play_rank) + ", Play: " + evaluator.class_to_string(player_class) + "\n" + Card.print_pretty_cards(player.hand)
+        
+        self.update_players_money()
+        winner = self.get_winner()
+        results += "\n" + winner.who_name + " wins!"
+        mac.send_message(results, self.conversation, True)
         self.finish()
-    
+        
+    def update_players_money(self):
+        winner = self.get_winner()
+        winner.add_money(self.pot)
+        Player.update_players(self.players)
+        
+    def get_winner(self):
+        winner = self.players[0]
+        for player in self.players:
+            if player.play_rank < winner.play_rank:
+                winner = player
+                
+        return winner
     
     def deal_hands(self):
         for player in self.players:
@@ -252,15 +275,15 @@ class WAPoker(object):
         
         if action == PlayerActions.CHECK:
             if player.set_action(PlayerActions.CHECK, self.players):
-                mac.send_message(self.print_players_stauts(), self.conversation)
+                poker_send_message(self.print_players_stauts(), self.conversation, False)
         elif action == PlayerActions.FOLD:
             if player.set_action(PlayerActions.FOLD, self.players):
                 self.players.remove(player)
-                mac.send_message(player.who_name + " folded", self.conversation)
+                mac.send_message(player.who_name + " folded", self.conversation, False)
         elif action == PlayerActions.BET:
             if player.set_action(PlayerActions.BET, self.players, bet):
                 self.set_bet(bet, player)
-                mac.send_message(self.print_players_stauts(), self.conversation)
+                poker_send_message(self.print_players_stauts(), self.conversation, False)
                 
         if self.can_advance():
             self.do_next_turn()
@@ -336,10 +359,10 @@ I mean, if the player tried to join the game
 '''
 def try_join_game(message):
     for game in active_games:
-        if game.join_identifier in message.message:
+        if game.join_identifier.lower() in message.message.lower():
             if game.is_conversation(message.conversation):
                 if game.started:
-                    mac.send_message("Sorry " + message.who_name + ", the game already started", message.conversation)
+                    mac.send_message("Sorry " + message.who_name + ", the game already started", message.conversation, False)
                     return True
                 else:
                     game.join(Player(message))
@@ -392,6 +415,29 @@ def try_action(action, message):
 def bet_from_message(message):
     try:
         arg = message.message.split(' ')[1]
-        return float(arg)
+        return abs(round(float(arg)))
     except:
         return 0
+        
+
+'''
+Decides if send a message on thread
+'''
+def thread_message(message, conversation, disconnect=True):
+    game = find_chat_game(conversation)
+    if game:
+        mac.send_message(message, conversation, disconnect)   
+
+'''
+Message queue for poker
+'''
+def poker_send_message(message, conversation, disconnect=True):
+    cancel_future_message()
+    
+    future_message = threading.Timer(3.0, thread_message, [message, conversation, disconnect])
+    future_message.start()
+    
+def cancel_future_message():
+    global future_message
+    if future_message:
+        future_message.cancel()

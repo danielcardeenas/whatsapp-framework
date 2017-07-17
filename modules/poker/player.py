@@ -3,6 +3,9 @@ from app.mac import mac
 from pprint import pprint
 from modules.poker.deuces import Card
 from modules.poker.constants import TexasStatus, PlayerActions
+import sqlite3
+
+conn = sqlite3.connect('modules/poker/db/poker.db')
 
 class Player(object):
     def __init__(self, message):
@@ -12,12 +15,13 @@ class Player(object):
         self.hand = None
         self.action = None
         self.current_bet = 0
-        self.money = 10
+        self.money = 20
         self.locked = False
+        self.play_rank = None
 
     def notify_hand(self):
         chat_info = "Hand: " + Card.print_pretty_cards(self.hand) 
-        mac.send_message(chat_info, self.who)
+        mac.send_message(chat_info, self.who, False)
 
     def pretty_status(self, highest_bet=0):
         base = "($" + str( self.money) + ") " + self.who_name + ": " + self.status_str()
@@ -36,7 +40,7 @@ class Player(object):
         if self.action == PlayerActions.CHECK:
             return "✅"
         elif self.action == PlayerActions.BET:
-            return "💵" + str(self.current_bet)
+            return "💵 " + str(self.current_bet)
         elif self.action == None:
             return ""
         else:
@@ -87,3 +91,31 @@ class Player(object):
             
     def is_all_in(self):
         return self.money <= 0
+        
+    def set_money(self, money):
+        self.money = money
+        
+    def add_money(self, money):
+        self.money = self.money + money
+        
+        
+    @staticmethod
+    def retrieve_players(players):
+        for player in players:
+            data = conn.execute("select phone, money, name from players where phone = ?", (player.who,)).fetchone()
+            if data is None:
+                # New player in db
+                conn.executescript("insert into players(name, money, phone) values('" + player.who_name + "', " + str(20) + ", '" + player.who + "')")
+                conn.close()
+            else:
+                player.set_money(float(data[1]))
+                
+    
+    @staticmethod
+    def update_players(players):
+        for player in players:
+            data = conn.execute("select phone, money, name from players where phone = ?", (player.who,)).fetchone()
+            if data:
+                conn.executescript("update players set money = " + str(player.money) + " where phone = '" + player.who + "'")
+                conn.close()
+                

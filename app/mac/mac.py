@@ -41,24 +41,27 @@ def receive_message(self, message_entity):
     ack_queue.append(message_entity)
 
 
-def prepate_answer(self, conversation):
+def prepate_answer(self, conversation, disconnect_after=True):
     # Set name Presence
     make_presence(self)
 
     # Set online
     online(self)
-    time.sleep(random.uniform(0.5, 1.5))
+    time.sleep(random.uniform(0.1, 0.4))
 
     # Set read (double v blue)
     ack_messages(self, conversation)
 
     # Set is writing
     start_typing(self, conversation)
-    time.sleep(random.uniform(0.5, 2))
+    time.sleep(random.uniform(0.5, 1.4))
 
     # Set it not writing
     stop_typing(self, conversation)
-    time.sleep(random.uniform(0.3, 0.7))
+    #time.sleep(random.uniform(0.1, 0.3))
+    
+    if disconnect_after:
+        disconnect(self)
 
 
 def make_presence(self):
@@ -125,11 +128,11 @@ def remove_conversation_from_queue(conversation):
     ack_queue[:] = [entity for entity in ack_queue if not same_conversation(entity, conversation)]
 
 
-def send_message(str_message, conversation):
+def send_message(str_message, conversation, disconnect_after=True):
     message = decode_string(str_message)
     
     # Prepare mac to answer (Human behavior)
-    prepate_answer(entity, conversation)
+    prepate_answer(entity, conversation, disconnect_after)
     entity.toLower(helper.make_message(message, conversation))
     
     
