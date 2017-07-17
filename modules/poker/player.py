@@ -6,6 +6,7 @@ from modules.poker.constants import TexasStatus, PlayerActions
 import sqlite3
 
 conn = sqlite3.connect('modules/poker/db/poker.db')
+cursor = conn.cursor()
 
 class Player(object):
     def __init__(self, message):
@@ -102,20 +103,17 @@ class Player(object):
     @staticmethod
     def retrieve_players(players):
         for player in players:
-            data = conn.execute("select phone, money, name from players where phone = ?", (player.who,)).fetchone()
+            data = cursor.execute("select phone, money, name from players where phone = ?", (player.who,)).fetchone()
             if data is None:
                 # New player in db
                 conn.executescript("insert into players(name, money, phone) values('" + player.who_name + "', " + str(20) + ", '" + player.who + "')")
-                conn.close()
             else:
                 player.set_money(float(data[1]))
-                
     
     @staticmethod
     def update_players(players):
         for player in players:
-            data = conn.execute("select phone, money, name from players where phone = ?", (player.who,)).fetchone()
+            data = cursor.execute("select phone, money, name from players where phone = ?", (player.who,)).fetchone()
             if data:
                 conn.executescript("update players set money = " + str(player.money) + " where phone = '" + player.who + "'")
-                conn.close()
                 

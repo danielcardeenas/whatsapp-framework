@@ -32,7 +32,6 @@ class MacStack(object):
     def start(self):
         print("[Whatsapp] Mac started\n")
 
-        # Idk what is this
         self.stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
 
         try:
