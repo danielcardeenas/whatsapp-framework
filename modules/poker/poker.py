@@ -275,7 +275,8 @@ class WAPoker(object):
         
         if action == PlayerActions.CHECK:
             if player.set_action(PlayerActions.CHECK, self.players):
-                poker_send_message(self.print_players_stauts(), self.conversation, False)
+                pass
+                #poker_send_message(self.print_players_stauts(), self.conversation, False)
         elif action == PlayerActions.FOLD:
             if player.set_action(PlayerActions.FOLD, self.players):
                 self.players.remove(player)
@@ -283,7 +284,7 @@ class WAPoker(object):
         elif action == PlayerActions.BET:
             if player.set_action(PlayerActions.BET, self.players, bet):
                 self.set_bet(bet, player)
-                poker_send_message(self.print_players_stauts(), self.conversation, False)
+                #poker_send_message(self.print_players_stauts(), self.conversation, False)
                 
         if self.can_advance():
             self.do_next_turn()
@@ -317,6 +318,11 @@ class WAPoker(object):
         game = game_from_user_conversation(conversation, creator)
         if game:
             game.finish()
+            
+        
+    @classmethod
+    def find_chat_game(self, conversation):
+        return find_chat_game(conversation)
             
             
 '''

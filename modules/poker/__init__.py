@@ -11,7 +11,7 @@ Main funciton, all happens after this
 '''
 @signals.message_received.connect
 def handle(message):
-    if message.command == "poker":
+    if message.command.lower() == "poker":
         if message.predicate == "-h":
             show_help(message)
         else:
@@ -37,7 +37,7 @@ def handle_command(message):
         else:
             mac.send_message("No game found in this chat", message.conversation)
     elif arg == "status":
-        game = WAPoker.find_my_game(message.conversation, message.who)
+        game = WAPoker.find_chat_game(message.conversation)
         if game:
             mac.send_message(game.print_players_stauts(), message.conversation)
     else:

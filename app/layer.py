@@ -6,14 +6,14 @@ from app.utils import helper
 from app.mac import mac, signals
 from app.receiver import receiver
 from app.models.message import Message
+from app.intercepter import intercepter
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_contacts.protocolentities import *
-
 from yowsup.layers.protocol_groups.protocolentities import *
 
 '''
-Basic flow. DO NOT TOUCH
+Basic lifesycle. DO NOT TOUCH
 Modifying this block automatically makes you a piece of shit
 ################################################################################
 ################################################################################
