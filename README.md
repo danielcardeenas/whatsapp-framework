@@ -39,7 +39,7 @@ from app.mac import mac, signals
 
 @signals.message_received.connect
 def handle(message):
-    if message.command == "hi":
+    if message.message == "hi":
         mac.send_message("Hello", message.conversation)
 ```
 Now you should only add it into [`modules/__init__.py`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/__init__.py) to enable the module
