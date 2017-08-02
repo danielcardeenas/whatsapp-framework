@@ -3,7 +3,7 @@
 ![Version](https://img.shields.io/badge/release-beta-green.svg?style=flat-square)
 
 <!---[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57RJJGH3HPCG6)-->
-###### Everything seems working nice now
+###### Everything seems to be working nice now
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
 Mac has built-in human behaivor so you only have to worry about the functions you make. Every module works completely separated from the core, this means that you can erease every module and mac will keep working
