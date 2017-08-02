@@ -5,7 +5,7 @@ Signals this module listents to:
 1. When a message is received (signals.message_received)
 ==========================================================
 '''
-@signals.message_received.connect
+@signals.command_received.connect
 def handle(message):
     if message.command == "hi":
         hi(message)

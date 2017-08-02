@@ -6,3 +6,4 @@ app/mac_bot.egg-info/
 app/assets/*
 cli
 tags.txt
+modules/broadcast/*

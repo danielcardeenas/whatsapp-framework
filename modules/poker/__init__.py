@@ -5,13 +5,14 @@ Poker module
 
 from app.mac import mac, signals
 from modules.poker.poker import WAPoker
+from app.utils import helper
 
 '''
 Main funciton, all happens after this
 '''
 @signals.message_received.connect
 def handle(message):
-    if message.command.lower() == "poker":
+    if helper.is_command(message.message) and message.command.lower() == "poker":
         if message.predicate == "-h":
             show_help(message)
         else:

@@ -19,15 +19,6 @@ entity = None
 
 name = "Mac"
 ack_queue = []
-commands = [ 
-    "hi",
-    "poll",
-    "yt",
-    "help",
-    "siono",
-    "poll2",
-    "elo"
-]
 logger = logging.getLogger(__name__)
 
 def set_entity(instance):
@@ -88,17 +79,6 @@ def stop_typing(self, conversation):
         OutgoingChatstateProtocolEntity.STATE_PAUSED,
         Jid.normalize(conversation)
     ))
-
-
-def is_in_command_list(message_entity):
-    try:
-        command = helper.predicate(message_entity).split(' ', 1)[0]
-        if command in commands:
-            return True
-    except:
-        return False
-        
-    return False
 
 
 def ack_messages(self, conversation):

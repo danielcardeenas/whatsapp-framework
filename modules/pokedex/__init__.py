@@ -10,7 +10,7 @@ from modules.pokedex import pykemon
 '''
 Main funciton, all happens after this
 '''
-@signals.message_received.connect
+@signals.command_received.connect
 def handle(message):
     if message.command == "pokemon":
         if message.predicate == "-h":
@@ -27,16 +27,24 @@ Handles command
 def handle_command(message):
     arg = message.predicate.split(' ')[0]
     if is_int_number(arg):
-        try:
-            client = pykemon.V1Client()
-            pokemon = client.get_pokemon(uid=int(arg))[0]
+        pokemon = get_pokemon(arg)
+        if pokemon:
             mac.send_message(pokemon.name.capitalize(), message.conversation)
-            #mac.send_image(message.conversation, get_image(pokemon.sprites["front_default"], "1.png"), pokemon.name)
-        except Exception as ex:
-            print(ex)
+        else:
             mac.send_message("Couldn't find the pokemon", message.conversation)
     else:
         mac.send_message("Invalid argument", message.conversation)
+        
+        
+def get_pokemon(number):
+    try:
+        client = pykemon.V1Client()
+        pokemon = client.get_pokemon(uid=int(number))[0]
+        return pokemon
+    except Exception as ex:
+        print(ex)
+        return
+    
     
 def is_int_number(arg):
     try: 

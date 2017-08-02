@@ -1,6 +1,9 @@
 import wolframalpha
+import re
+
 from app.mac import mac, signals
 from modules.wolfram import config
+from modules import pokedex
 
 '''
 Signals this module listents to:
@@ -9,9 +12,16 @@ Signals this module listents to:
 '''
 @signals.message_received.connect
 def handle(message):
-    request = shoudl_answer(message)
+    request = should_answer(message)
     if request != '':
-        mac.send_message(wolfram_answer(request), message.conversation)
+        if is_pokemon_case(request):
+            pokemon = pokedex.get_pokemon(request.split(' ')[1])
+            if pokemon:
+                #mac.send_message(pokemon.name.capitalize(), message.conversation)
+                mac.send_message(wolfram_answer("pokemon " + pokemon.name.capitalize()), message.conversation)
+                
+        else:
+            mac.send_message(wolfram_answer(request), message.conversation)
 
 
 '''
@@ -37,10 +47,18 @@ def wolfram_answer(message):
     
     return answer
         
-def shoudl_answer(message):
+def should_answer(message):
     if message.message[:4].lower() == 'mac,':
         return message.message[4:].strip()
-    elif message.message[:3].lower() == 'mac':
+    elif message.message[:4].lower() == 'mac ':
         return message.message[3:].strip()
     else:
         return ""
+        
+
+def is_pokemon_case(request):
+    regex = r"pokemon [0-9]*$"
+    if re.match(regex, request, re.IGNORECASE):
+        return True
+    else:
+        return False

@@ -5,7 +5,7 @@ from modules.elo import elo, match
 '''
 Main funciton, all happens after this
 '''
-@signals.message_received.connect
+@signals.command_received.connect
 def handle(message):
     if message.command == "elo":
         handle_elo(message)

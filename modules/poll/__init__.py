@@ -3,18 +3,19 @@ Poll module
 ----------------------------------------------------------------------------
 
 Handles the parameters to create a poll
-Structure of the message: "<title>, <identifier (optional)>"
+Structure of the message: "!poll <title>, <identifier (optional)>"
 '''
 
 from app.mac import mac, signals
 from modules.poll.poll import WAPoll
+from app.utils import helper
 
 '''
 Main funciton, all happens after this
 '''
 @signals.message_received.connect
 def handle(message):
-    if message.command == "poll":
+    if helper.is_command(message.message) and message.command.lower() == "poll":
         if message.predicate == "-h":
             show_help(message)
         else:

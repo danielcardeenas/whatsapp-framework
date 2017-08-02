@@ -11,5 +11,5 @@ initialized = signal('mac_initialized')
 Messages
 '''
 
-# Simple message
-message_received = signal('message_received')
+message_received = signal('message_received') # Plain message
+command_received = signal('command_received') # !<command>
