@@ -20,7 +20,12 @@ _This needs **Python 3.5**_
 > sudo ./setup.sh
 ```
 
-3. Register your phone and get a password with yowsup-cli: [_Documentation_](https://github.com/tgalal/yowsup/wiki/yowsup-cli-2.0)
+3. Register your phone and get a password with like this:
+```sh
+> yowsup-cli registration --requestcode sms --phone 49XXXXXXX--cc 49 -E android
+# After getting the sms (6 digits code)
+> yowsup-cli registration --register 123456 --phone 49XXXXXXXX --cc 49  
+```
 
 
 4. Open **config.py** and add set your credentials
