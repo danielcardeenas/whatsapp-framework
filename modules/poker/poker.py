@@ -56,6 +56,7 @@ class WAPoker(object):
         else:
             Player.retrieve_players(self.players)
             mac.send_message(self.print_players(), self.conversation)
+            self.remove_poor_players()
             self.started = True
         
         # Block incoming
@@ -138,7 +139,6 @@ class WAPoker(object):
         
     
     def join(self, player):
-        # If haven't already voted in this poll
         if not any(player.who == p.who for p in self.players):
             self.players.append(player)
         
@@ -146,7 +146,10 @@ class WAPoker(object):
     def print_players(self):
         players_str = "*Players:*"
         for player in self.players:
-            players_str += "\n• " + player.who_name + " ($" + str(player.money) + ")"
+            if player.money <= 0:
+                players_str += "\n• " + player.who_name + " (Too poor to play)"
+            else:
+                players_str += "\n• " + player.who_name + " ($" + str(player.money) + ")"
             
         return players_str
         
@@ -156,6 +159,11 @@ class WAPoker(object):
             players_status += "\n• " + player.pretty_status(self.highest_bet)
             
         return players_status
+        
+    def remove_poor_players(self):
+        for player in self.players:
+            if player.money <= 0:
+                self.players.remove(player)
         
     
     def finish(self):
@@ -279,7 +287,7 @@ class WAPoker(object):
                 #poker_send_message(self.print_players_stauts(), self.conversation, False)
         elif action == PlayerActions.FOLD:
             if player.set_action(PlayerActions.FOLD, self.players):
-                self.players.remove(player)
+                self.fold_player(player)
                 mac.send_message(player.who_name + " folded", self.conversation, False)
         elif action == PlayerActions.BET:
             if player.set_action(PlayerActions.BET, self.players, bet):
@@ -288,6 +296,11 @@ class WAPoker(object):
                 
         if self.can_advance():
             self.do_next_turn()
+            
+            
+    def fold_player(self, player):
+        player.update_money_db()
+        self.players.remove(player)
         
     '''
     Public function of the inside function called basically

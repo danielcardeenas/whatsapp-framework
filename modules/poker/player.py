@@ -99,6 +99,9 @@ class Player(object):
     def add_money(self, money):
         self.money = self.money + money
         
+    def update_money_db(self):
+        conn.executescript("update players set money = " + str(self.money) + " where phone = '" + self.who + "'")
+        
         
     @staticmethod
     def retrieve_players(players):

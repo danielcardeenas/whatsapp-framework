@@ -1,12 +1,13 @@
 from app.utils import helper
 
 class Message(object):
-    def __init__(self, message_entity):
+    def __init__(self, message_entity, tags=[]):
         self.message = helper.clean_message(message_entity)
         self.who = helper.get_who_send(message_entity)
         self.who_name = helper.sender_name(message_entity)
         self.conversation = message_entity.getFrom()
         self.message_entity = message_entity
+        self.tags = tags
         
         # These two attributes are just easier ways to identify instructions
         # But they are not really needed since you have the whole message
