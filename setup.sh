@@ -2,7 +2,6 @@ RED='\033[1;31m'
 ORANGE='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
-#printf "I ${CYAN}love${NC} Stack Overflow\n"
 
 install_requirements() {
     module_requirements="$1"
