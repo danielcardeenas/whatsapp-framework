@@ -2,7 +2,7 @@
 ![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg?style=flat-square)
 ![Version](https://img.shields.io/badge/release-beta-green.svg?style=flat-square)
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57RJJGH3HPCG6)
+<!---[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57RJJGH3HPCG6)-->
 ###### Everything seems working nice now
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom functions easily.
 
@@ -20,7 +20,12 @@ _This needs **Python 3.5**_
 > sudo ./setup.sh
 ```
 
-3. Register your phone and get a password with yowsup-cli: [_Documentation_](https://github.com/tgalal/yowsup/wiki/yowsup-cli-2.0)
+3. Register your phone and get a password with like this:
+```sh
+> yowsup-cli registration --requestcode sms --phone 49XXXXXXX--cc 49 -E android
+# After getting the sms (6 digits code)
+> yowsup-cli registration --register 123456 --phone 49XXXXXXXX --cc 49  
+```
 
 
 4. Open **config.py** and add set your credentials
@@ -39,7 +44,7 @@ from app.mac import mac, signals
 
 @signals.message_received.connect
 def handle(message):
-    if message.command == "hi":
+    if message.message == "hi":
         mac.send_message("Hello", message.conversation)
 ```
 Now you should only add it into [`modules/__init__.py`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/__init__.py) to enable the module
