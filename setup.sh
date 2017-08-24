@@ -7,7 +7,7 @@ install_requirements() {
     module_requirements="$1"
     
     #echo "pip3.5 -qqq install -r $module_requirements"
-    pip3.5 -qqq install -r $module_requirements
+    pip3 -qqq install -r $module_requirements
     
     return_code=$?
     if [ $return_code != 0 ]; then

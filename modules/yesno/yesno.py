@@ -1,5 +1,5 @@
 import requests
-import moviepy.editor as mp
+#import moviepy.editor as mp
 from app.mac import mac
 
 api_url = "https://yesno.wtf/api/"
@@ -15,7 +15,8 @@ class YesNo(object):
     def build(self):
         response = requests.get(api_url)
         json = response.json()
-        self.caption = translate_caption(json["answer"])
+        #self.caption = translate_caption(json["answer"])
+        self.caption = json["answer"]
         self.image_path = get_image(json["image"], self.caption)
 
     def send_yesno(self):
@@ -33,11 +34,13 @@ class YesNo(object):
 Converts gif to video (mp4)
 return video file path
 '''
+'''
 def gif_to_video(image_path, caption):
     path = "app/assets/images/" + caption + ".mp4"
     clip = mp.VideoFileClip(image_path)
     clip.write_videofile(path)
     return path
+'''
 
 
 '''
