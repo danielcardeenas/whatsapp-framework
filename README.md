@@ -25,7 +25,7 @@ _This needs **Python 3.5**_
 # Replace CC with your country code (See http://www.ipipi.com/help/telephone-country-codes.htm)
 > yowsup-cli registration --requestcode sms --phone CCXXXXXXXX--cc CC -E android
 # After getting the sms code (in this example: 123456)
-> yowsup-cli registration --register 123456 --phone CCXXXXXXXX --cc CC
+> yowsup-cli registration --register 123456 --phone CCXXXXXXXX --cc CC -E android
 ```
 
 
