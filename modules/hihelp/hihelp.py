@@ -2,7 +2,7 @@ from app.mac import mac, signals
 
 '''
 Signals this module listents to:
-1. When a message is received (signals.message_received)
+1. When a message is received (signals.command_received)
 ==========================================================
 '''
 @signals.command_received.connect
