@@ -1,13 +1,10 @@
 '''
-Poll module
+Poll2 module
 ----------------------------------------------------------------------------
-
-Handles the parameters to create a poll
-Structure of the message: "!poll <title>, <identifier (optional)>"
 '''
 
 from app.mac import mac, signals
-from modules.poll.poll import WAPoll
+from modules.poll2 import poll2
 from app.utils import helper
 
 '''
@@ -15,19 +12,18 @@ Main funciton, all happens after this
 '''
 @signals.message_received.connect
 def handle(message):
-    if helper.is_command(message.message) and message.command.lower() == "poll":
+    if helper.is_command(message.message) and message.command.lower() == "poll2":
         if message.predicate == "-h":
             show_help(message)
         else:
-            WAPoll.handle_command(message)
-            
+            poll2.handle_command(message)
     else:
-        WAPoll.handle_vote(message)
+        poll2.handle_vote(message)
         
 
 '''
 Prints help (how to use example)
 '''
 def show_help(message):
-    answer = "*Poll*\n*Usage:* !poll [title], [voter]\n*Example:* !poll who is gay?, ✋\n*To finish poll:* !poll finish"
+    answer = "*Poll2*\n*Usage:* !poll2 [title], [options...]\n*Example:* !poll who is the gayest?, Lucas, Berni, Dany \n*To finish poll:* !poll2 finish"
     mac.send_message(answer, message.conversation)

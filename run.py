@@ -9,7 +9,7 @@ from yowsup.layers.network import YowNetworkLayer
 from app.layer import MacLayer
 
 # Uncomment to log
-# logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 # Config
 credentials = (config.credentials['phone'], config.credentials['password'])
