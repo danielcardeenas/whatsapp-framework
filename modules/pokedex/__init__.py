@@ -29,7 +29,12 @@ def handle_command(message):
     if is_int_number(arg):
         pokemon = get_pokemon(arg)
         if pokemon:
-            mac.send_message(pokemon.name.capitalize(), message.conversation)
+            sprite = get_sprite(pokemon)
+            print(sprite)
+            if sprite is not None:
+                mac.send_image(get_image(sprite, sprite.split('/')[-1]), message.conversation, pokemon.name.capitalize())
+            else:
+                mac.send_message(pokemon.name.capitalize(), message.conversation)
         else:
             mac.send_message("Couldn't find the pokemon", message.conversation)
     else:
@@ -44,7 +49,25 @@ def get_pokemon(number):
     except Exception as ex:
         print(ex)
         return
-    
+
+
+def get_sprite(pokemon):
+    try:
+        if pokemon:
+            if pokemon.sprites:
+                if pokemon.sprites['front_default'] is not None:
+                    return pokemon.sprites['front_default']
+                elif pokemon.sprites.default is not None:
+                    return pokemon.sprites['default']
+                else:
+                    return None
+            else:
+                return None
+        else:
+            return None
+    except Exception as ex:
+        return None
+
     
 def is_int_number(arg):
     try: 

@@ -24,10 +24,10 @@ class YesNo(object):
         # mac.send_video(self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
 
         # Sends gif as image
-        mac.send_image(self.conversation, self.image_path, self.caption)
+        #mac.send_image(self.image_path, self.conversation, self.caption)
 
         # Sends just the answer
-        #mac.send_message("*" + self.caption + "*", self.conversation)
+        mac.send_message("*" + self.caption + "*", self.conversation)
 
 
 '''

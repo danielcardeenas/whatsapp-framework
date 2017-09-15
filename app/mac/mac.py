@@ -116,7 +116,7 @@ def send_message(str_message, conversation, disconnect_after=True):
     entity.toLower(helper.make_message(message, conversation))
     
     
-def send_image(conversation, path, caption=None):
+def send_image(path, conversation, caption=None):
     if os.path.isfile(path):
         media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE, caption)
     else:
