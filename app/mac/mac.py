@@ -176,12 +176,13 @@ def on_request_upload_result(self, jid, media_type, file_path, result_request_up
                                                           file_path,
                                                           jid,
                                                           result_request_upload_entity.getResumeOffset()),
-                                       async=False)
+                                       async=True)
         media_uploader.start()
 
 
 def on_request_upload_error(self, jid, path, error_request_upload_iq_entity, request_upload_iq_entity):
-    logger.error("Request upload for file %s for %s failed" % (path, jid))
+    return
+    #logger.error("Request upload for file %s for %s failed" % (path, jid))
 
 
 def do_send_media(self, media_type, file_path, url, to, ip=None, caption=None):
@@ -197,10 +198,12 @@ def do_send_media(self, media_type, file_path, url, to, ip=None, caption=None):
 
 
 def on_upload_error(self, filePath, jid):
-    logger.error("Upload file %s to %s failed!" % (filePath, jid))
+    return
+    #logger.error("Upload file %s to %s failed!" % (filePath, jid))
 
 
 def on_upload_progress(self, filePath, jid, progress):
-    sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
-    sys.stdout.flush()
+    return
+    #sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
+    #sys.stdout.flush()
 

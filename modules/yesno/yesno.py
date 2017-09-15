@@ -21,13 +21,13 @@ class YesNo(object):
 
     def send_yesno(self):
         # Converts gif to mp4 and sends as video
-        # mac.send_video(self.instance, self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
+        # mac.send_video(self.conversation, gif_to_video(self.image_path, self.caption), self.caption)
 
         # Sends gif as image
-        #mac.send_image(self.instance, self.conversation, self.image_path, self.caption)
+        mac.send_image(self.conversation, self.image_path, self.caption)
 
         # Sends just the answer
-        mac.send_message("*" + self.caption + "*", self.conversation)
+        #mac.send_message("*" + self.caption + "*", self.conversation)
 
 
 '''
@@ -48,7 +48,7 @@ Downloads image from url
 returns image file path
 '''
 def get_image(url, caption):
-    path = "app/assets/images/" + caption + ".gif"
+    path = "app/assets/images/" + caption + ".png"
     file = open(path, 'wb')
     file.write(requests.get(url).content)
     file.close()
