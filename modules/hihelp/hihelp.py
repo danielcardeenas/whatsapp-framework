@@ -9,7 +9,7 @@ Signals this module listents to:
 def handle(message):
     if message.command == "hi":
         hi(message)
-    elif message.command == "help":
+    elif message.command == "help": 
         help(message)
 
 '''
@@ -18,7 +18,7 @@ Actual module code
 '''
 def hi(message):
     who_name = message.who_name
-    answer = "Hi *" + who_name + "*"
+    answer = "Hi " + who_name
     mac.send_message(answer, message.conversation)
     
 def help(message):
