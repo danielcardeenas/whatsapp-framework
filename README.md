@@ -63,8 +63,9 @@ And that's it! You are ready to go.
 
 
 ### Example screenshots:
-![alt text](http://i.imgur.com/ZRlk5Uj.png)
-![alt text](http://i.imgur.com/JmPbPXB.png)
-![alt text](http://i.imgur.com/L4ebZql.png)
+![](https://i.imgur.com/ZRlk5Uj.png)
+![](https://i.imgur.com/JmPbPXB.png)
+![](https://i.imgur.com/L4ebZql.png)
+<img src="https://i.imgur.com/pLiwAm5.png" width="253px" height="450px">
 
 ###### **BTC**: 3FSCxDHnRKQvRJWPv4fcbLm37RemauTXRF
