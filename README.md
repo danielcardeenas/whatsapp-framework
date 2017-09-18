@@ -68,5 +68,6 @@ And that's it! You are ready to go.
 ![](https://i.imgur.com/L4ebZql.png)
 <img src="https://i.imgur.com/pLiwAm5.png" width="253px" height="450px">
 <img src="https://i.imgur.com/poLpmAR.png" width="253px" height="450px">
+<img src="https://i.imgur.com/CRNKfHj.png" width="253px" height="450px">
 
 ###### **BTC**: 3FSCxDHnRKQvRJWPv4fcbLm37RemauTXRF
