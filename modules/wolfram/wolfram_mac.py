@@ -48,10 +48,10 @@ def wolfram_answer(message):
     return answer
         
 def should_answer(message):
-    if message.message[:4].lower() == 'mac,':
-        return message.message[4:].strip()
-    elif message.message[:4].lower() == 'mac ':
-        return message.message[3:].strip()
+    if message.text[:4].lower() == 'mac,':
+        return message.text[4:].strip()
+    elif message.text[:4].lower() == 'mac ':
+        return message.text[3:].strip()
     else:
         return ""
         

@@ -29,8 +29,8 @@ def handle_command(message):
 def handle_vote(message):
     if conversation_has_poll(message.conversation):
         poll = get_poll(message.conversation)
-        if message.message in numbers and poll is not None:
-            vote(message.message, message.who, poll)
+        if message.text in numbers and poll is not None:
+            vote(message.text, message.who, poll)
 
 
 def get_poll(conversation):

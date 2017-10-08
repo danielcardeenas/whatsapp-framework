@@ -15,7 +15,7 @@ Main funciton, all happens after this
 '''
 @signals.message_received.connect
 def handle(message):
-    if helper.is_command(message.message) and message.command.lower() == "poll":
+    if helper.is_command(message.text) and message.command.lower() == "poll":
         if message.predicate == "-h":
             show_help(message)
         else:

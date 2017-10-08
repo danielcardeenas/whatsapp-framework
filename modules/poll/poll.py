@@ -58,7 +58,7 @@ class WAPoll(object):
     @classmethod
     def handle_vote(self, message):
         for poll in active_polls:
-            if poll.identifier in message.message:
+            if poll.identifier in message.text:
                 if poll.is_conversation(message.conversation):
                     poll.put_vote(Voter(message))
     

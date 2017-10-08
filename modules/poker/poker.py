@@ -378,7 +378,7 @@ I mean, if the player tried to join the game
 '''
 def try_join_game(message):
     for game in active_games:
-        if game.join_identifier.lower() in message.message.lower():
+        if game.join_identifier.lower() in message.text.lower():
             if game.is_conversation(message.conversation):
                 if game.started:
                     mac.send_message("Sorry " + message.who_name + ", the game already started", message.conversation, False)
@@ -405,15 +405,15 @@ def get_action(message):
     
 
 def is_check_action(message):
-    if message.message.lower() in actions["check"]:
+    if message.text.lower() in actions["check"]:
         return True
         
 def is_bet_action(message):
-    if message.message.lower().split(" ")[0] in actions["bet"]:
+    if message.text.lower().split(" ")[0] in actions["bet"]:
         return True
         
 def is_fold_action(message):
-    if message.message.lower() in actions["fold"]:
+    if message.text.lower() in actions["fold"]:
         return True
     
 '''
@@ -433,7 +433,7 @@ def try_action(action, message):
             
 def bet_from_message(message):
     try:
-        arg = message.message.split(' ')[1]
+        arg = message.text.split(' ')[1]
         return abs(round(float(arg)))
     except:
         return 0

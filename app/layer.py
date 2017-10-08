@@ -58,7 +58,6 @@ class MacLayer(YowInterfaceLayer):
         # Make message
         message = Message(message_entity)
         if message.valid:
-            message.log()
             signals.message_received.send(message)
             if helper.is_command(message.message):
                 signals.command_received.send(message)
