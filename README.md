@@ -13,7 +13,7 @@ _This needs **Python 3.5**_
 # Setup:
 1. Clone this repository (with submodules since it uses tgalal's yowsup library)
 ```sh
-> git clone --recursive https://github.com/danielcardeenas/whatsapp-framework.git
+> git clone https://github.com/danielcardeenas/whatsapp-framework.git
 ```
 2. Run setup.sh (Most likely on sudo since its going to install some libraries)
 ```sh
