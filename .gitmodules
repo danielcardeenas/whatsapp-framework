@@ -1,7 +1,0 @@
-[submodule "yowsup"]
-	path = libs/yowsup
-	url = https://github.com/danielcardeenas/yowsup
-
-[submodule "pythom-axolotl"]
-	path = libs/python-axolotl
-	url = https://github.com/danielcardeenas/python-axolotl
