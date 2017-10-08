@@ -1,6 +1,7 @@
 # -*- coding utf-8 -*-
 import time
 import random
+import shutil, os, logging
 
 from app.utils import helper
 from app.mac import mac, signals
@@ -11,14 +12,15 @@ from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_contacts.protocolentities import *
 from yowsup.layers.protocol_groups.protocolentities import *
 
+from yowsup.layers.protocol_media.mediadownloader import MediaDownloader
+
 '''
 Basic lifesycle. DO NOT TOUCH
-Modifying this block automatically makes you a piece of shit
 ################################################################################
 ################################################################################
 '''
 class MacLayer(YowInterfaceLayer):
-    PROP_CONTACTS = "org.openwhatsapp.yowsup.prop.syncdemo.contacts"
+    PROP_CONTACTS = "whatsapp.contacts"
 
     def __init__(self):
         super(MacLayer, self).__init__()
@@ -37,8 +39,9 @@ class MacLayer(YowInterfaceLayer):
         #print(result_sync_iq_entity)
 
     def on_sync_error(self, error_sync_iq_entity, original_iq_entity):
-        print("Sync error:")
-        print(error_sync_iq_entity)
+        pass
+        #print("Sync error:")
+        #print(error_sync_iq_entity)
 
 
     @ProtocolEntityCallback("receipt")
@@ -48,29 +51,28 @@ class MacLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
     def on_message(self, message_entity):
-        helper.log(message_entity)
-        if helper.is_text_message(message_entity):
-            mac.set_entity(self)
-
-            # Set received (double v) and add to ack queue
-            mac.receive_message(self, message_entity)
+        # Set received (double v) and add to ack queue
+        mac.receive_message(self, message_entity)
+        mac.set_entity(self)
+        
+        # Make message
+        message = Message(message_entity)
+        if message.valid:
+            message.log()
+            signals.message_received.send(message)
+            if helper.is_command(message.message):
+                signals.command_received.send(message)
             
-            # Send signal
-            self.send_message_signal(message_entity)
-
-            # Finally set offline
-            mac.disconnect(self)
+        mac.disconnect(self)
             
     def send_message_signal(self, message_entity):
-        #helper.log_mac(message_entity)
         message = Message(message_entity)
         signals.message_received.send(message)
         if helper.is_command(message.message):
             signals.command_received.send(message)
 
 '''
-Just ignore everything above (this block)
-Modifying this block automatically makes you a piece of shit
+Just ignore everything above 
 ################################################################################
 ################################################################################
 '''

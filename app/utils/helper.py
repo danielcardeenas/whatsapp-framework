@@ -5,7 +5,7 @@ import string
 from pprint import pprint
 
 log_file = "maclog.txt"
-me = "5218114140740@s.whatsapp.net"
+me = "5218114140740@s.whatsapp.net" # Daniel Cardenas
 
 def get_who_send(message_entity):
     who = message_entity.getFrom()
@@ -35,6 +35,7 @@ def is_text_message(message_entity):
 Detects if the message entity is media type.
 Available media types:
     + image
+    + audio i guess
     + location
     + vcard
 """
@@ -67,7 +68,7 @@ def is_vcard_media(message_entity):
 
 
 """
-Builds a sendable whatsapp message (self.toLower(message))
+Builds a sendable text whatsapp message (self.toLower(message))
 """
 def make_message(msg, conversation):
     outgoing_message_enity = TextMessageProtocolEntity(msg, to=conversation)
