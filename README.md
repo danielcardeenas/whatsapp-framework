@@ -62,7 +62,16 @@ And that's it! You are ready to go.
 ###### _You can take [`hihelp module`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/hihelp/hihelp.py) as an example._
 
 
-### Example screenshots:
+# Updates
+The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
+- [x] Add support for @tag messages
+- [x] Add support for reply messages
+- [x] Add support for receiving files
+- [x] Add support for big receiving big files (downloading and decryption done in chunks)
+- [x] Add support for sending images
+- [ ] Add support for encrypting images in chunks (_TODO_)
+
+# Example screenshots:
 ![](https://i.imgur.com/ZRlk5Uj.png)
 ![](https://i.imgur.com/JmPbPXB.png)
 ![](https://i.imgur.com/L4ebZql.png)
