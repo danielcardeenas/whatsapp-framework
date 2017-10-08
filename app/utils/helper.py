@@ -2,6 +2,7 @@
 
 from yowsup.layers.protocol_messages.protocolentities import *
 import string
+from pprint import pprint
 
 log_file = "maclog.txt"
 me = "5218114140740@s.whatsapp.net"
@@ -76,7 +77,7 @@ def make_message(msg, conversation):
 """
 Logs message to a txt file (maclog.txt, defined above of this class)
 """
-def log_mac(message_entity):
+def log_txt(message_entity):
     # Nigga who send the message (first name)
     who = who = sender_name(message_entity)
 
@@ -103,7 +104,14 @@ def log_mac(message_entity):
         "\n" + "Clean msg:" + "\n" + message + "\n" +
         "------------------------" + "\n" + "\n")
     file.close()
+    
 
+"""
+Deep print
+"""
+def log(message_entity):
+    pprint(vars(message_entity))
+    
 
 """
 Returns predicate of the message

@@ -48,6 +48,7 @@ class MacLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
     def on_message(self, message_entity):
+        helper.log(message_entity)
         if helper.is_text_message(message_entity):
             mac.set_entity(self)
 
