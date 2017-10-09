@@ -108,11 +108,32 @@ def remove_conversation_from_queue(conversation):
     ack_queue[:] = [entity for entity in ack_queue if not same_conversation(entity, conversation)]
 
 
+"""
+Sends text message to conversation:
+
+@signals.command_received.connect
+def handle(message):
+    if message.text == "Hi":
+        mac.send_message("Hello", message.conversation)
+"""
 def send_message(str_message, conversation, disconnect_after=True):
     message = decode_string(str_message)
     
     # Prepare mac to answer (Human behavior)
     prepate_answer(entity, conversation, disconnect_after)
+    entity.toLower(helper.make_message(message, conversation))
+    
+
+"""
+Sends text message to phone number:
+
+mac.send_message_to("Hello", "5218114140740")
+"""
+def send_message_to(str_message, phone_number, disconnect_after=True):
+    message = decode_string(str_message)
+    
+    # Prepare mac to answer (Human behavior)
+    prepate_answer(entity, Jid.normalize(phone_number), disconnect_after)
     entity.toLower(helper.make_message(message, conversation))
     
     

@@ -71,6 +71,7 @@ The project is not submoduling yowsup now due to a lot of the modifications made
 - [x] Add support for big receiving big files (downloading and decryption done in chunks)
 - [x] Add support for sending images
 - [ ] Add support for encrypting images in chunks (_TODO_)
+- [ ] Add pickle support to remember the messages when mac its turned off(_TODO_)
 
 # Example screenshots:
 ![](https://i.imgur.com/ZRlk5Uj.png)

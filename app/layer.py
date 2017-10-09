@@ -15,7 +15,7 @@ from yowsup.layers.protocol_groups.protocolentities import *
 from yowsup.layers.protocol_media.mediadownloader import MediaDownloader
 
 '''
-Basic lifesycle. DO NOT TOUCH
+Basic lifesycle
 ################################################################################
 ################################################################################
 '''
