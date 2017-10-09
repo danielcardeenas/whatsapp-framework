@@ -7,3 +7,6 @@ app/assets/*
 cli
 tags.txt
 modules/broadcast/*
+modules/wolfram/*
+modules/yesno/*
+modules/poker/*
