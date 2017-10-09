@@ -1,1 +1,0 @@
-api_key = "YOUR_WOLFRAM_API_KEY"
