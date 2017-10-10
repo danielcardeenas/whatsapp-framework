@@ -133,8 +133,9 @@ def send_message_to(str_message, phone_number, disconnect_after=True):
     message = decode_string(str_message)
     
     # Prepare mac to answer (Human behavior)
-    prepate_answer(entity, Jid.normalize(phone_number), disconnect_after)
-    entity.toLower(helper.make_message(message, phone_number))
+    jid = Jid.normalize(phone_number)
+    prepate_answer(entity,jid, disconnect_after)
+    entity.toLower(helper.make_message(message, jid))
     
     
 def send_image(path, conversation, caption=None):
