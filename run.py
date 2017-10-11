@@ -53,6 +53,5 @@ def run_infinite():
             break
 
 if __name__ == "__main__":
-    #run_infinite()
     c = MacStack()
     c.start()

@@ -4,10 +4,9 @@ from yowsup.common.tools import MimeTools
 from axolotl.kdf.hkdfv3 import HKDFv3
 from axolotl.sessioncipher import pad
 from axolotl.util.byteutil import ByteUtil
-
 from Crypto.Cipher import AES
-
 from time import sleep
+
 import socket, ssl, os, hashlib, sys
 import threading
 import logging
@@ -15,6 +14,7 @@ import base64
 import hmac
 import binascii
 
+WHATSAPP_KEY = "576861747341707020496d616765204b657973"
 logger = logging.getLogger(__name__)
 
 class MediaUploader(WARequest, threading.Thread):
@@ -33,9 +33,7 @@ class MediaUploader(WARequest, threading.Thread):
         self.progressCallback = progressCallback
 
         self.pvars = ["name", "type", "size", "url", "error", "mimetype", "filehash", "width", "height"]
-
         self.setParser(JSONResponseParser())
-
         self.sock = socket.socket()
 
     def start(self):
@@ -52,8 +50,7 @@ class MediaUploader(WARequest, threading.Thread):
         return a
 
     def encryptImg(self, img, refkey):
-        derivative = HKDFv3().deriveSecrets(binascii.unhexlify(refkey),
-                                            binascii.unhexlify("576861747341707020496d616765204b657973"), 112)
+        derivative = HKDFv3().deriveSecrets(binascii.unhexlify(refkey), binascii.unhexlify(WHATSAPP_KEY), 112)
         parts = ByteUtil.split(derivative, 16, 32)
         iv = parts[0]
         cipherKey = parts[1]
@@ -70,7 +67,6 @@ class MediaUploader(WARequest, threading.Thread):
         hashKey = ByteUtil.trim(mac.digest(), 10)
 
         finalEnc =  imgEnc + hashKey
-
         return finalEnc
 
     def run(self):
