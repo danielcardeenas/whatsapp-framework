@@ -2,6 +2,8 @@ commit.sh
 add.sh
 
 .idea/
+.9
+__pycache__
 
 app/build/
 app/dist/

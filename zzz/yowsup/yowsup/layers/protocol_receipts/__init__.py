@@ -1,2 +1,0 @@
-from .layer import YowReceiptProtocolLayer
-
