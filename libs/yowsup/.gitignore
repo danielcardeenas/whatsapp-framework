@@ -1,0 +1,10 @@
+*.pyc
+*.class
+todo
+*.egg-info
+tp
+tests
+dist
+build
+.idea
+.tox

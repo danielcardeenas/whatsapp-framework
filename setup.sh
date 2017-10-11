@@ -7,7 +7,7 @@ install_requirements() {
     module_requirements="$1"
     
     #echo "pip3.5 -qqq install -r $module_requirements"
-    pip3.5 -qqq install -r $module_requirements
+    pip3 -qqq install -r $module_requirements
     
     return_code=$?
     if [ $return_code != 0 ]; then
@@ -20,10 +20,10 @@ install_forked_yowsup() {
     printf "Installing ${ORANGE}yowsup libraries${NC}\n"
     echo "--------------------------"
     cd libs/python-axolotl
-    python3.5 setup.py -qqq install
+    python3 setup.py -qqq install
     wait
     cd ../yowsup
-    python3.5 setup.py -qqq install
+    python3 setup.py -qqq install
     wait
     echo "--------------------------"
     # Return to root
