@@ -1,12 +1,18 @@
 commit.sh
+add.sh
+
 .idea/
+
 app/build/
 app/dist/
 app/mac_bot.egg-info/
 app/assets/*
-cli
+
+cli.txt
 tags.txt
+
+# modules
 modules/broadcast/*
 modules/wolfram/*
 modules/yesno/*
-modules/poker/*
+modules/elo/*
