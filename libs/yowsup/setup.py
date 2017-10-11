@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 from setuptools import setup, find_packages
+import yowsup
 import platform
 import sys
 
@@ -19,7 +20,7 @@ else:
 
 setup(
     name='yowsup2',
-    version="1.0",
+    version=yowsup.__version__,
     url='http://github.com/danielcardeenas/yowsup/',
     license='GPL-3+',
     author='Tarek Galal, Daniel Cardenas',
@@ -27,11 +28,12 @@ setup(
     install_requires = deps,
     scripts = ['yowsup-cli'],
     #cmdclass={'test': PyTest},
+    author_email='tare2.galal@gmail.com',
     description='A WhatsApp python library',
     #long_description=long_description,
     packages= find_packages(),
     include_package_data=True,
-    data_files = [('common', ['common/mime.types'])],
+    data_files = [('yowsup/common', ['yowsup/common/mime.types'])],
     platforms='any',
     #test_suite='',
     classifiers = [

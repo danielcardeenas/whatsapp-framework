@@ -6,7 +6,7 @@ NC='\033[0m' # No Color
 install_requirements() {
     module_requirements="$1"
     
-    #printf "pip3.5 -qqq install -r $module_requirements"
+    #printf "pip3 -qqq install -r $module_requirements"
     pip3 -qqq install -r $module_requirements
     
     return_code=$?
