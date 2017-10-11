@@ -6,7 +6,7 @@ NC='\033[0m' # No Color
 install_requirements() {
     module_requirements="$1"
     
-    #echo "pip3.5 -qqq install -r $module_requirements"
+    #printf "pip3.5 -qqq install -r $module_requirements"
     pip3 -qqq install -r $module_requirements
     
     return_code=$?
@@ -18,45 +18,45 @@ install_requirements() {
 
 install_forked_yowsup() {
     printf "Installing ${ORANGE}yowsup libraries${NC}\n"
-    echo "--------------------------"
+    printf "${NC}--------------------------\n"
     cd libs/python-axolotl
     python3 setup.py -qqq install
     wait
     cd ../yowsup
     python3 setup.py -qqq install
     wait
-    echo "--------------------------"
+    printf "${NC}--------------------------\n"
     # Return to root
     cd ../../
 }
 
 install_modules() {
-    echo "Configuring modules"
-    echo "--------------------------"
+    printf "Configuring modules\n"
+    printf "${NC}--------------------------\n"
     cd modules
     for D in *; do
         if [ -d "${D}" ] && [ "${D}" != "__pycache__" ]; then
             if [ -f ${D}/requirements.txt ]; then
-                echo "[${CYAN}${D}${NC}] Installing dependencies..."
+                printf "[${CYAN}${D}${NC}] Installing dependencies...\n"
                 module_requirements="${D}/requirements.txt"
                 install_requirements "$module_requirements"
             else 
-                echo "[${CYAN}${D}${NC}] All good..."
+                printf "[${CYAN}${D}${NC}] All good...\n"
             fi
         fi
     done
     wait
     
-    echo "--------------------------"
+    printf "${NC}--------------------------\n"
     
     # Return to root
     cd ../
 }
 
 install_app_dependencies() {
-    echo "Configuring framework"
-    echo "--------------------------"
-    echo "[${CYAN}mac${NC}] Installing dependencies..."
+    printf "Configuring framework\n"
+    printf "${NC}--------------------------\n"
+    printf "[${CYAN}mac${NC}] Installing dependencies...\n"
     
     app_requirements="app/requirements.txt"
     install_requirements "$app_requirements"
