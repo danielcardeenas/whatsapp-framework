@@ -28,7 +28,7 @@ setup(
     install_requires = deps,
     scripts = ['yowsup-cli'],
     #cmdclass={'test': PyTest},
-    author_email='tare2.galal@gmail.com',
+    author_email='danielcardeenas@gmail.com',
     description='A WhatsApp python library',
     #long_description=long_description,
     packages= find_packages(),
