@@ -1,4 +1,4 @@
-import sys, tempfile, logging
+import sys, tempfile, logging, os
 logger = logging.getLogger(__name__)
 
 if sys.version_info >= (3, 0):
@@ -21,6 +21,8 @@ class MediaDownloader:
 
             if path == "":
                 path = "app/assets/received/" + tempfile.mkstemp()[1].rsplit('/', 1)[-1]
+                
+            os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, "wb") as f:
                 meta = u.info()
 
