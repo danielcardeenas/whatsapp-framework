@@ -7,6 +7,7 @@ app/build/
 app/dist/
 app/mac_bot.egg-info/
 app/assets/*
+config.py
 
 cli.txt
 tags.txt
