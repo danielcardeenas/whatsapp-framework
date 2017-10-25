@@ -28,6 +28,7 @@ class MacLayer(YowInterfaceLayer):
     
     @ProtocolEntityCallback("success")
     def on_success(self, success_entity):
+        mac.set_entity(self)
         contacts = self.getProp(self.__class__.PROP_CONTACTS, [])
         #print("Sync contacts sucess: " + helper.nice_list(contacts))
         contact_entity = GetSyncIqProtocolEntity(contacts)
@@ -53,7 +54,6 @@ class MacLayer(YowInterfaceLayer):
     def on_message(self, message_entity):
         # Set received (double v) and add to ack queue
         mac.receive_message(self, message_entity)
-        mac.set_entity(self)
         
         # Make message
         message = Message(message_entity)
