@@ -4,7 +4,7 @@ Pokedex module
 '''
 
 from app.mac import mac, signals
-import requests
+import requests, os
 from modules.pokedex import pykemon
 
 '''
@@ -90,6 +90,7 @@ returns image file path
 '''
 def get_image(url, file_name):
     path = "app/assets/images/" + file_name
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     file = open(path, 'wb')
     file.write(requests.get(url).content)
     file.close()
