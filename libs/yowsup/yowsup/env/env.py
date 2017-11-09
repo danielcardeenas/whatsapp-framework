@@ -51,7 +51,6 @@ class YowsupEnv(with_metaclass(YowsupEnvType, object)):
             if env not in envs:
                 env = envs[0]
             logger.debug("Env not set, setting it to %s" % env)
-            logger.warning("Env not set, setting it to %s" % env)
             cls.setEnv(env)
         return cls.__CURR
 

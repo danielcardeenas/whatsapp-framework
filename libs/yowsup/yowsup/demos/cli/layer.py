@@ -1,24 +1,24 @@
 from .cli import Cli, clicmd
-from libs.yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
-from libs.yowsup.layers.auth import YowAuthenticationProtocolLayer
-from libs.yowsup.layers import YowLayerEvent, EventCallback
-from libs.yowsup.layers.network import YowNetworkLayer
+from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
+from yowsup.layers.auth import YowAuthenticationProtocolLayer
+from yowsup.layers import YowLayerEvent, EventCallback
+from yowsup.layers.network import YowNetworkLayer
 import sys
 from yowsup.common import YowConstants
 import datetime
 import os
 import logging
-from libs.yowsup.layers.protocol_groups.protocolentities      import *
-from libs.yowsup.layers.protocol_presence.protocolentities    import *
-from libs.yowsup.layers.protocol_messages.protocolentities    import *
-from libs.yowsup.layers.protocol_ib.protocolentities          import *
-from libs.yowsup.layers.protocol_iq.protocolentities          import *
-from libs.yowsup.layers.protocol_contacts.protocolentities    import *
-from libs.yowsup.layers.protocol_chatstate.protocolentities   import *
-from libs.yowsup.layers.protocol_privacy.protocolentities     import *
-from libs.yowsup.layers.protocol_media.protocolentities       import *
-from libs.yowsup.layers.protocol_media.mediauploader import MediaUploader
-from libs.yowsup.layers.protocol_profiles.protocolentities    import *
+from yowsup.layers.protocol_groups.protocolentities      import *
+from yowsup.layers.protocol_presence.protocolentities    import *
+from yowsup.layers.protocol_messages.protocolentities    import *
+from yowsup.layers.protocol_ib.protocolentities          import *
+from yowsup.layers.protocol_iq.protocolentities          import *
+from yowsup.layers.protocol_contacts.protocolentities    import *
+from yowsup.layers.protocol_chatstate.protocolentities   import *
+from yowsup.layers.protocol_privacy.protocolentities     import *
+from yowsup.layers.protocol_media.protocolentities       import *
+from yowsup.layers.protocol_media.mediauploader import MediaUploader
+from yowsup.layers.protocol_profiles.protocolentities    import *
 from yowsup.common.tools import Jid
 from yowsup.common.optionalmodules import PILOptionalModule, AxolotlOptionalModule
 
@@ -335,7 +335,7 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
     def keys_get(self, jids):
         with AxolotlOptionalModule(failMessage = self.__class__.FAIL_OPT_AXOLOTL) as importFn:
             importFn()
-            from libs.yowsup.layers.axolotl.protocolentities.iq_key_get import GetKeysIqProtocolEntity
+            from yowsup.layers.axolotl.protocolentities.iq_key_get import GetKeysIqProtocolEntity
             if self.assertConnected():
                 jids = [self.aliasToJid(jid) for jid in jids.split(',')]
                 entity = GetKeysIqProtocolEntity(jids)
@@ -508,7 +508,7 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
         output = self.__class__.MESSAGE_FORMAT.format(
             FROM = sender,
             TIME = formattedDate,
-            MESSAGE = messageOut.encode('latin-1').decode() if sys.version_info >= (3, 0) else messageOut,
+            MESSAGE = messageOut,
             MESSAGE_ID = message.getId()
             )
 
@@ -544,6 +544,9 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
         	entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption = caption)
         self.toLower(entity)
 
+    def __str__(self):
+        return "CLI Interface Layer"
+
     ########### callbacks ############
 
     def onRequestUploadResult(self, jid, mediaType, filePath, resultRequestUploadIqProtocolEntity, requestUploadIqProtocolEntity, caption = None):
@@ -560,17 +563,14 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
             mediaUploader.start()
 
     def onRequestUploadError(self, jid, path, errorRequestUploadIqProtocolEntity, requestUploadIqProtocolEntity):
-        return
-        #logger.error("Request upload for file %s for %s failed" % (path, jid))
+        logger.error("Request upload for file %s for %s failed" % (path, jid))
 
     def onUploadError(self, filePath, jid, url):
-        return
-        #logger.error("Upload file %s to %s for %s failed!" % (filePath, url, jid))
+        logger.error("Upload file %s to %s for %s failed!" % (filePath, url, jid))
 
     def onUploadProgress(self, filePath, jid, url, progress):
-        return
-        #sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
-        #sys.stdout.flush()
+        sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
+        sys.stdout.flush()
 
     def onGetContactPictureResult(self, resultGetPictureIqProtocolEntiy, getPictureIqProtocolEntity):
         # do here whatever you want

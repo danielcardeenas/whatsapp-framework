@@ -163,7 +163,7 @@ class MimeTools:
     mimetypes.init() # Load default mime.types
     try:
         mimetypes.init([MIME_FILE]) # Append whatsapp mime.types
-    except Exception as e:
+    except exception as e:
         logger.warning("Mime types supported can't be read. System mimes will be used. Cause: " + e.message)
 
     @staticmethod
@@ -172,29 +172,40 @@ class MimeTools:
         if mimeType is None:
             raise Exception("Unsupported/unrecognized file type for: "+filepath);
         return mimeType
-        
-    @staticmethod
-    def getExtension(mimetype):
-        ext = mimetypes.guess_extension(mimetype.split(';')[0])
-        if ext is None:
-            raise Exception("Unsupported/unrecognized mimetype: "+mimetype);
-        return ext
 
 class VideoTools:
     @staticmethod
     def getVideoProperties(videoFile):
-        with FFVideoOptionalModule() as imp:
-            VideoStream = imp("VideoStream")
-            s = VideoStream(videoFile)
-            return s.width, s.height, s.bitrate, s.duration #, s.codec_name
+        if sys.version_info <= (3, 0): 
+            with FFVideoOptionalModule() as imp:
+                VideoStream = imp("VideoStream")
+                s = VideoStream(videoFile)
+                return s.width, s.height, s.bitrate, s.duration #, s.codec_name
+        else:
+            import av
+            container = av.open(videoFile)
+            for i,frame in enumerate(container.decode(video=0)):
+                break
+            return frame.width, frame.height, container.bit_rate, container.duration/av.time_base
 
     @staticmethod
     def generatePreviewFromVideo(videoFile):
-        with FFVideoOptionalModule() as imp:
-            VideoStream = imp("VideoStream")
-            fd, path = tempfile.mkstemp('.jpg')
-            stream = VideoStream(videoFile)
-            stream.get_frame_at_sec(0).image().save(path)
-            preview = ImageTools.generatePreviewFromImage(path)
-            os.remove(path)
-            return preview
+        if sys.version_info <= (3, 0):
+            with FFVideoOptionalModule() as imp:
+                VideoStream = imp("VideoStream")
+                fd, path = tempfile.mkstemp('.jpg')
+                stream = VideoStream(videoFile)
+                stream.get_frame_at_sec(0).image().save(path)
+                preview = ImageTools.generatePreviewFromImage(path)
+                os.remove(path)
+                return preview
+        else:
+            #install av lib using pip3 install av
+            import av
+            container = av.open(videoFile)
+            for i, frame in enumerate(container.decode(video=0)):
+                fd, path = tempfile.mkstemp('.jpg')
+                frame.to_image().save(path)
+                preview = ImageTools.generatePreviewFromImage(path)
+                os.remove(path)
+                return preview

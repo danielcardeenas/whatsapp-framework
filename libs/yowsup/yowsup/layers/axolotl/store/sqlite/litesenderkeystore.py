@@ -31,13 +31,7 @@ class LiteSenderKeyStore(SenderKeyStore):
             q = "UPDATE sender_keys set record = ? WHERE group_id = ? and sender_id = ?"
             cursor = self.dbConn.cursor()
             cursor.execute(q, (serialized, senderKeyName.getGroupId(), senderKeyName.getSender().getName()))
-            try:
-                self.dbConn.commit()
-            except:
-                pass
-            
-        except Exception as ex:
-            pass
+            self.dbConn.commit()
 
     def loadSenderKey(self, senderKeyName):
         """

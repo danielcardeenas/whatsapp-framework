@@ -1,8 +1,8 @@
 from yowsup.stacks import  YowStackBuilder
 from .layer import YowsupCliLayer
-from libs.yowsup.layers.auth import AuthError
-from libs.yowsup.layers import YowLayerEvent
-from libs.yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
+from yowsup.layers.auth import AuthError
+from yowsup.layers import YowLayerEvent
+from yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
 import sys
 
 class YowsupCliStack(object):

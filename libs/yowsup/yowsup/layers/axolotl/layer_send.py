@@ -20,7 +20,7 @@ from .layer_base import AxolotlBaseLayer
 logger = logging.getLogger(__name__)
 
 class AxolotlSendLayer(AxolotlBaseLayer):
-    MAX_SENT_QUEUE = 200
+    MAX_SENT_QUEUE = 100
     def __init__(self):
         super(AxolotlSendLayer, self).__init__()
 
@@ -66,9 +66,8 @@ class AxolotlSendLayer(AxolotlBaseLayer):
                 self._sendIq(groupInfoIq, getResultNodes)
             else:
                 messageData = self.serializeToProtobuf(node)
-                # print (messageData)
-                #if not self.store.containsSession(recipient_id, 1):
-                #    self.getKeysFor([node["to"]], lambda successJids, b: self.sendToContact(node) if len(successJids) == 1 else self.toLower(node), lambda: self.toLower(node))
+                if not self.store.containsSession(recipient_id, 1):
+                    self.getKeysFor([node["to"]], lambda successJids, b: self.sendToContact(node) if len(successJids) == 1 else self.toLower(node), lambda: self.toLower(node))
                 if messageData:
                     sessionCipher = self.getSessionCipher(recipient_id)
                     messageData = messageData.SerializeToString() + self.getPadding()
@@ -174,7 +173,7 @@ class AxolotlSendLayer(AxolotlBaseLayer):
 
     def enqueueSent(self, node):
         if len(self.sentQueue) >= self.__class__.MAX_SENT_QUEUE:
-            logger.warn("Discarding queued node without receipt [" + str(len(self.sentQueue)) + "]")
+            logger.warn("Discarding queued node without receipt")
             self.sentQueue.pop(0)
         self.sentQueue.append(node)
 
@@ -300,6 +299,8 @@ class AxolotlSendLayer(AxolotlBaseLayer):
             return self.serializeLocationToProtobuf(mediaNode, message)
         if mediaNode["type"] == "vcard":
             return self.serializeContactToProtobuf(mediaNode, message)
+        if mediaNode["type"] == "video":
+            return self.serializeVideoToProtobuf(mediaNode, message)
 
         return None
 
@@ -334,7 +335,7 @@ class AxolotlSendLayer(AxolotlBaseLayer):
         image_message.width = int(mediaNode["width"])
         image_message.height = int(mediaNode["height"])
         image_message.mime_type = mediaNode["mimetype"]
-        image_message.media_key = mediaNode["mediakey"]
+        #image_message.media_key = mediaNode["mediakey"]
         image_message.file_sha256 = binascii.unhexlify(mediaNode["filehash"].encode())
         image_message.file_length = int(mediaNode["size"])
         image_message.media_key = binascii.unhexlify(mediaNode["anu"])
@@ -346,6 +347,23 @@ class AxolotlSendLayer(AxolotlBaseLayer):
 
         return m
 
+    def serializeVideoToProtobuf(self,mediaNode, message = None):
+        m = message or Message()
+        video_message = VideoMessage()
+        video_message.url = mediaNode["url"]
+        #video_message.width = int(mediaNode["width"])
+        #video_message.height = int(mediaNode["height"])
+        video_message.mime_type = mediaNode["mimetype"]
+        video_message.file_sha256 = binascii.unhexlify(mediaNode["filehash"].encode())
+        video_message.file_length = int(mediaNode["size"])
+        video_message.media_key = binascii.unhexlify(mediaNode["anu"])
+        #video_message.file_enc_sha256 = binascii.unhexlify(mediaNode["file_enc_sha256"])
+        video_message.caption = mediaNode["caption"] or ""
+        video_message.jpeg_thumbnail = mediaNode.getData()
+        video_message.duration = int(mediaNode["duration"])
+        m.video_message.MergeFrom(video_message)
+        
+        return m
     def serializeUrlToProtobuf(self, node, message = None):
         pass
 
