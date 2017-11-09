@@ -163,8 +163,8 @@ class MimeTools:
     mimetypes.init() # Load default mime.types
     try:
         mimetypes.init([MIME_FILE]) # Append whatsapp mime.types
-    except exception as e:
-        logger.warning("Mime types supported can't be read. System mimes will be used. Cause: " + e.message)
+    except Exception as e:
+        logger.warning("Unsupported MIME type. System mimes will be used. Cause: " + e.message)
 
     @staticmethod
     def getMIME(filepath):
@@ -200,7 +200,6 @@ class VideoTools:
                 os.remove(path)
                 return preview
         else:
-            #install av lib using pip3 install av
             import av
             container = av.open(videoFile)
             for i, frame in enumerate(container.decode(video=0)):

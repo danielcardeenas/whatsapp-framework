@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class AxolotlReceivelayer(AxolotlBaseLayer):
     def __init__(self):
         super(AxolotlReceivelayer, self).__init__()
-        self.v2Jids = [] #people we're going to send v2 enc messages
+        self.v2Jids = []
         self.sessionCiphers = {}
         self.groupCiphers = {}
         self.pendingIncomingMessages = {} #(jid, participantJid?) => message
@@ -338,21 +338,28 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         self.toUpper(messageNode)
 
     def handleDocumentMessage(self, originalEncNode, documentMessage):
-        messageNode = copy.deepcopy(originalEncNode)
-        messageNode["type"] = "media"
-        mediaNode = ProtocolTreeNode("media", {
-            "type": "document",
-            "url": documentMessage.url,
-            "mimetype": documentMessage.mime_type,
-            "title": documentMessage.title,
-            "filehash": documentMessage.file_sha256,
-            "size": str(documentMessage.file_length),
-            "pages": str(documentMessage.page_count),
-            "mediakey": documentMessage.media_key
-        }, data=documentMessage.jpeg_thumbnail)
-        messageNode.addChild(mediaNode)
-
-        self.toUpper(messageNode)
+        try:
+            messageNode = copy.deepcopy(originalEncNode)
+            messageNode["type"] = "media"
+            mediaNode = ProtocolTreeNode("media", {
+                "type": "document",
+                "url": documentMessage.url,
+                "mimetype": documentMessage.mime_type,
+                "title": documentMessage.title,
+                "filehash": documentMessage.file_sha256,
+                "size": str(documentMessage.file_length),
+                "pages": str(documentMessage.page_count),
+                "mediakey": documentMessage.media_key
+            }, data=documentMessage.jpeg_thumbnail)
+            messageNode.addChild(mediaNode)
+            self.toUpper(messageNode)
+        except:
+            if PROP_IGNORE_UNHANDLED:
+                self.toLower(OutgoingReceiptProtocolEntity(originalEncNode["id"], originalEncNode["from"], participant=originalEncNode["participant"]).toProtocolTreeNode())
+                logger.warning("Unhandled message, sending delivery receipt")
+            else:
+                print(m)
+                raise ValueError("Unhandled")
 
     def handleLocationMessage(self, originalEncNode, locationMessage):
         try:
@@ -370,22 +377,30 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             self.toUpper(messageNode)
         except:
             if PROP_IGNORE_UNHANDLED:
-                self.toLower(OutgoingReceiptProtocolEntity(node["id"], node["from"], participant=node["participant"]).toProtocolTreeNode())
+                self.toLower(OutgoingReceiptProtocolEntity(originalEncNode["id"], originalEncNode["from"], participant=originalEncNode["participant"]).toProtocolTreeNode())
                 logger.warning("Unhandled message, sending delivery receipt")
             else:
                 print(m)
                 raise ValueError("Unhandled")
 
     def handleContactMessage(self, originalEncNode, contactMessage):
-        messageNode = copy.deepcopy(originalEncNode)
-        messageNode["type"] = "media"
-        mediaNode = ProtocolTreeNode("media", {
-            "type": "vcard"
-        }, [
-            ProtocolTreeNode("vcard", {"name": contactMessage.display_name}, data = contactMessage.vcard)
-        ] )
-        messageNode.addChild(mediaNode)
-        self.toUpper(messageNode)
+        try:
+            messageNode = copy.deepcopy(originalEncNode)
+            messageNode["type"] = "media"
+            mediaNode = ProtocolTreeNode("media", {
+                "type": "vcard"
+            }, [
+                ProtocolTreeNode("vcard", {"name": contactMessage.display_name}, data = contactMessage.vcard)
+            ] )
+            messageNode.addChild(mediaNode)
+            self.toUpper(messageNode)
+        except:
+            if PROP_IGNORE_UNHANDLED:
+                self.toLower(OutgoingReceiptProtocolEntity(originalEncNode["id"], originalEncNode["from"], participant=originalEncNode["participant"]).toProtocolTreeNode())
+                logger.warning("Unhandled message, sending delivery receipt")
+            else:
+                print(m)
+                raise ValueError("Unhandled")
 
     def getSessionCipher(self, recipientId):
         if recipientId in self.sessionCiphers:
