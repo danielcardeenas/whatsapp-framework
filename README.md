@@ -67,7 +67,7 @@ And that's it! You are ready to go.
 The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
 - [x] Add support for @tag messages
 - [x] Add support for reply messages
-- [x] Add support for receiving files
+- [x] Add support for receiving images
 - [x] Add support for big receiving big files (downloading and decryption done in chunks)
 - [x] Add support for sending images
 - [ ] Add support for encrypting images in chunks (_TODO_)
