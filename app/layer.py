@@ -24,7 +24,6 @@ class MacLayer(YowInterfaceLayer):
 
     def __init__(self):
         super(MacLayer, self).__init__()
-        signals.initialized.send(self)
     
     @ProtocolEntityCallback("success")
     def on_success(self, success_entity):
@@ -33,6 +32,7 @@ class MacLayer(YowInterfaceLayer):
         #print("Sync contacts sucess: " + helper.nice_list(contacts))
         contact_entity = GetSyncIqProtocolEntity(contacts)
         self._sendIq(contact_entity, self.on_sync_result, self.on_sync_error)
+        signals.initialized.send(self)
 
     def on_sync_result(self, result_sync_iq_entity, original_iq_entity):
         pass
