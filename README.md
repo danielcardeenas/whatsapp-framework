@@ -48,6 +48,8 @@ def handle(message):
     #message.log() to see message object properties
     if message.text == "hi":
         mac.send_message("Hello", message.conversation)
+        #mac.send_image("path/to/image.png", message.conversation)
+        #mac.send_video("path/to/video.mp4", message.conversation)
 ```
 Now you should only add it into [`modules/__init__.py`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/__init__.py) to enable the module
 ```python
@@ -65,6 +67,7 @@ And that's it! You are ready to go.
 
 # Updates
 The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
+- [x] Send videos (needs ffmpeg installed)
 - [x] Add support for @tag messages
 - [x] Add support for reply messages
 - [x] Add support for receiving images
