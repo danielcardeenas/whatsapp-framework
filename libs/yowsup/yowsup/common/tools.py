@@ -11,6 +11,11 @@ import hashlib
 import os.path, mimetypes
 from .optionalmodules import PILOptionalModule, FFVideoOptionalModule
 
+# Video
+import subprocess
+import shlex
+import json
+
 logger = logging.getLogger(__name__)
 
 class Jid:
@@ -182,11 +187,7 @@ class VideoTools:
                 s = VideoStream(videoFile)
                 return s.width, s.height, s.bitrate, s.duration #, s.codec_name
         else:
-            import av
-            container = av.open(videoFile)
-            for i,frame in enumerate(container.decode(video=0)):
-                break
-            return frame.width, frame.height, container.bit_rate, container.duration/av.time_base
+            return VideoTools.video_meta_data(videoFile)
 
     @staticmethod
     def generatePreviewFromVideo(videoFile):
@@ -200,11 +201,29 @@ class VideoTools:
                 os.remove(path)
                 return preview
         else:
-            import av
-            container = av.open(videoFile)
-            for i, frame in enumerate(container.decode(video=0)):
-                fd, path = tempfile.mkstemp('.jpg')
-                frame.to_image().save(path)
-                preview = ImageTools.generatePreviewFromImage(path)
-                os.remove(path)
-                return preview
+            import moviepy.editor as mvpy
+            
+            clip = mvpy.VideoFileClip(videoFile)
+            path = tempfile.mkstemp('.jpg')[1]
+            clip.save_frame(path)
+            preview = ImageTools.generatePreviewFromImage(path)
+            os.remove(path)
+            return preview
+
+    @staticmethod
+    def video_meta_data(path):
+        cmd = "ffprobe -v quiet -print_format json -show_streams"
+        args = shlex.split(cmd)
+        args.append(path)
+        
+        # run the ffprobe process, decode stdout into utf-8 & convert to JSON
+        ffprobeOutput = subprocess.check_output(args).decode('utf-8')
+        ffprobeOutput = json.loads(ffprobeOutput)
+    
+        height = ffprobeOutput['streams'][0]['height']
+        width = ffprobeOutput['streams'][0]['width']
+        bit_rate = ffprobeOutput['streams'][0]['bit_rate']
+        duration = ffprobeOutput['streams'][0]['duration']
+        
+        #print(height, width, br, duration)
+        return width, height, bit_rate, int(duration)

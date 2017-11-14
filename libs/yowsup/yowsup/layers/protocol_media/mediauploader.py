@@ -58,16 +58,15 @@ class MediaUploader(WARequest, threading.Thread):
             return DownloadableMediaMessageProtocolEntity.AUDIO_KEY
         raise Exception ("FILE TYPE NOT SUPPORTED")
         
-        
 
-    def encryptMedia(self,img, refkey,filetype):
+    def encryptMedia(self, img, refkey,filetype):
         key = self.getKey(filetype)
         derivative = HKDFv3().deriveSecrets(binascii.unhexlify(refkey),
                                             binascii.unhexlify(key), 112)
         parts = ByteUtil.split(derivative, 16, 32)
         iv = parts[0]
         cipherKey = parts[1]
-        macKey=derivative[48:80]
+        macKey = derivative[48:80]
 
         mac = hmac.new(macKey,digestmod=hashlib.sha256)
         mac.update(iv)
@@ -91,7 +90,6 @@ class MediaUploader(WARequest, threading.Thread):
 
         self.url = _host[:_host.index('/')]
 
-
         try:
             filename = os.path.basename(sourcePath)
             filetype = MimeTools.getMIME(filename)
@@ -100,7 +98,7 @@ class MediaUploader(WARequest, threading.Thread):
             stream = f.read()
             f.close()
             refkey = binascii.hexlify(os.urandom(32))
-            stream=self.encryptMedia(stream,refkey,filetype)
+            stream = self.encryptMedia(stream, refkey, filetype)
             fenc = open(sourcePath+".enc", 'wb')  # bahtiar
             fenc.write(stream)
             fenc.seek(0, 2)

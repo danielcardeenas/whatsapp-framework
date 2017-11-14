@@ -19,7 +19,6 @@ class AndroidYowsupEnv(YowsupEnv):
 
     _MD5_CLASSES = "XIJOPqDAqrT6cvYq/1137w=="
     _KEY = "eQV5aq/Cg63Gsq1sshN9T3gh+UUp0wIw0xgHYT1bnCjEqOJQKCRrWxdAe2yvsDeCJL+Y4G3PRD2HUF7oUgiGo8vGlNJOaux26k+A2F3hj8A="
-
     _VERSION = "2.17.393"
     _OS_NAME = "Android"
     _OS_VERSION = "4.3"

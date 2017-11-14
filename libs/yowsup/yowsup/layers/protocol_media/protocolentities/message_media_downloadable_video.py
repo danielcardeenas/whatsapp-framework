@@ -86,8 +86,10 @@ class VideoDownloadableMediaMessageProtocolEntity(DownloadableMediaMessageProtoc
             mediaNode.setAttribute("duration",  self.duration)
         if self.encoding is not None:
             mediaNode.setAttribute("encoding",  self.encoding)
+            
         mediaNode.setAttribute("height",    str(self.height))
         mediaNode.setAttribute("width",     str(self.width))
+        
         if self.abitrate is not None:
         	mediaNode.setAttribute("abitrate",  str(self.abitrate))
         if self.acodec is not None:

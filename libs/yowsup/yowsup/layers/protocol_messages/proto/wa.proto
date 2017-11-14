@@ -30,15 +30,15 @@ message ImageMessage {
 }
 
 message VideoMessage {
-     required bytes url             =  1;
-     required string mime_type      =  2;
-     required bytes file_sha256     =  3;
-     required uint64 file_length    =  4;
-     required uint64 duration       =  5;
-     required bytes media_key       =  6;
-     required string caption        =  7;
-     required bytes file_enc_sha256 = 8;
-     required bytes jpeg_thumbnail  = 16;
+  required bytes url             =  1;
+  required string mime_type      =  2;
+  required bytes file_sha256     =  3;
+  required uint64 file_length    =  4;
+  required uint64 duration       =  5;
+  required bytes media_key       =  6;
+  required string caption        =  7;
+  required bytes file_enc_sha256 = 8;
+  required bytes jpeg_thumbnail  = 16;
 }
 
 message LocationMessage {
