@@ -15,6 +15,7 @@ from .optionalmodules import PILOptionalModule, FFVideoOptionalModule
 import subprocess
 import shlex
 import json
+import math
 
 logger = logging.getLogger(__name__)
 
@@ -226,4 +227,4 @@ class VideoTools:
         duration = ffprobeOutput['streams'][0]['duration']
         
         #print(height, width, br, duration)
-        return width, height, bit_rate, int(float(duration))
+        return width, height, int(float(bit_rate)), int(math.ceil(float(duration)))
