@@ -226,4 +226,4 @@ class VideoTools:
         duration = ffprobeOutput['streams'][0]['duration']
         
         #print(height, width, br, duration)
-        return width, height, bit_rate, int(duration)
+        return width, height, bit_rate, int(float(duration))
