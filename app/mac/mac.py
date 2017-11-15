@@ -11,8 +11,9 @@ from yowsup.layers.protocol_chatstate.protocolentities import *
 from yowsup.layers.protocol_media.protocolentities import *
 from yowsup.layers.protocol_media.mediauploader import MediaUploader
 from yowsup.common.tools import Jid
-from yowsup.layers.protocol_profiles.protocolentities    import *
 from yowsup.common.optionalmodules import PILOptionalModule, AxolotlOptionalModule
+from yowsup.layers.protocol_profiles.protocolentities import *
+from yowsup.layers.protocol_contacts.protocolentities import *
 
 from app.utils import helper
 from app.utils import media_decrypter
@@ -111,6 +112,15 @@ def remove_conversation_from_queue(conversation):
     ack_queue[:] = [entity for entity in ack_queue if not same_conversation(entity, conversation)]
 
 
+def decode_string(message):
+    try:
+        if type(message) is bytes:
+            message = message.decode(encoding='latin1', errors='ignore')
+        return message
+    except:
+        return message.decode('utf-8','ignore').encode("utf-8")
+        
+        
 """
 Sends text message to conversation:
 
@@ -146,16 +156,7 @@ def send_image(path, conversation, caption=None):
 
 def send_image_to(path, phone_number, caption=None):
     jid = Jid.normalize(phone_number)
-    send_image(path, jid)
-
-
-def decode_string(message):
-    try:
-        if type(message) is bytes:
-            message = message.decode(encoding='latin1', errors='ignore')
-        return message
-    except:
-        return message.decode('utf-8','ignore').encode("utf-8")
+    send_image(path, jid, caption)
 
 
 def send_video(path, conversation, caption=None):
@@ -163,6 +164,26 @@ def send_video(path, conversation, caption=None):
         media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO)
     else:
         print("Video doesn't exists")
+        
+        
+def send_video_to(path, phone_number, caption=None):
+    jid = Jid.normalize(phone_number)
+    send_video(path, jid, caption)
+    
+
+"""
+Still not supported
+"""
+def send_audio(path, conversation):
+    if os.path.isfile(path):
+        media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_AUDIO)
+    else:
+        print("File doesn't exists")
+        
+
+def send_audio_to(path, phone_number):
+    jid = Jid.normalize(phone_number)
+    send_audio(path, jid)
 
 
 def media_send(self, jid, path, media_type, caption=None):
@@ -210,6 +231,24 @@ def make_picture_and_preview(path):
         preview = src.resize((96, 96)).tobytes("jpeg", "RGB")
         return picture, preview
                 
+
+def contact_status(jids, fn=None):
+    def success(result, original):
+        if (fn):
+            fn(result.statuses)
+            
+    if isinstance(jids, list):
+        iq = GetStatusesIqProtocolEntity(jids)
+        entity._sendIq(iq, success)
+    else:
+        iq = GetStatusesIqProtocolEntity([jids])
+        entity._sendIq(iq, success)
+        
+        
+def contact_status_from(number, fn=None):
+    jid = Jid.normalize(number)
+    contact_status(jid, fn)
+
 
 '''
 Callbacks. Do not touch

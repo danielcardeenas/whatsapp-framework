@@ -67,6 +67,7 @@ And that's it! You are ready to go.
 
 # Updates
 The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
+- [x] Get contacts statuses
 - [x] Get contacts profile picture (also from groups)
 - [x] Set profile picture (also from groups)
 - [x] Send videos (needs ffmpeg installed)
