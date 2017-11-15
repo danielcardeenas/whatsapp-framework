@@ -18,22 +18,32 @@ class Message(object):
         
     def build(self):
         if helper.is_text_message(self.message_entity):
-            self.message = helper.clean_message(self.message_entity)
-            self.text = helper.clean_message(self.message_entity)
-            self.put_command()
-            self.valid = True
-        
+            self.build_text_message()
         elif helper.is_media_message(self.message_entity):
-            try:
-                self.file_path = downloader.get_file(self.message_entity)
-                self.text = self.message_entity.getCaption()
-                self.message = self.message_entity.getCaption()
-                self.valid = True
-            except:
-                print("Unsupported media file")
+            self.build_media_message()
         else:
             print("Unsupported message")
-            
+    
+    """
+    Builds text message
+    """
+    def build_text_message(self):
+        self.message = helper.clean_message(self.message_entity)
+        self.text = helper.clean_message(self.message_entity)
+        self.put_command()
+        self.valid = True
+        
+    """
+    Tries to build the media message. If fails, builds the text message
+    """
+    def build_media_message(self):
+        if hasattr(self.message_entity, 'getMediaUrl'):
+            self.file_path = downloader.get_file(self.message_entity)
+            self.text = self.message_entity.getCaption()
+            self.message = self.message_entity.getCaption()
+            self.valid = True
+        else:
+            self.build_text_message()
     
     """
     These two attributes are just easier ways to identify instructions
