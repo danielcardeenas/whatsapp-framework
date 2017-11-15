@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os.path
+import os
 import logging
 import sys
 import time
@@ -15,6 +15,7 @@ from yowsup.layers.protocol_profiles.protocolentities    import *
 from yowsup.common.optionalmodules import PILOptionalModule, AxolotlOptionalModule
 
 from app.utils import helper
+from app.utils import media_decrypter
 
 # Globar entity
 entity = None
@@ -164,27 +165,44 @@ def send_video(path, conversation, caption=None):
         print("Video doesn't exists")
 
 
-def media_send(self, number, path, media_type, caption=None):
-    jid = number
+def media_send(self, jid, path, media_type, caption=None):
     entity = RequestUploadIqProtocolEntity(media_type, filePath=path)
     fn_success = lambda success_entity, original_entity: on_request_upload_result(self, jid, media_type, path,
                                                                                     success_entity, original_entity,
                                                                                     caption)
     fn_error = lambda error_entity, original_entity: on_request_upload_error(self, jid, path, error_entity, original_entity)
     self._sendIq(entity, fn_success, fn_error)
+
+
+def contact_picture(conversation, success_fn=None, preview=False):
+    iq = GetPictureIqProtocolEntity(conversation, preview=preview)
+    
+    def got_picture(result_picture, picture_protocol_entity):
+        path = "app/assets/profiles/%s_%s.jpg" % (picture_protocol_entity.getTo(), "preview" if result_picture.isPreview() else "full")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        result_picture.writeToFile(path)
+        if success_fn:
+            success_fn(picture_protocol_entity.getTo(), path)
+    
+    entity._sendIq(iq, got_picture)
     
 
+def contact_picture_from(number, success_fn=None, preview=False):
+    jid = Jid.normalize(phone_number)
+    contact_picture(jid, success_fn, preview)
+
+
 def set_profile_pricture(path, success=None, error=None):
-    picture, preview = picture_preview(path)
+    picture, preview = make_picture_and_preview(path)
     entity._sendIq(SetPictureIqProtocolEntity(entity.getOwnJid(), preview, picture), success, error)
 
 
 def set_group_picture(path, group_jid, success=None, error=None):
-    picture, preview = picture_preview(path)
+    picture, preview = make_picture_and_preview(path)
     entity._sendIq(SetPictureIqProtocolEntity(group_jid, preview, picture), success, error)
         
         
-def picture_preview(path):
+def make_picture_and_preview(path):
     with PILOptionalModule(failMessage = "No PIL library installed, try install pillow") as imp:
         Image = imp("Image")
         src = Image.open(path)

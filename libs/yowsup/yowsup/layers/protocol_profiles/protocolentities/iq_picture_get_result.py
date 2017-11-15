@@ -1,5 +1,6 @@
 from .iq_picture import PictureIqProtocolEntity
 from yowsup.structs import ProtocolTreeNode
+
 class ResultGetPictureIqProtocolEntity(PictureIqProtocolEntity):
     '''
     <iq type="result" from="{{jid}}" id="{{id}}">
@@ -21,7 +22,9 @@ class ResultGetPictureIqProtocolEntity(PictureIqProtocolEntity):
         return self.preview
 
     def getPictureData(self):
-        return self.pictureData
+        b = bytearray()
+        b.extend(map(ord, self.pictureData))
+        return b
 
     def getPictureId(self):
         return self.pictureId
@@ -34,6 +37,7 @@ class ResultGetPictureIqProtocolEntity(PictureIqProtocolEntity):
         node = super(ResultGetPictureIqProtocolEntity, self).toProtocolTreeNode()
         pictureNode = ProtocolTreeNode({"type": "preview" if self.isPreview() else "image" }, data = self.getPictureData())
         node.addChild(pictureNode)
+        print(node)
         return node
 
     @staticmethod
