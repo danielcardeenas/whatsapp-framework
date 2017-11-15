@@ -11,6 +11,8 @@ from yowsup.layers.protocol_chatstate.protocolentities import *
 from yowsup.layers.protocol_media.protocolentities import *
 from yowsup.layers.protocol_media.mediauploader import MediaUploader
 from yowsup.common.tools import Jid
+from yowsup.layers.protocol_profiles.protocolentities    import *
+from yowsup.common.optionalmodules import PILOptionalModule, AxolotlOptionalModule
 
 from app.utils import helper
 
@@ -130,12 +132,8 @@ Sends text message to phone number:
 mac.send_message_to("Hello", "5218114140740")
 """
 def send_message_to(str_message, phone_number, disconnect_after=True):
-    message = decode_string(str_message)
-    
-    # Prepare mac to answer (Human behavior)
     jid = Jid.normalize(phone_number)
-    prepate_answer(entity,jid, disconnect_after)
-    entity.toLower(helper.make_message(message, jid))
+    send_message(str_message, jid)
     
     
 def send_image(path, conversation, caption=None):
@@ -143,6 +141,11 @@ def send_image(path, conversation, caption=None):
         media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE, caption)
     else:
         print("Image doesn't exists")
+        
+
+def send_image_to(path, phone_number, caption=None):
+    jid = Jid.normalize(phone_number)
+    send_image(path, jid)
 
 
 def decode_string(message):
@@ -154,9 +157,9 @@ def decode_string(message):
         return message.decode('utf-8','ignore').encode("utf-8")
 
 
-def send_video(self, number, path, caption=None):
+def send_video(path, conversation, caption=None):
     if os.path.isfile(path):
-        media_send(self, number, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO)
+        media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO)
     else:
         print("Video doesn't exists")
 
@@ -169,7 +172,26 @@ def media_send(self, number, path, media_type, caption=None):
                                                                                     caption)
     fn_error = lambda error_entity, original_entity: on_request_upload_error(self, jid, path, error_entity, original_entity)
     self._sendIq(entity, fn_success, fn_error)
+    
 
+def set_profile_pricture(path, success=None, error=None):
+    picture, preview = picture_preview(path)
+    entity._sendIq(SetPictureIqProtocolEntity(entity.getOwnJid(), preview, picture), success, error)
+
+
+def set_group_picture(path, group_jid, success=None, error=None):
+    picture, preview = picture_preview(path)
+    entity._sendIq(SetPictureIqProtocolEntity(group_jid, preview, picture), success, error)
+        
+        
+def picture_preview(path):
+    with PILOptionalModule(failMessage = "No PIL library installed, try install pillow") as imp:
+        Image = imp("Image")
+        src = Image.open(path)
+        picture = src.resize((640, 640)).tobytes("jpeg", "RGB")
+        preview = src.resize((96, 96)).tobytes("jpeg", "RGB")
+        return picture, preview
+                
 
 '''
 Callbacks. Do not touch
