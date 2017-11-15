@@ -5,6 +5,7 @@ from .protocolentities import VideoDownloadableMediaMessageProtocolEntity
 from .protocolentities import LocationMediaMessageProtocolEntity
 from .protocolentities import VCardMediaMessageProtocolEntity
 from .protocolentities import RequestUploadIqProtocolEntity, ResultRequestUploadIqProtocolEntity
+from yowsup.layers.protocol_messages.protocolentities import TextMessageProtocolEntity
 from yowsup.layers.protocol_iq.protocolentities import IqProtocolEntity, ErrorIqProtocolEntity
 
 class YowMediaProtocolLayer(YowProtocolLayer):
@@ -37,20 +38,27 @@ class YowMediaProtocolLayer(YowProtocolLayer):
     def recvMessageStanza(self, node):
         if node.getAttributeValue("type") == "media":
             mediaNode = node.getChild("media")
-            if mediaNode.getAttributeValue("type") == "image":
-                entity = ImageDownloadableMediaMessageProtocolEntity.fromProtocolTreeNode(node)
-                self.toUpper(entity)
-            elif mediaNode.getAttributeValue("type") == "audio":
-                entity = AudioDownloadableMediaMessageProtocolEntity.fromProtocolTreeNode(node)
-                self.toUpper(entity)
-            elif mediaNode.getAttributeValue("type") == "video":
-                entity = VideoDownloadableMediaMessageProtocolEntity.fromProtocolTreeNode(node)
-                self.toUpper(entity)
-            elif mediaNode.getAttributeValue("type") == "location":
-                entity = LocationMediaMessageProtocolEntity.fromProtocolTreeNode(node)
-                self.toUpper(entity)
-            elif mediaNode.getAttributeValue("type") == "vcard":
-                entity = VCardMediaMessageProtocolEntity.fromProtocolTreeNode(node)
+            if mediaNode:
+                if mediaNode.getAttributeValue("type") == "image":
+                    entity = ImageDownloadableMediaMessageProtocolEntity.fromProtocolTreeNode(node)
+                    self.toUpper(entity)
+                elif mediaNode.getAttributeValue("type") == "audio":
+                    entity = AudioDownloadableMediaMessageProtocolEntity.fromProtocolTreeNode(node)
+                    self.toUpper(entity)
+                elif mediaNode.getAttributeValue("type") == "video":
+                    entity = VideoDownloadableMediaMessageProtocolEntity.fromProtocolTreeNode(node)
+                    self.toUpper(entity)
+                elif mediaNode.getAttributeValue("type") == "location":
+                    entity = LocationMediaMessageProtocolEntity.fromProtocolTreeNode(node)
+                    self.toUpper(entity)
+                elif mediaNode.getAttributeValue("type") == "vcard":
+                    entity = VCardMediaMessageProtocolEntity.fromProtocolTreeNode(node)
+                    self.toUpper(entity)
+                else:
+                    entity = TextMessageProtocolEntity.fromProtocolTreeNode(node)
+                    self.toUpper(entity)
+            else:
+                entity = TextMessageProtocolEntity.fromProtocolTreeNode(node)
                 self.toUpper(entity)
 
     def sendIq(self, entity):
