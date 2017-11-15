@@ -188,7 +188,7 @@ def contact_picture(conversation, success_fn=None, preview=False):
     
 
 def contact_picture_from(number, success_fn=None, preview=False):
-    jid = Jid.normalize(phone_number)
+    jid = Jid.normalize(number)
     contact_picture(jid, success_fn, preview)
 
 
