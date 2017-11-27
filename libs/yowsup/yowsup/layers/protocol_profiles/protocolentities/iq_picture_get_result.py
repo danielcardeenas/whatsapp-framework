@@ -37,7 +37,7 @@ class ResultGetPictureIqProtocolEntity(PictureIqProtocolEntity):
         node = super(ResultGetPictureIqProtocolEntity, self).toProtocolTreeNode()
         pictureNode = ProtocolTreeNode({"type": "preview" if self.isPreview() else "image" }, data = self.getPictureData())
         node.addChild(pictureNode)
-        print(node)
+        #print(node)
         return node
 
     @staticmethod

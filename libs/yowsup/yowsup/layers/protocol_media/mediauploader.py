@@ -56,8 +56,12 @@ class MediaUploader(WARequest, threading.Thread):
             return DownloadableMediaMessageProtocolEntity.IMAGE_KEY
         elif "audio" in filetype:
             return DownloadableMediaMessageProtocolEntity.AUDIO_KEY
+        elif "application" in filetype:
+            return DownloadableMediaMessageProtocolEntity.DOCUMENT_KEY
+        elif "text" in filetype:
+            return DownloadableMediaMessageProtocolEntity.DOCUMENT_KEY
         raise Exception ("FILE TYPE NOT SUPPORTED")
-        
+                
 
     def encryptMedia(self, img, refkey,filetype):
         key = self.getKey(filetype)
