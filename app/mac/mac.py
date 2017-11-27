@@ -213,7 +213,7 @@ def contact_picture_from(number, success_fn=None, preview=False):
     contact_picture(jid, success_fn, preview)
 
 
-def set_profile_pricture(path, success=None, error=None):
+def set_profile_picture(path, success=None, error=None):
     picture, preview = make_picture_and_preview(path)
     entity._sendIq(SetPictureIqProtocolEntity(entity.getOwnJid(), preview, picture), success, error)
 
