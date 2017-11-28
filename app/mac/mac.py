@@ -25,6 +25,12 @@ name = "Mac"
 ack_queue = []
 logger = logging.getLogger(__name__)
 
+def init(credentials):
+    """
+    Run mac stack here
+    """
+    pass
+
 def set_entity(instance):
     global entity
     entity = instance
@@ -130,8 +136,11 @@ def handle(message):
         mac.send_message("Hello", message.conversation)
 """
 def send_message(str_message, conversation, disconnect_after=True):
-    message = decode_string(str_message)
-    
+    #message = decode_string(str_message)
+    message = str_message
+    if isinstance(message, str):
+        message = message.encode()
+        
     # Prepare mac to answer (Human behavior)
     prepate_answer(entity, conversation, disconnect_after)
     entity.toLower(helper.make_message(message, conversation))
@@ -170,10 +179,7 @@ def send_video_to(path, phone_number, caption=None):
     jid = Jid.normalize(phone_number)
     send_video(path, jid, caption)
     
-
-"""
-Still not supported
-"""
+    
 def send_audio(path, conversation):
     if os.path.isfile(path):
         media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_AUDIO)
@@ -184,7 +190,19 @@ def send_audio(path, conversation):
 def send_audio_to(path, phone_number):
     jid = Jid.normalize(phone_number)
     send_audio(path, jid)
+    
+    
+def send_document(path, conversation):
+    if os.path.isfile(path):
+        media_send(entity, conversation, path, RequestUploadIqProtocolEntity.MEDIA_TYPE_DOCUMENT)
+    else:
+        print("File doesn't exists")
 
+
+def send_document_to(path, phone_number):
+    jid = Jid.normalize(phone_number)
+    send_document(path, jid)
+    
 
 def media_send(self, jid, path, media_type, caption=None):
     entity = RequestUploadIqProtocolEntity(media_type, filePath=path)
@@ -213,7 +231,7 @@ def contact_picture_from(number, success_fn=None, preview=False):
     contact_picture(jid, success_fn, preview)
 
 
-def set_profile_pricture(path, success=None, error=None):
+def set_profile_picture(path, success=None, error=None):
     picture, preview = make_picture_and_preview(path)
     entity._sendIq(SetPictureIqProtocolEntity(entity.getOwnJid(), preview, picture), success, error)
 

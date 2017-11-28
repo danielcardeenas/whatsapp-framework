@@ -3,6 +3,7 @@ import os
 from yowsup.layers.protocol_media.mediadownloader import MediaDownloader
 from app.utils import helper
 from app.utils import media_decrypter
+from pprint import pprint
 
 """
 Downloads & Decrypts
@@ -33,10 +34,12 @@ def download_enc(message_entity):
 Decrypts enc file and returns its path
 """
 def decrypt_file(message_entity, enc_path):
+    pprint(vars(message_entity))
     key = message_entity.getMediaKey()
+    type = message_entity.getMediaType()
     out = ""
     
     if helper.is_image_media(message_entity):
         out = os.path.splitext(enc_path)[0] + '.jpg'
     
-    return media_decrypter.decrypt_file(enc_path, key, out)
+    return media_decrypter.decrypt_file(enc_path, key, type, out)
