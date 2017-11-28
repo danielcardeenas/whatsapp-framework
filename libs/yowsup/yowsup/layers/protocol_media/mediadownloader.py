@@ -17,15 +17,6 @@ class MediaDownloader:
 
     def download(self, url="", path=""):
         try:
-             if not url:
-                if self.url:
-                    url = "https://" if self.port == 443 else "http://"
-                    url = url + self.url
-                    url = url + "?" + urlencode(self.params)
-                    logger.debug("URL is %s" % url)
-                else:
-                    raise Exception("No url specified")
-
             u = urlopen(url)
 
             if path == "":
