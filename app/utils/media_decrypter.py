@@ -7,15 +7,10 @@ from axolotl.kdf.hkdfv3 import HKDFv3
 from axolotl.util.byteutil import ByteUtil
 
 WHATSAPP_KEY = "576861747341707020496d616765204b657973"
-AUDIO_KEY = "576861747341707020417564696f204b657973"
-VIDEO_KEY = "576861747341707020566964656f204b657973"
-IMAGE_KEY = "576861747341707020496d616765204b657973"
-DOCUMENT_KEY = "576861747341707020496d616765204b657973"
 
-def decrypt_file(enc_path, media_key, media_type, out_path=""):
+def decrypt_file(enc_path, media_key, out_path=""):
     media_key = binascii.hexlify(media_key)
-    key = getKey(media_type)
-    derivative = HKDFv3().deriveSecrets(binascii.unhexlify(media_key), binascii.unhexlify(key), 112)
+    derivative = HKDFv3().deriveSecrets(binascii.unhexlify(media_key), binascii.unhexlify(WHATSAPP_KEY), 112)
     
     splits = ByteUtil.split(derivative, 16, 32)
     iv = splits[0]
@@ -44,18 +39,7 @@ def decrypt_file(enc_path, media_key, media_type, out_path=""):
                 out_file.write(piece)
                 
     return out_path
-    
-    
-def getKey(media_type):
-    print(media_type)
-    if media_type == "image":
-        return IMAGE_KEY
-    elif media_type == "audio":
-        return AUDIO_KEY
-    elif media_type == "document":
-        return DOCUMENT_KEY
-    else:
-        return IMAGE_KEY
+                
     
 def pad(stream):
     x = (16 - len(stream) % 16) * chr(16 - len(stream) % 16)

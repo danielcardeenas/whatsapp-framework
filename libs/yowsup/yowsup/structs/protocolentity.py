@@ -1,6 +1,5 @@
 from .protocoltreenode import ProtocolTreeNode
 import unittest, time
-
 class ProtocolEntity(object):
     __ID_GEN = 0
 

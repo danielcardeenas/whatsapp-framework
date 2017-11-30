@@ -7,4 +7,3 @@ from .iq_picture_set import SetPictureIqProtocolEntity
 from .iq_privacy_set import SetPrivacyIqProtocolEntity
 from .iq_privacy_get import GetPrivacyIqProtocolEntity
 from .iq_privacy_result import ResultPrivacyIqProtocolEntity
-from .iq_picture_delete import DeletePictureIqProtocolEntity

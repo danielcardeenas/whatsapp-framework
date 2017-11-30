@@ -39,11 +39,8 @@ class Message(object):
     def build_media_message(self):
         if hasattr(self.message_entity, 'getMediaUrl'):
             self.file_path = downloader.get_file(self.message_entity)
-            try:
-                self.text = self.message_entity.getCaption()
-                self.message = self.message_entity.getCaption()
-            except:
-                pass
+            self.text = self.message_entity.getCaption()
+            self.message = self.message_entity.getCaption()
             self.valid = True
         else:
             self.build_text_message()

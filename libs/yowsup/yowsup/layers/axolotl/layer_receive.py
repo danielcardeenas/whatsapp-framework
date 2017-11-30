@@ -6,9 +6,7 @@ from yowsup.layers.axolotl.protocolentities import *
 from yowsup.structs import ProtocolTreeNode
 from yowsup.layers.axolotl.props import PROP_IDENTITY_AUTOTRUST
 from yowsup.layers.axolotl.props import PROP_IGNORE_UNHANDLED
-from axolotl.util.hexutil import HexUtil
-from axolotl.util.keyhelper import KeyHelper
-from yowsup.layers.protocol_acks.protocolentities import OutgoingAckProtocolEntity
+
 from axolotl.protocol.prekeywhispermessage import PreKeyWhisperMessage
 from axolotl.protocol.whispermessage import WhisperMessage
 from axolotl.sessioncipher import SessionCipher
@@ -23,7 +21,7 @@ from axolotl.groups.senderkeyname import SenderKeyName
 from axolotl.groups.groupsessionbuilder import GroupSessionBuilder
 from axolotl.protocol.senderkeydistributionmessage import SenderKeyDistributionMessage
 from yowsup import signals
-import binascii
+
 import logging
 import copy
 import sys
@@ -32,8 +30,6 @@ from pprint import pprint
 logger = logging.getLogger(__name__)
 
 class AxolotlReceivelayer(AxolotlBaseLayer):
-    _COUNT_PREKEYS = 200
-
     def __init__(self):
         super(AxolotlReceivelayer, self).__init__()
         self.v2Jids = [] #people we're going to send v2 enc messages
@@ -46,14 +42,8 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         :type protocolTreeNode: ProtocolTreeNode
         """
         if not self.processIqRegistry(protocolTreeNode):
-            #print("RECEIVE: %s" % protocolTreeNode["type"])
-            #print(protocolTreeNode.tag)
-            #print(protocolTreeNode)
-            if protocolTreeNode.tag == "message":
+            if protocolTreeNode.tag == "message" or protocolTreeNode.tag == "media":
                 self.onMessage(protocolTreeNode)
-            elif protocolTreeNode.tag == "notification": #and protocolTreeNode["type"] == "encrypt":
-                self.onEncryptNotification(protocolTreeNode)
-                return
             elif not protocolTreeNode.tag == "receipt":
                 #receipts will be handled by send layer
                 self.toUpper(protocolTreeNode)
@@ -82,11 +72,6 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             del self.pendingIncomingMessages[conversationIdentifier]
 
     ##### handling received data #####
-    def onEncryptNotification(self, protocolTreeNode):
-        entity = EncryptNotification.fromProtocolTreeNode(protocolTreeNode)
-        ack = OutgoingAckProtocolEntity(protocolTreeNode["id"], "notification", protocolTreeNode["type"], protocolTreeNode["from"])
-        self.toLower(ack.toProtocolTreeNode())
-        self.sendKeys(fresh=False, countPreKeys = self.__class__._COUNT_PREKEYS - entity.getCount())
 
     def onMessage(self, protocolTreeNode):
         encNode = protocolTreeNode.getChild("enc")
@@ -180,9 +165,7 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             #print("Plain before:", plaintext)
             padding = ord(plaintext[-1]) & 0xFF
             plaintext = plaintext[:-padding]
-            if isinstance(plaintext, str):
-                plaintext = plaintext.encode()
-            #plaintext = plaintext.encode() if sys.version_info >= (3, 0) else plaintext
+            plaintext = plaintext.encode() if sys.version_info >= (3, 0) else plaintext
             #print("Plain:", plaintext)
             self.parseAndHandleMessageProto(encMessageProtocolEntity, plaintext)
 
@@ -230,16 +213,23 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             #print("Special message received")
             #self.handleUrlMessage(node, m.url_message)
             self.handleComplexMessage(node, m.url_message)
+            
         elif m.HasField("location_message"):
             self.handleLocationMessage(node, m.location_message)
+            
         elif m.HasField("image_message"):
             self.handleImageMessage(node, m.image_message)
-        elif m.HasField("video_message"):
-            self.handleVideoMessage(node, m.video_message)
-        elif m.HasField("audio_message"):
-            self.handleAudioMessage(node, m.audio_message)
-        elif m.HasField("document_message"):
-            self.handleDocumentMessage(node, m.document_message)
+            
+        #elif m.HasField("document_message"):
+        #    logger.debug("Handle document message")
+        #    self.handleDocumentMessage(node, m.document_message)
+        #elif m.HasField("video_message"):
+        #    logger.debug("Handle video message")
+        #    self.handleDocumentMessage(node, m.video_message)
+        #elif m.HasField("audio_message"):
+        #    logger.debug("Handle audio message")
+        #    self.handleAudioMessage(node, m.audio_message)
+        
         else:
             logger.warning("Unhandled message")
             pprint(m)
@@ -291,28 +281,6 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
 
         self.toUpper(messageNode)
 
-    def handleVideoMessage(self, originalEncNode, videoMessage):
-        messageNode = copy.deepcopy(originalEncNode)
-        messageNode["type"] = "media"
-        mediaNode = ProtocolTreeNode("media", {
-            "type": "video",
-            "filehash": videoMessage.file_sha256,
-            "size": str(videoMessage.file_length),
-            "url": videoMessage.url,
-            "mimetype": videoMessage.mime_type.split(';')[0],
-            "encoding": videoMessage.mime_type.split(';')[1].strip() if len(videoMessage.mime_type.split(';')) > 1 else "",
-            "duration": str(videoMessage.duration),
-            "seconds": str(videoMessage.duration),
-            "caption": videoMessage.caption,
-            "encoding": "raw",
-            "file": "enc",
-            "ip": "0",
-            "mediakey": videoMessage.media_key
-        }, data=videoMessage.jpeg_thumbnail)
-        messageNode.addChild(mediaNode)
-
-        self.toUpper(messageNode)
-
     def handleAudioMessage(self, originalEncNode, audioMessage):
         messageNode = copy.deepcopy(originalEncNode)
         messageNode["type"] = "media"
@@ -322,7 +290,6 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             "size": str(audioMessage.file_length),
             "url": audioMessage.url,
             "mimetype": audioMessage.mime_type.split(';')[0],
-            "encoding": audioMessage.mime_type.split(';')[1].strip() if len(audioMessage.mime_type.split(';')) > 1 else "",
             "duration": str(audioMessage.duration),
             "seconds": str(audioMessage.duration),
             "encoding": "raw",
@@ -330,6 +297,27 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             "ip": "0",
             "mediakey": audioMessage.media_key
         })
+        messageNode.addChild(mediaNode)
+
+        self.toUpper(messageNode)
+
+    def handleVideoMessage(self, originalEncNode, videoMessage):
+        messageNode = copy.deepcopy(originalEncNode)
+        messageNode["type"] = "media"
+        mediaNode = ProtocolTreeNode("media", {
+            "type": "video",
+            "filehash": videoMessage.file_sha256,
+            "size": str(videoMessage.file_length),
+            "url": videoMessage.url,
+            "mimetype": videoMessage.mime_type.split(';')[0],
+            "duration": str(videoMessage.duration),
+            "seconds": str(videoMessage.duration),
+            "caption": videoMessage.caption,
+            "encoding": "raw",
+            "file": "enc",
+            "ip": "0",
+            "mediakey": videoMessage.media_key
+        }, data=videoMessage.jpeg_thumbnail)
         messageNode.addChild(mediaNode)
 
         self.toUpper(messageNode)
@@ -354,17 +342,17 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         messageNode["type"] = "media"
         mediaNode = ProtocolTreeNode("media", {
             "type": "document",
+            "url": documentMessage.url,
+            "mimetype": documentMessage.mime_type,
             "title": documentMessage.title,
             "filehash": documentMessage.file_sha256,
             "size": str(documentMessage.file_length),
-            "url": documentMessage.url,
-            "mimetype": documentMessage.mime_type.split(';')[0],
-            "pagecount": str(documentMessage.page_count),
+            "pages": str(documentMessage.page_count),
             "mediakey": documentMessage.media_key
-        })
+        }, data=documentMessage.jpeg_thumbnail)
         messageNode.addChild(mediaNode)
-        self.toUpper(messageNode)
 
+        self.toUpper(messageNode)
 
     def handleLocationMessage(self, originalEncNode, locationMessage):
         try:
@@ -416,33 +404,3 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             groupCipher = GroupCipher(self.store, senderKeyName)
             self.groupCiphers[senderKeyName] = groupCipher
         return groupCipher
-
-
-    ### keys set and get
-    def sendKeys(self, fresh=True, countPreKeys=_COUNT_PREKEYS):
-        identityKeyPair = KeyHelper.generateIdentityKeyPair() if fresh else self.store.getIdentityKeyPair()
-        registrationId = KeyHelper.generateRegistrationId() if fresh else self.store.getLocalRegistrationId()
-        preKeys = KeyHelper.generatePreKeys(KeyHelper.getRandomSequence(), countPreKeys)
-        signedPreKey = KeyHelper.generateSignedPreKey(identityKeyPair, KeyHelper.getRandomSequence(65536))
-        preKeysDict = {}
-        for preKey in preKeys:
-            keyPair = preKey.getKeyPair()
-            preKeysDict[self.adjustId(preKey.getId())] = self.adjustArray(keyPair.getPublicKey().serialize()[1:])
-
-        signedKeyTuple = (self.adjustId(signedPreKey.getId()),
-                          self.adjustArray(signedPreKey.getKeyPair().getPublicKey().serialize()[1:]),
-                          self.adjustArray(signedPreKey.getSignature()))
-
-        setKeysIq = SetKeysIqProtocolEntity(self.adjustArray(identityKeyPair.getPublicKey().serialize()[1:]),
-                                            signedKeyTuple, preKeysDict, Curve.DJB_TYPE, self.adjustId(registrationId))
-
-        onResult = lambda _, __: self.persistKeys(registrationId, identityKeyPair, preKeys, signedPreKey, fresh)
-        self._sendIq(setKeysIq, onResult, self.onSentKeysError)
-
-    def persistKeys(self, registrationId, identityKeyPair, preKeys, signedPreKey, fresh):
-        total = len(preKeys)
-        curr = 0
-        prevPercentage = 0
-
-    def adjustArray(self, arr):
-        return HexUtil.decodeHex(binascii.hexlify(arr))

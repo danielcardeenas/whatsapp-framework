@@ -130,8 +130,6 @@ Cleans all the garbage and non-ASCII characters in the message (idk why whatsapp
 """
 def clean_message(message_entity):
     message = message_entity.getBody()
-    if isinstance(message, bytes):
-        message = message.decode()
     message = message.strip()
     #message = ''.join(filter(lambda x: x in string.printable, message))
     return message

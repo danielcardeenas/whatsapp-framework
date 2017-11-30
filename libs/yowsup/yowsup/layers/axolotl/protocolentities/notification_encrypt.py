@@ -8,7 +8,6 @@ class EncryptNotification(NotificationProtocolEntity):
         </count>
     </notification>
     """
-    count = 9
     def __init__(self, count, timestamp, _id = None, notify = None, offline = None):
         super(EncryptNotification, self).__init__("encrypt", _id, YowConstants.WHATSAPP_SERVER, timestamp, notify, offline)
         self.setProps(count)
@@ -29,8 +28,5 @@ class EncryptNotification(NotificationProtocolEntity):
     def fromProtocolTreeNode(node):
         entity = NotificationProtocolEntity.fromProtocolTreeNode(node)
         entity.__class__ = EncryptNotification
-        #print("FROM PROTOCOL TREE NODE")
-        #print(node)
-        #print(node.getChild("count")["value"])
-        #entity.setProps(node.getChild("count")["value"])
+        entity.setProps(node.getChild("count")["value"])
         return entity
