@@ -180,7 +180,9 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             #print("Plain before:", plaintext)
             padding = ord(plaintext[-1]) & 0xFF
             plaintext = plaintext[:-padding]
-            plaintext = plaintext.encode() if sys.version_info >= (3, 0) else plaintext
+            if isinstance(plaintext, str):
+                plaintext = plaintext.encode()
+            #plaintext = plaintext.encode() if sys.version_info >= (3, 0) else plaintext
             #print("Plain:", plaintext)
             self.parseAndHandleMessageProto(encMessageProtocolEntity, plaintext)
 
