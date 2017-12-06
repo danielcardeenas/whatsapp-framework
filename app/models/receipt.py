@@ -6,3 +6,11 @@ class Receipt(object):
         self.conversation = message_entity.getFrom()
         self.timestamp = message_entity.timestamp
         self.message_entity = message_entity
+        
+    """
+    Logs message node
+    """
+    def log(self, deep=False):
+        helper.log(self)
+        if deep:
+            helper.log(self.message_entity)
