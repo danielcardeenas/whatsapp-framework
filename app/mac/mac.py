@@ -30,62 +30,62 @@ def set_entity(instance):
     entity = instance
 
 
-def receive_message(entity, message_entity):
-    entity.toLower(message_entity.ack())
+def receive_message(self, message_entity):
+    self.toLower(message_entity.ack())
     # Add message to queue to ACK later
     ack_queue.append(message_entity)
 
 
-def prepate_answer(entity, conversation, disconnect_after=True):
+def prepate_answer(self, conversation, disconnect_after=True):
     # Set name Presence
-    make_presence(entity)
+    make_presence(self)
 
     # Set online
-    online(entity)
+    online(self)
     time.sleep(random.uniform(0.1, 0.4))
 
     # Set read (double v blue)
-    ack_messages(entity, conversation)
+    ack_messages(self, conversation)
 
     # Set is writing
-    start_typing(entity, conversation)
+    start_typing(self, conversation)
     time.sleep(random.uniform(0.5, 1.4))
 
     # Set it not writing
-    stop_typing(entity, conversation)
+    stop_typing(self, conversation)
     #time.sleep(random.uniform(0.1, 0.3))
     
     if disconnect_after:
-        disconnect(entity)
+        disconnect(self)
 
 
-def make_presence(entity):
-    entity.toLower(PresenceProtocolEntity(name=name))
+def make_presence(self):
+    self.toLower(PresenceProtocolEntity(name=name))
 
 
-def online(entity):
-    entity.toLower(AvailablePresenceProtocolEntity())
+def online(self):
+    self.toLower(AvailablePresenceProtocolEntity())
 
 
-def disconnect(entity):
-    entity.toLower(UnavailablePresenceProtocolEntity())
+def disconnect(self):
+    self.toLower(UnavailablePresenceProtocolEntity())
 
 
-def start_typing(entity, conversation):
-    entity.toLower(OutgoingChatstateProtocolEntity(
+def start_typing(self, conversation):
+    self.toLower(OutgoingChatstateProtocolEntity(
         OutgoingChatstateProtocolEntity.STATE_TYPING,
         Jid.normalize(conversation)
     ))
 
 
-def stop_typing(entity, conversation):
-    entity.toLower(OutgoingChatstateProtocolEntity(
+def stop_typing(self, conversation):
+    self.toLower(OutgoingChatstateProtocolEntity(
         OutgoingChatstateProtocolEntity.STATE_PAUSED,
         Jid.normalize(conversation)
     ))
 
 
-def ack_messages(entity, conversation):
+def ack_messages(self, conversation):
     # Filter messages from this conversation
     queue = [message_entity for message_entity in ack_queue if same_conversation(message_entity, conversation)]
 
@@ -94,7 +94,7 @@ def ack_messages(entity, conversation):
 
     # Ack every message in queue
     for message_entity in queue:
-        entity.toLower(message_entity.ack(True))
+        self.toLower(message_entity.ack(True))
 
         # Remove it from queue
         if message_entity in ack_queue:
@@ -123,7 +123,6 @@ def decode_string(message):
         
 """
 Sends text message to conversation:
-
 @signals.command_received.connect
 def handle(message):
     if message.text == "Hi":
@@ -139,7 +138,6 @@ def send_message(str_message, conversation, disconnect_after=True):
 
 """
 Sends text message to phone number:
-
 mac.send_message_to("Hello", "5218114140740")
 """
 def send_message_to(str_message, phone_number, disconnect_after=True):
@@ -186,13 +184,13 @@ def send_audio_to(path, phone_number):
     send_audio(path, jid)
 
 
-def media_send(entity, jid, path, media_type, caption=None):
+def media_send(self, jid, path, media_type, caption=None):
     entity = RequestUploadIqProtocolEntity(media_type, filePath=path)
-    fn_success = lambda success_entity, original_entity: on_request_upload_result(entity, jid, media_type, path,
+    fn_success = lambda success_entity, original_entity: on_request_upload_result(self, jid, media_type, path,
                                                                                     success_entity, original_entity,
                                                                                     caption)
-    fn_error = lambda error_entity, original_entity: on_request_upload_error(entity, jid, path, error_entity, original_entity)
-    entity._sendIq(entity, fn_success, fn_error)
+    fn_error = lambda error_entity, original_entity: on_request_upload_error(self, jid, path, error_entity, original_entity)
+    self._sendIq(entity, fn_success, fn_error)
 
 
 def contact_picture(conversation, success_fn=None, preview=False):
@@ -253,13 +251,13 @@ def contact_status_from(number, fn=None):
 '''
 Callbacks. Do not touch
 '''
-def on_request_upload_result(entity, jid, media_type, file_path, result_request_upload_entity,
+def on_request_upload_result(self, jid, media_type, file_path, result_request_upload_entity,
                              request_upload_entity, caption=None):
     if result_request_upload_entity.isDuplicate():
-        do_send_media(entity, media_type, file_path, result_request_upload_entity.getUrl(), jid,
+        do_send_media(self, media_type, file_path, result_request_upload_entity.getUrl(), jid,
                       result_request_upload_entity.getIp(), caption)
     else:
-        success_fn = lambda file_path, jid, url: do_send_media(entity,
+        success_fn = lambda file_path, jid, url: do_send_media(self,
                                                                media_type,
                                                                file_path,
                                                                url,
@@ -267,13 +265,13 @@ def on_request_upload_result(entity, jid, media_type, file_path, result_request_
                                                                result_request_upload_entity.getIp(),
                                                                caption)
         media_uploader = MediaUploader(jid,
-                                       entity.getOwnJid(),
+                                       self.getOwnJid(),
                                        file_path,
                                        result_request_upload_entity.getUrl(),
                                        result_request_upload_entity.getResumeOffset(),
                                        success_fn,
-                                       on_upload_error(entity, file_path, jid),
-                                       on_upload_progress(entity,
+                                       on_upload_error(self, file_path, jid),
+                                       on_upload_progress(self,
                                                           file_path,
                                                           jid,
                                                           result_request_upload_entity.getResumeOffset()),
@@ -281,29 +279,29 @@ def on_request_upload_result(entity, jid, media_type, file_path, result_request_
         media_uploader.start()
 
 
-def on_request_upload_error(entity, jid, path, error_request_upload_iq_entity, request_upload_iq_entity):
+def on_request_upload_error(self, jid, path, error_request_upload_iq_entity, request_upload_iq_entity):
     return
     #logger.error("Request upload for file %s for %s failed" % (path, jid))
 
 
-def do_send_media(entity, media_type, file_path, url, to, ip=None, caption=None):
+def do_send_media(self, media_type, file_path, url, to, ip=None, caption=None):
     if media_type == RequestUploadIqProtocolEntity.MEDIA_TYPE_IMAGE:
         entity = ImageDownloadableMediaMessageProtocolEntity.fromFilePath(file_path, url, ip, to, caption=caption)
-        entity.toLower(entity)
+        self.toLower(entity)
     elif media_type == RequestUploadIqProtocolEntity.MEDIA_TYPE_AUDIO:
         entity = AudioDownloadableMediaMessageProtocolEntity.fromFilePath(file_path, url, ip, to)
-        entity.toLower(entity)
+        self.toLower(entity)
     elif media_type == RequestUploadIqProtocolEntity.MEDIA_TYPE_VIDEO:
         entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(file_path, url, ip, to, caption=caption)
-        entity.toLower(entity)
+        self.toLower(entity)
 
 
-def on_upload_error(entity, filePath, jid):
+def on_upload_error(self, filePath, jid):
     return
     #logger.error("Upload file %s to %s failed!" % (filePath, jid))
 
 
-def on_upload_progress(entity, filePath, jid, progress):
+def on_upload_progress(self, filePath, jid, progress):
     return
     #sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
     #sys.stdout.flush()
