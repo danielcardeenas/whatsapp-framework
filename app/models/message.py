@@ -6,6 +6,7 @@ class Message(object):
         self.who = helper.get_who_send(message_entity)
         self.who_name = helper.sender_name(message_entity)
         self.conversation = message_entity.getFrom()
+        self.timestamp = message_entity.getTimestamp()
         self.message_entity = message_entity
         self.valid = False
         self.message = ""
