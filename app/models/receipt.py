@@ -6,6 +6,7 @@ class Receipt(object):
         self.conversation = message_entity.getFrom()
         self.timestamp = message_entity.timestamp
         self.message_entity = message_entity
+        self.blue = message_entity.type == "read"
         
     """
     Logs message node
