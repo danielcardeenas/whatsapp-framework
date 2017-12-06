@@ -6,7 +6,7 @@ from yowsup.stacks import YowStackBuilder
 from yowsup.layers import YowLayerEvent
 from yowsup.layers.network import YowNetworkLayer
 
-from app.layer import MacLayer
+from app.mac.layer import MacLayer
 
 # Uncomment to log
 #logging.basicConfig(level=logging.DEBUG)
@@ -41,16 +41,9 @@ class MacStack(object):
         except KeyboardInterrupt:
             print("\nYowsdown")
             sys.exit(0)
-            
-def run_infinite():
-    while True:
-        try:
-            c = MacStack()
-            c.start()
-        except:
-            pass
-        else:
-            break
+        
+def instance():
+    return MacStack()
 
 if __name__ == "__main__":
     c = MacStack()
