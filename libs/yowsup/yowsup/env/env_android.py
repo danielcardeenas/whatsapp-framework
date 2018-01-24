@@ -17,9 +17,9 @@ class AndroidYowsupEnv(YowsupEnv):
         "YHNtYoIvt5R3X6YZylbPftF/8ayWTALBgcqhkjOOAQDBQADLwAwLAIUAKYCp0d6z4QQdyN74JDfQ2WCyi8CFDUM4CaNB+ceVXd" \
         "KtOrNTQcc0e+t"
 
-    _MD5_CLASSES = "CjxZj9h0ptjV2RRSfH9aYA=="
+    _MD5_CLASSES = "OW8IX3t9e+PaXY3iO7Z6Hw=="
     _KEY = "eQV5aq/Cg63Gsq1sshN9T3gh+UUp0wIw0xgHYT1bnCjEqOJQKCRrWxdAe2yvsDeCJL+Y4G3PRD2HUF7oUgiGo8vGlNJOaux26k+A2F3hj8A="
-    _VERSION = "2.18.8"
+    _VERSION = "2.18.20"
     _OS_NAME = "Android"
     _OS_VERSION = "4.3"
     _DEVICE_NAME = "endeavoru"
