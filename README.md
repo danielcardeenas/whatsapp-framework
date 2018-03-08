@@ -23,7 +23,7 @@ _This needs **Python 3.5**_
 3. Register your phone and get a password with like this:
 ```sh
 # Replace CC with your country code (See http://www.ipipi.com/help/telephone-country-codes.htm)
-> yowsup-cli registration --requestcode sms --phone CCXXXXXXXX--cc CC -E android
+> yowsup-cli registration --requestcode sms --phone CCXXXXXXXX --cc CC -E android
 # After getting the sms code (in this example: 123456)
 > yowsup-cli registration --register 123456 --phone CCXXXXXXXX --cc CC -E android
 ```
