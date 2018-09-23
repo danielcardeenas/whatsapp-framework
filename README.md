@@ -45,9 +45,10 @@ from app.mac import mac, signals
 
 @signals.message_received.connect
 def handle(message):
-    #message.log() to see message object properties
     if message.text == "hi":
         mac.send_message("Hello", message.conversation)
+        
+        # Can also send media
         #mac.send_image("path/to/image.png", message.conversation)
         #mac.send_video("path/to/video.mp4", message.conversation)
 ```
