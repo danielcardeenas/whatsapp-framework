@@ -215,6 +215,10 @@ def set_profile_picture(path, success=None, error=None):
     picture, preview = make_picture_and_preview(path)
     entity._sendIq(SetPictureIqProtocolEntity(entity.getOwnJid(), preview, picture), success, error)
 
+def set_status_text(text, success=None, error=None):
+    entity._sendIq(SetStatusIqProtocolEntity(entity.getOwnJid(), text), success, error)
+
+
 
 def set_group_picture(path, group_jid, success=None, error=None):
     picture, preview = make_picture_and_preview(path)
