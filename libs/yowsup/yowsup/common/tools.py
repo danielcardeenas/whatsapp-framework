@@ -182,7 +182,7 @@ class MimeTools:
 class VideoTools:
     @staticmethod
     def getVideoProperties(videoFile):
-        if sys.version_info <= (3, 0): 
+        if sys.version_info <= (3, 0):
             with FFVideoOptionalModule() as imp:
                 VideoStream = imp("VideoStream")
                 s = VideoStream(videoFile)
@@ -203,7 +203,7 @@ class VideoTools:
                 return preview
         else:
             import moviepy.editor as mvpy
-            
+
             clip = mvpy.VideoFileClip(videoFile)
             path = tempfile.mkstemp('.jpg')[1]
             clip.save_frame(path)
@@ -216,15 +216,27 @@ class VideoTools:
         cmd = "ffprobe -v quiet -print_format json -show_streams"
         args = shlex.split(cmd)
         args.append(path)
-        
+
         # run the ffprobe process, decode stdout into utf-8 & convert to JSON
         ffprobeOutput = subprocess.check_output(args).decode('utf-8')
         ffprobeOutput = json.loads(ffprobeOutput)
-    
-        height = ffprobeOutput['streams'][0]['height']
-        width = ffprobeOutput['streams'][0]['width']
-        bit_rate = ffprobeOutput['streams'][0]['bit_rate']
-        duration = ffprobeOutput['streams'][0]['duration']
-        
+
+        # mp4 streams could be split into an audio and video codec_type (this gets the correct stream index, but default back to 0)
+        index = 0
+        if len(ffprobeOutput['streams']) > 1:
+            i = 0
+            # loop over streams until the video codec is found, and use that stream index
+            while i < len(ffprobeOutput['streams']):
+                if 'codec_type' in ffprobeOutput['streams'][i]:
+                    if ffprobeOutput['streams'][i]['codec_type'] == 'video':
+                        index = i
+                        break
+                i += 1
+
+        height = ffprobeOutput['streams'][index]['height']
+        width = ffprobeOutput['streams'][index]['width']
+        bit_rate = ffprobeOutput['streams'][index]['bit_rate']
+        duration = ffprobeOutput['streams'][index]['duration']
+
         #print(height, width, br, duration)
         return width, height, int(float(bit_rate)), int(math.ceil(float(duration)))
