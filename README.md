@@ -4,6 +4,8 @@
 
 ###### Whatsapp blocks numbers now. Framework wont work properly until next version
 
+###### For a javascript whatsapp library go [here](https://github.com/danielcardeenas/sulla)
+
 <!---[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=57RJJGH3HPCG6)-->
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom bot easily.
 
